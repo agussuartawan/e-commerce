@@ -1,9 +1,22 @@
 @extends('layouts.general')
 @section('title', 'Beranda')
 @section('content')
-<div class="container mt-4">
+<div class="container mt-2">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12 d-flex justify-content-end">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <select name="" id="" class="form-control mr-sm-2 custom-select my-2">
+                    <option value="">Kategori 1</option>
+                    <option value="">Kategori 2</option>
+                </select>
+                <button class="btn btn-outline-success my-sm-0" type="submit">Cari</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">
@@ -13,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">
@@ -23,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">

@@ -19,25 +19,43 @@
                 </button>
             
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {{ request()->is('beranda') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('beranda') }}">Beranda</a> 
-                    </li>
-                    <li class="nav-item {{ request()->is('login') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
-                    </li>
-                    <li class="nav-item {{ request()->is('register') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('register') }}">Daftar</a>
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <select name="" id="" class="form-control mr-sm-2 custom-select">
-                        <option value="">Kategori 1</option>
-                        <option value="">Kategori 2</option>
-                    </select>
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cari</button>
-                </form>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item {{ request()->is('beranda') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('beranda') }}">Beranda</a> 
+                        </li>
+                        @guest
+                            <li class="nav-item {{ request()->is('login') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            </li>
+                            <li class="nav-item {{ request()->is('register') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('register') }}">Daftar</a>
+                            </li>
+                        @else
+                            <li class="nav-item {{ request()->is('payment') ? 'active' : '' }}">
+                                <a class="nav-link" href="#">Pembayaran</a>
+                            </li>
+                            <li class="nav-item {{ request()->is('delivery') ? 'active' : '' }}">
+                                <a class="nav-link" href="#">Pengiriman</a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        @endguest
+                    </ul>                
                 </div>
             </div>
         </nav>

@@ -80,7 +80,7 @@
                             <label for="address" class="col-md-4 col-form-label text-md-end">{{ __('Alamat') }}</label>
 
                             <div class="col-md-6">
-                                <textarea name="address" id="address" class="form-control"></textarea>
+                                <textarea name="address" id="address" class="form-control">{{ old('address') }}</textarea>
                                 @error('address')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

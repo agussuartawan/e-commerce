@@ -10,10 +10,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('beranda', [BerandaController::class, 'beranda'])->name('beranda');
 
-// Route::group(['prefix' => 'panel'], function () {
-Route::get('/dashboard', DashboardController::class)->name('dashboard');
-// });
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::group(['middleware' => 'can:akses dashboard'], function () {
+		Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+	});
+});
