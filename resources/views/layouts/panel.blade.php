@@ -30,7 +30,7 @@
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
-  {{-- @include('include.preloader') --}}
+  @include('include.preloader')
 
   @include('include.navbar')
 

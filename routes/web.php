@@ -15,5 +15,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('beranda', [BerandaController::class, 'beranda'])->name('beranda');
 
 // Route::group(['prefix' => 'panel'], function () {
-Route::get('/panel/dashboard', DashboardController::class)->name('dashboard');
+Route::get('/dashboard', DashboardController::class)->name('dashboard');
 // });
