@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 py-2">
+        <div class="col-md-4 d-flex justify-content-center py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">
@@ -26,17 +26,17 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 py-2">
+        <div class="col-md-4 d-flex justify-content-center py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">Pelembab Bibir</h5>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste dolorem ab at porro cum molestias possimus? Placeat quaerat laudantium quod necessitatibus aspernatur, corrupti provident impedit, soluta odio quia nesciunt rerum?</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste dolorem ab at porro cum molestias possimus? Placeat quaerat laudantium quod necessitatibus aspernatur, corrupti provident impedit, soluta odio quia nesciunt rerum? lorem</p>
                     <a href="#" class="btn btn-primary">Detail</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 py-2">
+        <div class="col-md-4 d-flex justify-content-center py-2">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset('img/no-image.jpg') }}" alt="Card image cap">
                 <div class="card-body">

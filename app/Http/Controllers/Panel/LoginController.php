@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Panel;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class LoginController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -14,6 +16,6 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return view('panel.dashboard.index');
+        return view('panel.login');
     }
 }

@@ -27,35 +27,45 @@
                             <li class="nav-item {{ request()->is('login') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('login') }}">Login</a>
                             </li>
+
                             <li class="nav-item {{ request()->is('register') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('register') }}">Daftar</a>
                             </li>
                         @else
-                            <li class="nav-item {{ request()->is('payment') ? 'active' : '' }}">
-                                <a class="nav-link" href="#">Pembayaran</a>
-                            </li>
-                            <li class="nav-item {{ request()->is('delivery') ? 'active' : '' }}">
-                                <a class="nav-link" href="#">Pengiriman</a>
-                            </li>
+                            @can('akses beranda')
+                                <li class="nav-item {{ request()->is('payment') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#">Pembayaran</a>
+                                </li>
 
+                                <li class="nav-item {{ request()->is('delivery') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#">Pengiriman</a>
+                                </li>
+                            @endcan
+                        @endguest
+
+                    </ul>  
+                    @auth
+                        @can('akses beranda')
+                        <ul class="navbar-nav ml-auto">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  {{ Auth::user()->name }}
+                                {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                  <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
+            
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </div>
                             </li>
-                        @endguest
-                    </ul>                
+                        </ul>
+                        @endcan
+                    @endauth
                 </div>
             </div>
         </nav>
