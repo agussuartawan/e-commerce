@@ -23,7 +23,8 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
+          @if(auth()->user()->hasAnyPermission(['akses kategori','akses barang', 'akses akun', 'akses bank', 'akses pelanggan']))
+          <li class="nav-item {{ request()->is('categories*') || request()->is('products*') || request()->is('banks*') || request()->is('accounts') || request()->is('customers*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="fas fa-file-archive nav-icon"></i>
               <p>
@@ -32,62 +33,90 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+
+              @can('akses kategori')
               <li class="nav-item">
-                <a href="./index.html" class="nav-link">
+                <a href="{{ route('categories.index') }}" class="nav-link {{ request()->is('categories*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Kategori</p>
                 </a>
               </li>
+              @endcan
+
+              @can('akses barang')
               <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
+                <a href="./index2.html" class="nav-link {{ request()->is('products*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Barang</p>
                 </a>
               </li>
+              @endcan
+
+              @can('akses akun')
               <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
+                <a href="./index2.html" class="nav-link {{ request()->is('accounts*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Akun</p>
                 </a>
               </li>
+              @endcan
+
+              @can('akses bank')
               <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
+                <a href="./index2.html" class="nav-link {{ request()->is('banks*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Akun</p>
+                  <p>Bank</p>
                 </a>
               </li>
+              @endcan
+
+              @can('akses pelanggan')
               <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
+                <a href="./index2.html" class="nav-link {{ request()->is('customers*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pelanggan</p>
                 </a>
               </li>
+              @endcan
+
             </ul>
           </li>
+          @endif
+
+          @can('akses pembayaran')
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="pages/widgets.html" class="nav-link {{ request()->is('payments*') ? 'active' : '' }}">
               <i class="far fa-solid fa-credit-card nav-icon"></i>
               <p>
                 Pembayaran
               </p>
             </a>
           </li>
+          @endcan
+
+          @can('akses penjualan')
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="pages/widgets.html" class="nav-link {{ request()->is('sales*') ? 'active' : '' }}">
               <i class="fas fa-shopping-cart nav-icon"></i>
               <p>
                 Penjualan
               </p>
             </a>
           </li>
+          @endcan
+
+          @can('akses jurnal umum')
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="pages/widgets.html" class="nav-link {{ request()->is('general journal*') ? 'active' : '' }}">
               <i class="fas fa-book nav-icon"></i>
               <p>
                 Jurnal Umum
               </p>
             </a>
           </li>
+          @endcan
+
+          @can('akses laporan')
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fas fa-book-open nav-icon"></i>
@@ -123,6 +152,7 @@
               </li>
             </ul>
           </li>
+          @endcan
 
           <li class="nav-item">
             <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
