@@ -38,9 +38,22 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses barang'], function () {
 		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
 		Route::resource('products', ProductController::class)->except('destroy');
+		
+		#product color route
 		Route::get('color-search', [ProductColorController::class, 'searchColor']);
+		Route::get('color-create', [ProductColorController::class, 'create']);
+		Route::post('color-create', [ProductColorController::class, 'store'])->name('color.store');
+		
+		#product fragrance route
 		Route::get('fragrance-search', [ProductFragranceController::class, 'searchFragrance']);
+		Route::get('fragrance-create', [ProductFragranceController::class, 'create'])->name('fragrance.create');
+		Route::post('fragrance-create', [ProductFragranceController::class, 'store'])->name('fragrance.store');
+		
+		
+		#product unit route
 		Route::get('unit-search', [ProductUnitController::class, 'searchUnit']);
+		Route::get('unit-create', [ProductUnitController::class, 'create'])->name('unit.create');
+		Route::post('unit-create', [ProductUnitController::class, 'store'])->name('unit.store');
 	});
 
 });

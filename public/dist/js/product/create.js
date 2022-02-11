@@ -5,7 +5,280 @@ $(function () {
         searchFragrance();
         searchUnit();
     });
+
+    //category
+    $('body').on('click', '#add-category', function(){
+        $("#modal").modal("show");
+        $(".modal-title").text('Tambah Kategori');
+        $(".modal-save").attr('id', 'save-category');
+
+        $.ajax({
+            url: '/categories/create',
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+            },
+            error: function (xhr, status) {
+                $(".modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $('body').on('click', '#save-category', function(){
+        event.preventDefault();
+
+        var form = $("#form-category"),
+        url = form.attr("action"),
+        method = "POST",
+        message =  "Data kategori berhasil ditambahkan";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $("#save-category").attr("disabled", true);
+            },
+            complete: function () {
+                $("#save-category").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<small class="invalid-feedback">${value}</small>`
+                            );
+                    });
+                }
+            },
+        });
+    });
+
+
+    //color
+    $('body').on('click', '#add-color', function(){
+        $("#modal").modal("show");
+        $(".modal-title").text('Tambah Warna Produk');
+        $(".modal-save").attr('id', 'save-color');
+
+        $.ajax({
+            url: '/color-create',
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+                $('.color-picker').minicolors({theme: 'bootstrap'});
+            },
+            error: function (xhr, status) {
+                $(".modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $('body').on('click', '#save-color', function(){
+        event.preventDefault();
+
+        var form = $("#form-product-color"),
+        url = form.attr("action"),
+        method = "POST",
+        message =  "Data warna berhasil ditambahkan";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $("#save-color").attr("disabled", true);
+            },
+            complete: function () {
+                $("#save-color").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<small class="invalid-feedback">${value}</small>`
+                            );
+                    });
+                }
+            },
+        });
+    });
+
+
+    //fragrance
+    $('body').on('click', '#add-fragrance', function(){
+        $("#modal").modal("show");
+        $(".modal-title").text('Tambah Aroma Produk');
+        $(".modal-save").attr('id', 'save-fragrance');
+
+        $.ajax({
+            url: '/fragrance-create',
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+            },
+            error: function (xhr, status) {
+                $(".modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $('body').on('click', '#save-fragrance', function(){
+        event.preventDefault();
+
+        var form = $("#form-product-fragrance"),
+        url = form.attr("action"),
+        method = "POST",
+        message =  "Data aroma berhasil ditambahkan";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $("#save-fragrance").attr("disabled", true);
+            },
+            complete: function () {
+                $("#save-fragrance").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<small class="invalid-feedback">${value}</small>`
+                            );
+                    });
+                }
+            },
+        });
+    });
+
+
+    //unit
+    $('body').on('click', '#add-unit', function(){
+        $("#modal").modal("show");
+        $(".modal-title").text('Tambah Unit Produk');
+        $(".modal-save").attr('id', 'save-unit');
+
+        $.ajax({
+            url: '/unit-create',
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+            },
+            error: function (xhr, status) {
+                $(".modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $('body').on('click', '#save-unit', function(){
+        event.preventDefault();
+
+        var form = $("#form-product-unit"),
+        url = form.attr("action"),
+        method = "POST",
+        message =  "Data aroma berhasil ditambahkan";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $("#save-unit").attr("disabled", true);
+            },
+            complete: function () {
+                $("#save-unit").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<small class="invalid-feedback">${value}</small>`
+                            );
+                    });
+                }
+            },
+        });
+    });
+
+    $('#modal').on('hidden.bs.modal', function(){
+        $('.modal-save').removeAttr('id');
+    });
 });
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+});
+
+showSuccessToast = (message) => {
+    Toast.fire({
+        icon: "success",
+        title: message,
+    });
+};
+
+showErrorToast = () => {
+    Toast.fire({
+        icon: "error",
+        title: "&nbsp;Terjadi Kesalahan!",
+    });
+};
 
 const previewImage = () => {
     const image = document.querySelector("#photo");

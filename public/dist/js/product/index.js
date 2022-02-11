@@ -35,7 +35,7 @@ $(function () {
             },
             columns: [
                 { data: "code", name: "code" },
-                { data: "name", name: "name" },
+                { data: "product_name", name: "product_name" },
                 { data: "selling_price", name: "selling_price" },
                 { data: "stock", name: "stock" },
                 { data: "category", name: "product.category" },

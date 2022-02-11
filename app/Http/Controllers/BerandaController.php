@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BerandaController extends Controller
 {
     public function beranda()
     {
-        return view('beranda.index');
+        $categories = Category::all();
+        return view('beranda.index', compact('categories'));
     }
 
     public function productShow(Product $product)

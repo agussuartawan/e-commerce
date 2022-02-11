@@ -38,26 +38,38 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $messages = [
-            'name.required' => 'Nama tidak boleh kosong!',
-            'name.string' => ' Nama tidak boleh mengandung simbol!',
-            'name.string' => ' Nama tidak boleh melebihi 255 huruf!',
+            'product_name.required' => 'Nama tidak boleh kosong!',
+            'product_name.string' => ' Nama tidak boleh mengandung simbol!',
+            'product_name.string' => ' Nama tidak boleh melebihi 255 huruf!',
             'selling_price.required' => 'Harga tidak boleh kosong!',
             'category_id.required' => 'Kategori tidak boleh kosong!',
             'product_color_id.required' => 'Warna tidak boleh kosong!',
             'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
             'product_unit_id.required' => 'Unit tidak boleh kosong!',
+            'photo.image' => 'Foto tidak valid!',
+            'photo.max' => 'Foto tidak boleh melebihi 500 KB!'
         ];
 
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'selling_price' => ['required'],
+            'product_name' => ['required', 'string', 'max:255'],
+            'selling_price' => ['required', 'numeric'],
             'category_id' => ['required'],
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
             'product_unit_id' => ['required'],
+            'photo' => ['image','file', 'max:512'],
+            'stock' => ['required', 'numeric']
         ], $messages);
+
+        if($request->file('photo')){
+            $validatedData['photo'] = $request->file('photo')->store('product-photo');
+        }
+
+        $validatedData['size'] = $request->size;
+        $validatedData['description'] = $request->description;
+        $validatedData['code'] = $request->code;
         
-        $product = Product::create($request->all());
+        $product = Product::create($validatedData);
 
         return $product;
     }
@@ -122,8 +134,8 @@ class ProductController extends Controller
             })
             ->addColumn('action', function ($data) {
                 $buttons = '';
-                $buttons += '<a href="/products/'. $data->id .'/show" class="btn btn-sm btn-primary btn-show" title="Detail '.$data->name.'">Edit</a>';
-                $buttons += '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
+                $buttons .= '<a href="/products/'. $data->id .'/show" class="btn btn-sm btn-primary btn-show" title="Detail '.$data->product_name.'">Edit</a>';
+                $buttons .= '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-info modal-edit" title="Edit '.$data->product_name.'">Edit</a>';
 
                 return $buttons;
             })
@@ -131,7 +143,7 @@ class ProductController extends Controller
                 if (!empty($request->search)) {
                     $instance->where(function ($w) use ($request) {
                         $search = $request->search;
-                        $w->orWhere('name', 'LIKE', "%$search%")
+                        $w->orWhere('product_name', 'LIKE', "%$search%")
                             ->orwhere('stock', 'LIKE', "%$search%")
                             ->orwhere('size', 'LIKE', "%$search%")
                             ->orwhere('selling_price', 'LIKE', "%$search%");

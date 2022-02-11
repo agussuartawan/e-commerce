@@ -16,7 +16,7 @@ class Product extends Model
         'product_fragrance_id',
         'product_unit_id',
         'code',
-        'name',
+        'product_name',
         'stock',
         'selling_price',
         'size',

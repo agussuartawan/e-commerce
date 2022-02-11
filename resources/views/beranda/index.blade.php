@@ -7,8 +7,10 @@
             <form class="form-inline">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <select name="" id="" class="form-control mr-sm-2 custom-select my-2">
-                    <option value="">Kategori 1</option>
-                    <option value="">Kategori 2</option>
+                    <option value="0">Semua</option>
+                    @foreach ($categories as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
                 </select>
                 <button class="btn btn-outline-success my-sm-0" type="submit">Cari</button>
             </form>
