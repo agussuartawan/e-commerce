@@ -5,6 +5,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Panel\LoginController;
 use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
+use App\Http\Controllers\Panel\ProductColorController;
+use App\Http\Controllers\Panel\ProductFragranceController;
+use App\Http\Controllers\Panel\ProductUnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +32,15 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses kategori'], function () {
 		Route::resource('categories', CategoryController::class)->except('destroy', 'show');
 		Route::get('categories/get-list', [CategoryController::class, 'getCategoryLists']);
+		Route::get('categories-search', [CategoryController::class, 'searchCategories']);
+	});
+
+	Route::group(['middleware' => 'can:akses barang'], function () {
+		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
+		Route::resource('products', ProductController::class)->except('destroy');
+		Route::get('color-search', [ProductColorController::class, 'searchColor']);
+		Route::get('fragrance-search', [ProductFragranceController::class, 'searchFragrance']);
+		Route::get('unit-search', [ProductUnitController::class, 'searchUnit']);
 	});
 
 });

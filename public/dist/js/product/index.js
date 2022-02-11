@@ -1,6 +1,6 @@
 $(function () {
     $(document).ready(function () {
-        $("#category-table").DataTable({
+        $("#product-table").DataTable({
             lengthChange: false,
             paging: true,
             serverSide: true,
@@ -28,13 +28,17 @@ $(function () {
             },
             pagingType: "full_numbers",
             ajax: {
-                url: "categories/get-list",
+                url: "products/get-list",
                 data: function (d) {
                     d.search = $('input[type="search"]').val();
                 },
             },
             columns: [
+                { data: "code", name: "code" },
                 { data: "name", name: "name" },
+                { data: "selling_price", name: "selling_price" },
+                { data: "stock", name: "stock" },
+                { data: "category", name: "product.category" },
                 { data: "action", name: "action", orderable: false },
             ],
             dom: "<'row'<'col'B><'col'f>>tipr",
@@ -43,8 +47,7 @@ $(function () {
                     text: "Tambah",
                     className: "btn btn-info",
                     action: function (e, dt, node, config) {
-                        showModal();
-                        fillModal($(this));
+                        window.location.href = "/products/create";
                     },
                 },
             ],
@@ -62,7 +65,7 @@ $(function () {
     $(".modal-save").on("click", function (event) {
         event.preventDefault();
 
-        var form = $("#form-category"),
+        var form = $("#form-product"),
             url = form.attr("action"),
             method =
                 $("input[name=_method").val() == undefined ? "POST" : "PUT",

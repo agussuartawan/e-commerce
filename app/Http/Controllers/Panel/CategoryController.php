@@ -89,15 +89,31 @@ class CategoryController extends Controller
         return $category;
     }
 
-    public function getCategoryLists()
+    public function getCategoryLists(Request $request)
     {
-        $data  = Category::orderBy('created_at', 'DESC')->get();
+        $data  = Category::query();
 
-        return Datatables::of($data)
+        return DataTables::of($data)
             ->addColumn('action', function ($data) {
-                return '<a href="'. $data .'" class="btn btn-sm btn-block btn-info">Edit</a>';
+                return '<a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
+            })
+            ->filter(function ($instance) use ($request) {
+                if (!empty($request->search)) {
+                    $instance->where(function ($w) use ($request) {
+                        $search = $request->search;
+                        $w->orWhere('name', 'LIKE', "%$search%");
+                    });
+                }
+
+                return $instance;
             })
             ->rawColumns(['action'])
             ->make(true);
+    }
+
+    public function searchCategories(Request $request)
+    {
+        $search = $request->search;
+        return Category::where('name', 'LIKE', "%$search%")->select('id', 'name')->get();
     }
 }
