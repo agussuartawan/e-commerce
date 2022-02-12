@@ -16,7 +16,7 @@
                 </form>
             </div>
         </div>
-
+        <hr>
         <div class="row">
             @foreach ($products as $product)
                 <div class="col-md-4 d-flex justify-content-center py-2">

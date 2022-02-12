@@ -11,8 +11,6 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 
-        'product_color_id',
-        'product_fragrance_id',
         'product_unit_id',
         'code',
         'product_name',
@@ -30,12 +28,12 @@ class Product extends Model
 
     public function product_color()
     {
-        return $this->belongsTo(ProductColor::class);
+        return $this->belongsToMany(ProductColor::class, 'color_products');
     }
 
     public function product_fragrance()
     {
-        return $this->belongsTo(ProductFragrance::class);
+        return $this->belongsToMany(ProductFragrance::class, 'fragrance_products');
     }
 
     public function product_unit()

@@ -216,7 +216,7 @@ $(function () {
         var form = $("#form-product-unit"),
             url = form.attr("action"),
             method = "POST",
-            message = "Data aroma berhasil ditambahkan";
+            message = "Data unit berhasil ditambahkan";
 
         $(".form-control").removeClass("is-invalid");
         $(".invalid-feedback").remove();
@@ -261,7 +261,8 @@ $(function () {
         const me = $(this),
             url = me.attr("action"),
             method = "POST",
-            formData = new FormData(this);
+            formData = new FormData(this),
+            message = 'Data produk berhasil disimpan!';
 
         $(".form-control").removeClass("is-invalid");
         $(".invalid-feedback").remove();
@@ -280,7 +281,7 @@ $(function () {
                 $(".btn").removeAttr("disabled");
             },
             success: function (response) {
-                showSuccessToast();
+                showSuccessToast(message);
                 window.location.href = "/products";
             },
             error: function (xhr) {
@@ -314,10 +315,10 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 
-showSuccessToast = () => {
+showSuccessToast = (message) => {
     Toast.fire({
         icon: "success",
-        title: "Data produk berhasil disimpan.",
+        title: message,
     });
 };
 

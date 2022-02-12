@@ -256,7 +256,7 @@ $(function () {
     });
 
     //submit form product
-    $("#form-product").on("submit", function (event) {
+    $("#form-products").on("submit", function (event) {
         event.preventDefault();
         const me = $(this),
             url = me.attr("action"),

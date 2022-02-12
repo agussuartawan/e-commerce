@@ -105,7 +105,7 @@
 
                                     <label for="product_color_id">Warna</label>
                                     <div class="input-group mb-3">
-                                        {!! Form::select('product_color_id', $colors, null, ['class' => 'form-control custom-select', 'id' => 'product_color_id']) !!}
+                                        {!! Form::select('product_color_id[]', $colors, $product->product_color()->pluck('product_color_id'), ['class' => 'form-control custom-select', 'id' => 'product_color_id', 'multiple' => true]) !!}
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary" type="button" id="add-color"><i
                                                     class="fas fa-plus"></i></button>
@@ -114,7 +114,7 @@
 
                                     <label for="product_fragrance_id">Aroma</label>
                                     <div class="input-group mb-3">
-                                        {!! Form::select('product_fragrance_id', $fragrance, null, ['class' => 'form-control custom-select', 'id' => 'product_fragrance_id']) !!}
+                                        {!! Form::select('product_fragrance_id[]', $fragrances, $product->product_fragrance()->pluck('product_fragrance_id'), ['class' => 'form-control custom-select', 'id' => 'product_fragrance_id', 'multiple' => true]) !!}
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary" type="button" id="add-fragrance"><i
                                                     class="fas fa-plus"></i></button>

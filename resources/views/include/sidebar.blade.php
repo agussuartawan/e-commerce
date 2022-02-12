@@ -68,7 +68,7 @@
 
                             @can('akses bank')
                                 <li class="nav-item">
-                                    <a href="./index2.html"
+                                    <a href="{{ route('banks.index') }}"
                                         class="nav-link {{ request()->is('banks*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Bank</p>
@@ -78,7 +78,7 @@
 
                             @can('akses pelanggan')
                                 <li class="nav-item">
-                                    <a href="./index2.html"
+                                    <a href="{{ route('customers.index') }}"
                                         class="nav-link {{ request()->is('customers*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Pelanggan</p>

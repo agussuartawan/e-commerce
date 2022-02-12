@@ -1,6 +1,6 @@
 $(function () {
     $(document).ready(function () {
-        $("#product-table").DataTable({
+        const dTable = $("#product-table").DataTable({
             lengthChange: false,
             paging: true,
             serverSide: true,
@@ -29,6 +29,7 @@ $(function () {
                 url: "products/get-list",
                 data: function (d) {
                     d.search = $('input[type="search"]').val();
+                    d.category_id = $('select').val();
                 },
             },
             columns: [
@@ -39,7 +40,7 @@ $(function () {
                 { data: "category", name: "product.category" },
                 { data: "action", name: "action", orderable: false },
             ],
-            dom: "<'row'<'col'B><'col'f>>tipr",
+            dom: "<'row'<'col'B><'col select'><'col'f>>tipr",
             buttons: [
                 {
                     text: "Tambah",
@@ -49,6 +50,39 @@ $(function () {
                     },
                 },
             ],
+        });
+
+        $("div.select").html('<select class="form-control"></select>');
+
+        $('select').select2({
+            theme: "bootstrap4",
+            ajax: {
+                url: "/categories-search",
+                dataType: "json",
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                            };
+                        }),
+                    };
+                },
+            },
+            placeholder: "Cari kategori",
+            cache: true,
+            allowClear: true,
+        })
+        .on('change', function(){
+            dTable.draw();
         });
     });
 

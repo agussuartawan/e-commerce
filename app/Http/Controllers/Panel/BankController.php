@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use Illuminate\Http\Request;
-use App\Models\Category;
 use DataTables;
 
-class CategoryController extends Controller
+class BankController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('panel.category.index');
+        return view('panel.bank.index');
     }
 
     /**
@@ -26,8 +26,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $category = new Category();
-        return view('include.category.form', compact('category'));
+        $bank = new Bank();
+        return view('include.bank.form', compact('bank'));
     }
 
     /**
@@ -42,66 +42,74 @@ class CategoryController extends Controller
             'name.required' => 'Nama tidak boleh kosong!',
             'name.string' => ' Nama tidak boleh mengandung simbol!',
             'name.max' => ' Nama tidak boleh melebihi 255 huruf!',
+            'account_number.required' => 'No rekening tidak boleh kosong!',
+            'account_number.numeric' => ' No rekening tidak boleh mengandung simbol!',
+            'account_number.max' => ' No rekening tidak boleh melebihi 255 huruf!',
         ];
 
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255']
+            'name' => ['required', 'string', 'max:255'],
+            'account_number' => ['required', 'string', 'max:255']
         ], $messages);
         
-        $category = Category::create($request->all());
+        $bank = Bank::create($validatedData);
 
-        return $category;
+        return $bank;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Bank $bank)
     {
-        return view('include.category.form', compact('category'));
+        return view('include.bank.form', compact('bank'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Bank $bank)
     {
-
         $messages = [
             'name.required' => 'Nama tidak boleh kosong!',
             'name.string' => ' Nama tidak boleh mengandung simbol!',
             'name.max' => ' Nama tidak boleh melebihi 255 huruf!',
+            'account_number.required' => 'No rekening tidak boleh kosong!',
+            'account_number.numeric' => ' No rekening tidak boleh mengandung simbol!',
+            'account_number.max' => ' No rekening tidak boleh melebihi 255 huruf!',
         ];
 
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255']
+            'name' => ['required', 'string', 'max:255'],
+            'account_number' => ['required', 'string', 'max:255']
         ], $messages);
+        
+        $bank->update($validatedData);
 
-        $category->update($request->all());
-
-        return $category;
+        return $bank;    
     }
 
-    public function getCategoryLists(Request $request)
+    public function getBankLists(Request $request)
     {
-        $data  = Category::query();
+        $data  = Bank::query();
 
         return DataTables::of($data)
             ->addColumn('action', function ($data) {
-                return '<a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
+                return '<a href="/banks/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
             })
             ->filter(function ($instance) use ($request) {
                 if (!empty($request->search)) {
                     $instance->where(function ($w) use ($request) {
                         $search = $request->search;
-                        $w->orWhere('name', 'LIKE', "%$search%");
+                        $w->orWhere('name', 'LIKE', "%$search%")
+                            ->orWhere('account_number', 'LIKE', "%$search%");
                     });
                 }
 
@@ -109,11 +117,5 @@ class CategoryController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
-    }
-
-    public function searchCategories(Request $request)
-    {
-        $search = $request->search;
-        return Category::where('name', 'LIKE', "%$search%")->select('id', 'name')->get();
     }
 }

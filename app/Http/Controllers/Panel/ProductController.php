@@ -45,7 +45,7 @@ class ProductController extends Controller
         $messages = [
             'product_name.required' => 'Nama tidak boleh kosong!',
             'product_name.string' => ' Nama tidak boleh mengandung simbol!',
-            'product_name.string' => ' Nama tidak boleh melebihi 255 huruf!',
+            'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
             'selling_price.required' => 'Harga tidak boleh kosong!',
             'category_id.required' => 'Kategori tidak boleh kosong!',
             'product_color_id.required' => 'Warna tidak boleh kosong!',
@@ -74,6 +74,9 @@ class ProductController extends Controller
         
         $product = Product::create($validatedData);
 
+        $product->product_color()->sync($validatedData['product_color_id']);
+        $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
+
         return $product;
     }
 
@@ -93,8 +96,8 @@ class ProductController extends Controller
         $categories = Category::pluck('name', 'id');
         $colors = ProductColor::pluck('name', 'id');
         $units = ProductUnit::pluck('name', 'id');
-        $fragrance = ProductFragrance::pluck('name', 'id');
-        return view('panel.product.edit', compact('product', 'colors', 'units', 'fragrance', 'categories'));
+        $fragrances = ProductFragrance::pluck('name', 'id');
+        return view('panel.product.edit', compact('product', 'colors', 'units', 'fragrances', 'categories'));
     }
 
     /**
@@ -109,7 +112,7 @@ class ProductController extends Controller
         $messages = [
             'product_name.required' => 'Nama tidak boleh kosong!',
             'product_name.string' => ' Nama tidak boleh mengandung simbol!',
-            'product_name.string' => ' Nama tidak boleh melebihi 255 huruf!',
+            'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
             'selling_price.required' => 'Harga tidak boleh kosong!',
             'category_id.required' => 'Kategori tidak boleh kosong!',
             'product_color_id.required' => 'Warna tidak boleh kosong!',
@@ -141,6 +144,9 @@ class ProductController extends Controller
         
         $product->update($validatedData);
 
+        $product->product_color()->sync($validatedData['product_color_id']);
+        $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
+
         return $product;
     }
     
@@ -165,6 +171,9 @@ class ProductController extends Controller
                 return rupiah($data->selling_price);
             })
             ->filter(function ($instance) use ($request) {
+                if ($request->category_id) {
+                    $instance->where('category_id', $request->category_id);
+                }
                 if (!empty($request->search)) {
                     $instance->where(function ($w) use ($request) {
                         $search = $request->search;
