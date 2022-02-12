@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductColor;
+use App\Models\ProductFragrance;
+use App\Models\ProductUnit;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -46,8 +51,6 @@ class ProductController extends Controller
             'product_color_id.required' => 'Warna tidak boleh kosong!',
             'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
             'product_unit_id.required' => 'Unit tidak boleh kosong!',
-            'photo.image' => 'Foto tidak valid!',
-            'photo.max' => 'Foto tidak boleh melebihi 500 KB!'
         ];
 
         $validatedData = $request->validate([
@@ -87,7 +90,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('panel.product.edit', compact('product'));
+        $categories = Category::pluck('name', 'id');
+        $colors = ProductColor::pluck('name', 'id');
+        $units = ProductUnit::pluck('name', 'id');
+        $fragrance = ProductFragrance::pluck('name', 'id');
+        return view('panel.product.edit', compact('product', 'colors', 'units', 'fragrance', 'categories'));
     }
 
     /**
@@ -100,9 +107,9 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $messages = [
-            'name.required' => 'Nama tidak boleh kosong!',
-            'name.string' => ' Nama tidak boleh mengandung simbol!',
-            'name.string' => ' Nama tidak boleh melebihi 255 huruf!',
+            'product_name.required' => 'Nama tidak boleh kosong!',
+            'product_name.string' => ' Nama tidak boleh mengandung simbol!',
+            'product_name.string' => ' Nama tidak boleh melebihi 255 huruf!',
             'selling_price.required' => 'Harga tidak boleh kosong!',
             'category_id.required' => 'Kategori tidak boleh kosong!',
             'product_color_id.required' => 'Warna tidak boleh kosong!',
@@ -111,15 +118,28 @@ class ProductController extends Controller
         ];
 
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'selling_price' => ['required'],
+            'product_name' => ['required', 'string', 'max:255'],
+            'selling_price' => ['required', 'numeric'],
             'category_id' => ['required'],
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
             'product_unit_id' => ['required'],
+            'photo' => ['image','file', 'max:512'],
+            'stock' => ['required', 'numeric']
         ], $messages);
+
+        if($request->file('photo')){
+            if($product->photo){
+                Storage::delete($product->photo);
+            }
+            $validatedData['photo'] = $request->file('photo')->store('product-photo');
+        }
+
+        $validatedData['size'] = $request->size;
+        $validatedData['description'] = $request->description;
+        $validatedData['code'] = $request->code;
         
-        $product->update($request->all());
+        $product->update($validatedData);
 
         return $product;
     }
@@ -130,14 +150,19 @@ class ProductController extends Controller
 
         return DataTables::of($data)
             ->addColumn('category', function ($data) {
-                return '<span class="badge badge-secondary"'.$data->category->name.'"</span>';
+                return '<span class="badge badge-secondary">'.$data->category->name.'</span>';
             })
             ->addColumn('action', function ($data) {
-                $buttons = '';
-                $buttons .= '<a href="/products/'. $data->id .'/show" class="btn btn-sm btn-primary btn-show" title="Detail '.$data->product_name.'">Edit</a>';
-                $buttons .= '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-info modal-edit" title="Edit '.$data->product_name.'">Edit</a>';
+                $buttons = '<div class="row"><div class="col">';
+                $buttons .= '<a href="/products/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->product_name.'">Detail</a>';
+                $buttons .= '</div><div class="col">';
+                $buttons .= '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->product_name.'">Edit</a>';
+                $buttons .= '</div></div>';
 
                 return $buttons;
+            })
+            ->addColumn('selling_price', function($data){
+                return rupiah($data->selling_price);
             })
             ->filter(function ($instance) use ($request) {
                 if (!empty($request->search)) {
@@ -152,7 +177,7 @@ class ProductController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action', 'category'])
+            ->rawColumns(['action', 'category', 'selling_price'])
             ->make(true);
     }
 }

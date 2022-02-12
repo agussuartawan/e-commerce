@@ -19,14 +19,12 @@ $(function () {
                 paginate: {
                     first: "Awal",
                     last: "Akhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya",
                 },
             },
             scroller: {
                 loadingIndicator: false,
             },
-            pagingType: "full_numbers",
+            pagingType: "first_last_numbers",
             ajax: {
                 url: "categories/get-list",
                 data: function (d) {

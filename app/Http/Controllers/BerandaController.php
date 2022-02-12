@@ -11,7 +11,8 @@ class BerandaController extends Controller
     public function beranda()
     {
         $categories = Category::all();
-        return view('beranda.index', compact('categories'));
+        $products = Product::get();
+        return view('beranda.index', compact('categories', 'products'));
     }
 
     public function productShow(Product $product)

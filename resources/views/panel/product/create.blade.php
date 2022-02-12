@@ -29,11 +29,6 @@
 
     <section class="content">
         <div class="container-fluid">
-            @if($errors->any())
-                @foreach($errors->all() as $error)
-                {{$error}}
-                @endforeach
-            @endif
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
@@ -43,17 +38,18 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             {!! Form::open([
-                                'route' => 'products.store',
-                                'method' => 'POST',
-                                'id' => 'form-product',
-                                'files' => true,
-                            ]) !!}
+    'route' => 'products.store',
+    'method' => 'POST',
+    'id' => 'form-product',
+    'files' => true,
+]) !!}
 
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label for="photo">Foto</label>
-                                    <img class="rounded mb-3 col-sm-5" id="preview">
-                                    <div class="input-group">
+                                    <label for="photo">Foto <span class="badge badge-info">Max 500
+                                            KB</span></label>
+                                    <img class="rounded mb-3 mx-auto d-block col-sm-5" id="preview">
+                                    <div class="input-group" id="photos">
                                         <div class="custom-file">
                                             <input type="file" class="form-control" id="photo" name="photo"
                                                 onchange="previewImage()">
@@ -101,7 +97,8 @@
                                         <div class="input-group">
                                             {!! Form::select('category_id', [], null, ['class' => 'form-control custom-select', 'id' => 'category_id']) !!}
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button" id="add-category"><i class="fas fa-plus"></i></button>
+                                                <button class="btn btn-outline-secondary" type="button" id="add-category"><i
+                                                        class="fas fa-plus"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -110,7 +107,8 @@
                                     <div class="input-group mb-3">
                                         {!! Form::select('product_color_id', [], null, ['class' => 'form-control custom-select', 'id' => 'product_color_id']) !!}
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="add-color"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-outline-secondary" type="button" id="add-color"><i
+                                                    class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
 
@@ -118,7 +116,8 @@
                                     <div class="input-group mb-3">
                                         {!! Form::select('product_fragrance_id', [], null, ['class' => 'form-control custom-select', 'id' => 'product_fragrance_id']) !!}
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="add-fragrance"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-outline-secondary" type="button" id="add-fragrance"><i
+                                                    class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
 
@@ -126,7 +125,8 @@
                                     <div class="input-group">
                                         {!! Form::select('product_unit_id', [], null, ['class' => 'form-control custom-select', 'id' => 'product_unit_id']) !!}
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="add-unit"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-outline-secondary" type="button" id="add-unit"><i
+                                                    class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>

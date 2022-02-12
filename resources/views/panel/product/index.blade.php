@@ -50,7 +50,7 @@
                                             <th>Harga</th>
                                             <th>Stock</th>
                                             <th>Kategori</th>
-                                            <th>Aksi</th>
+                                            <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>

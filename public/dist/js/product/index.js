@@ -19,14 +19,12 @@ $(function () {
                 paginate: {
                     first: "Awal",
                     last: "Akhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya",
                 },
             },
             scroller: {
                 loadingIndicator: false,
             },
-            pagingType: "full_numbers",
+            pagingType: "first_last_numbers",
             ajax: {
                 url: "products/get-list",
                 data: function (d) {
@@ -54,104 +52,27 @@ $(function () {
         });
     });
 
-    $("body").on("click", ".modal-edit", function (event) {
+    $("body").on("click", ".btn-show", function (event) {
         event.preventDefault();
-        var me = $(this);
+        $("#modal").modal("show");
 
-        showModal();
-        fillModal(me);
-    });
+        var me = $(this),
+            url = me.attr("href"),
+            title = me.attr("title");
 
-    $(".modal-save").on("click", function (event) {
-        event.preventDefault();
-
-        var form = $("#form-product"),
-            url = form.attr("action"),
-            method =
-                $("input[name=_method").val() == undefined ? "POST" : "PUT",
-            message =
-                $("input[name=_method").val() == undefined
-                    ? "Data kategori berhasil ditambahkan"
-                    : "Data kategori berhasil diubah";
-
-        $(".form-control").removeClass("is-invalid");
-        $(".invalid-feedback").remove();
+        $(".modal-title").text(title);
+        $(".modal-save").remove();
 
         $.ajax({
             url: url,
-            method: method,
-            data: form.serialize(),
-            beforeSend: function () {
-                $(".modal-save").attr("disabled", true);
-            },
-            complete: function () {
-                $(".modal-save").removeAttr("disabled");
-            },
+            type: "GET",
+            dataType: "html",
             success: function (response) {
-                showSuccessToast(message);
-                $("#modal").modal("hide");
-                $("#category-table").DataTable().ajax.reload();
+                $(".modal-body").html(response);
             },
-            error: function (xhr) {
-                showErrorToast();
-                var res = xhr.responseJSON;
-                if ($.isEmptyObject(res) == false) {
-                    $.each(res.errors, function (key, value) {
-                        $("#" + key)
-                            .addClass("is-invalid")
-                            .after(
-                                `<small class="invalid-feedback">${value}</small>`
-                            );
-                    });
-                }
+            error: function (xhr, status) {
+                alert("Terjadi kesalahan");
             },
         });
     });
 });
-
-var Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-});
-
-showModal = () => {
-    $("#modal").modal("show");
-};
-
-fillModal = (me) => {
-    var url = me.attr("href"),
-        title = me.attr("title");
-
-    url === undefined ? (url = "/categories/create") : "";
-    title === undefined ? (title = "Tambah Kategori") : "";
-
-    $(".modal-title").text(title);
-
-    $.ajax({
-        url: url,
-        type: "GET",
-        dataType: "html",
-        success: function (response) {
-            $(".modal-body").html(response);
-        },
-        error: function (xhr, status) {
-            alert("Terjadi kesalahan");
-        },
-    });
-};
-
-showSuccessToast = (message) => {
-    Toast.fire({
-        icon: "success",
-        title: message,
-    });
-};
-
-showErrorToast = () => {
-    Toast.fire({
-        icon: "error",
-        title: "&nbsp;Terjadi Kesalahan!",
-    });
-};

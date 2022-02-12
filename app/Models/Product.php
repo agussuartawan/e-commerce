@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
@@ -29,13 +28,18 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function color()
+    public function product_color()
     {
         return $this->belongsTo(ProductColor::class);
     }
 
-    public function fragrance()
+    public function product_fragrance()
     {
         return $this->belongsTo(ProductFragrance::class);
+    }
+
+    public function product_unit()
+    {
+        return $this->belongsTo(ProductUnit::class);
     }
 }

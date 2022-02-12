@@ -95,7 +95,7 @@ class CategoryController extends Controller
 
         return DataTables::of($data)
             ->addColumn('action', function ($data) {
-                return '<a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
+                return '<a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
             })
             ->filter(function ($instance) use ($request) {
                 if (!empty($request->search)) {
