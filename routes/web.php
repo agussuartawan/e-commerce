@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Panel\BankController;
 use App\Http\Controllers\Panel\LoginController;
+use App\Http\Controllers\Beranda\OrderController;
 use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
 use App\Http\Controllers\Panel\CustomerController;
+use App\Http\Controllers\Beranda\BerandaController;
+use App\Http\Controllers\Panel\DashboardController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\ProductFragranceController;
@@ -68,6 +69,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses bank'], function () {
 		Route::get('banks/get-list', [BankController::class, 'getBankLists']);
 		Route::resource('banks', BankController::class)->except('destroy', 'show');
+	});
+
+	# route pemesanan
+	Route::group(['middleware' => 'can:akses beranda'], function () {
+		Route::get('order/{product}/create', [OrderController::class, 'create'])->name('order.create');
+		Route::post('order/{product}/create', [OrderController::class, 'store'])->name('order.store');
 	});
 
 });

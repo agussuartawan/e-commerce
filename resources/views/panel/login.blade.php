@@ -20,7 +20,7 @@
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
         <div class="text-center">
-            <img src="{{ asset('img/null-avatar.png') }}" class="rounded" alt="...">
+            <img src="{{ asset('img/logo.png') }}" class="rounded" alt="..." width="128px" height="128px">
           </div>
       <a href="../../index2.html" class="h1"><b>CV</b>Murni Sejati</a>
     </div>
@@ -45,7 +45,8 @@
             </div>
           </div>
         </div>
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        <p class="text-center mt-2">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
       </form>
     </div>
     <!-- /.card-body -->

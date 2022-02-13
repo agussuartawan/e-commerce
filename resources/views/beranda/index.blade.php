@@ -19,7 +19,7 @@
         <hr>
         <div class="row">
             @foreach ($products as $product)
-                <div class="col-md-4 d-flex justify-content-center py-2">
+                <div class="col d-flex justify-content-center py-2">
                     <div class="card" style="width: 18rem;">
                         @if ($product->photo)
                             <img class="card-img-top" src="{{ asset('storage/' . $product->photo) }}"

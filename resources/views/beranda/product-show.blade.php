@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mt-2">
         <div class="row">
-            <div class="col-md-12 d-flex justify-content-end">
+            <div class="col d-flex justify-content-end">
                 <form class="form-inline">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <select name="" id="" class="form-control mr-sm-2 custom-select my-2">
@@ -26,14 +26,58 @@
                 @endif
             </div>
             <div class="col-md-6">
-                <h5>{{ $product->product_name }}</h5>
-                <p>Harga  Rp. {{ rupiah($product->selling_price) }} / {{ $product->size}} {{$product->product_unit->name }}</p>
+                <h4>{{ $product->product_name }}</h4>
+                <span>Harga  Rp. {{ rupiah($product->selling_price) }} / {{ $product->size}} {{$product->product_unit->name }}</span>
 
-                <a href="#" class="btn btn-primary">Beli</a>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <span class="col-form-label text-md-end">Aroma Tersedia</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                @if($product->product_fragrance)
+                                    @foreach ($product->product_fragrance as $fragrance)
+                                        <span class="badge badge-info mr-2" title="Aroma">{{ $fragrance->name }}</span>
+                                    @endforeach
+                        
+                                @else
+                                    <p>-</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">  
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <span class="col-form-label text-md-end">Warna Tersedia</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                @if($product->product_color)
+                                    @foreach ($product->product_color as $color)
+                                        <span class="badge mr-2" style="background-color: {{$color->hex_color}}!important;" title="Warna">{{ $color->name }}</span>
+                                    @endforeach
+                                @else
+                                    <p>-</p>
+                                @endif
+                            </div>
+                        </div>                
+                    </div>
+                </div>
+                <a href="{{ route('order.create', $product) }}" class="btn btn-primary mt-4">Beli Produk Ini</a>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col">
                 <h6>Deskripsi produk</h6>
                 <p>{{ $product->description }}</p>
