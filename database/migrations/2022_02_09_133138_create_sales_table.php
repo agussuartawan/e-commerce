@@ -26,7 +26,7 @@ class CreateSalesTable extends Migration
             $table->integer('qty');
             $table->decimal('grand_total', $precission = 18, $scale = 2);
             $table->string('date');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->text('address');
             $table->string('payment_status');
             $table->string('delivery_status');

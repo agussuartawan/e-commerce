@@ -21,6 +21,7 @@ Route::get('/panel', function () {
 	return redirect('/panel/login');
 });
 
+
 Auth::routes();
 Route::get('panel/login', LoginController::class)->middleware('guest')->name('panel.login');
 Route::get('beranda', [BerandaController::class, 'beranda'])->name('beranda');
@@ -75,6 +76,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses beranda'], function () {
 		Route::get('order/{product}/create', [OrderController::class, 'create'])->name('order.create');
 		Route::post('order/{product}/create', [OrderController::class, 'store'])->name('order.store');
+		Route::get('order/{sale}/payment', [OrderController::class, 'payment'])->name('order.payment');
+
+		Route::get('bank-search', [BankController::class, 'searchBank']);
+		Route::get('province-search', [OrderController::class, 'searchProvince']);
+		Route::get('city-search/{province_id}', [OrderController::class, 'searchBank']);
 	});
 
 });

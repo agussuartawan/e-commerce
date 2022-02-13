@@ -118,4 +118,10 @@ class BankController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+
+    public function searchBank(Request $request)
+    {
+        $search = $request->search;
+        return Bank::where('name', 'LIKE', "%$search%")->select('id', 'name')->get();
+    }
 }
