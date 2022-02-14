@@ -45,11 +45,15 @@ class BankController extends Controller
             'account_number.required' => 'No rekening tidak boleh kosong!',
             'account_number.numeric' => ' No rekening tidak boleh mengandung simbol!',
             'account_number.max' => ' No rekening tidak boleh melebihi 255 huruf!',
+            'account_name.required' => 'Nama rekening tidak boleh kosong!',
+            'account_name.numeric' => ' Nama rekening tidak boleh mengandung simbol!',
+            'account_name.max' => ' Nama rekening tidak boleh melebihi 255 huruf!',
         ];
 
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'account_number' => ['required', 'string', 'max:255']
+            'account_number' => ['required', 'string', 'max:255'],
+            'account_name' => ['required', 'string', 'max:255'],
         ], $messages);
         
         $bank = Bank::create($validatedData);
@@ -84,11 +88,15 @@ class BankController extends Controller
             'account_number.required' => 'No rekening tidak boleh kosong!',
             'account_number.numeric' => ' No rekening tidak boleh mengandung simbol!',
             'account_number.max' => ' No rekening tidak boleh melebihi 255 huruf!',
+            'account_name.required' => 'Nama rekening tidak boleh kosong!',
+            'account_name.numeric' => ' Nama rekening tidak boleh mengandung simbol!',
+            'account_name.max' => ' Nama rekening tidak boleh melebihi 255 huruf!',
         ];
 
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'account_number' => ['required', 'string', 'max:255']
+            'account_number' => ['required', 'string', 'max:255'],
+            'account_name' => ['required', 'string', 'max:255'],
         ], $messages);
         
         $bank->update($validatedData);

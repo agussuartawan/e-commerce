@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Panel\BankController;
-use App\Http\Controllers\Panel\LoginController;
 use App\Http\Controllers\Beranda\OrderController;
 use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
@@ -21,9 +20,7 @@ Route::get('/panel', function () {
 	return redirect('/panel/login');
 });
 
-
 Auth::routes();
-Route::get('panel/login', LoginController::class)->middleware('guest')->name('panel.login');
 Route::get('beranda', [BerandaController::class, 'beranda'])->name('beranda');
 Route::get('product/{product}/show', [BerandaController::class, 'productShow'])->name('product.show');
 
@@ -77,10 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('order/{product}/create', [OrderController::class, 'create'])->name('order.create');
 		Route::post('order/{product}/create', [OrderController::class, 'store'])->name('order.store');
 		Route::get('order/{sale}/payment', [OrderController::class, 'payment'])->name('order.payment');
+		Route::get('order/{sale}/result', [OrderController::class, 'result'])->name('order.result');
 
 		Route::get('bank-search', [BankController::class, 'searchBank']);
 		Route::get('province-search', [OrderController::class, 'searchProvince']);
-		Route::get('city-search/{province_id}', [OrderController::class, 'searchBank']);
+		Route::get('city-search/{province_id}', [OrderController::class, 'searchCity']);
 	});
 
 });

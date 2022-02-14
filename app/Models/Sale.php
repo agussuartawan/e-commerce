@@ -25,5 +25,14 @@ class Sale extends Model
         'payment_status',
         'delivery_status',
         'is_received',
+        'product_color_id',
+        'product_fragrance_id',
+        'due_date',
+        'is_cancel',
     ];
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\CarbonInterval;
 use DB;
 
 class OrderController extends Controller
@@ -26,7 +27,8 @@ class OrderController extends Controller
     public function store(Request $request, Product $product)
     {
         if($product->stock >= $request->qty){
-            DB::transaction(function () use ($request, $product){
+            $result = '';
+            DB::transaction(function () use ($request, $product, &$result){
                 // membuat nomor penjualan otomatis
                 $now = Carbon::now();
                 $year_month = $now->year . $now->month;
@@ -48,6 +50,8 @@ class OrderController extends Controller
                     'province_id.required' => 'Provinsi tidak boleh kosong!',
                     'city_id.required' => 'Kota tidak boleh kosong!',
                     'bank_id.required' => 'Bank tidak boleh kosong!',
+                    'product_color_id.required' => 'Mohon pilih warna produk!',
+                    'product_fragrance_id.required' => 'Mohon pilih aroma product!',
                 ];
 
                 $validated = $request->validate([
@@ -56,11 +60,16 @@ class OrderController extends Controller
                     'province_id' => ['required'],
                     'city_id' => ['required'],
                     'bank_id' => ['required'],
+                    'product_color_id' => ['required'],
+                    'product_fragrance_id' => ['required'],
                 ], $messages);
 
                 //hitung grand total
                 $price = $product->selling_price;
                 $grand_total = (int)$price * (int)$validated['qty'];
+
+                // hitung tanggal jatuh tempo
+                $due_date = $now->addDay();
 
                 //insert ke table sales
                 $sale = Sale::create([
@@ -79,19 +88,33 @@ class OrderController extends Controller
                     'province_id' => $validated['province_id'],
                     'city_id' => $validated['city_id'],
                     'bank_id' => $validated['bank_id'],
+                    'product_color_id' => $validated['product_color_id'],
+                    'product_fragrance_id' => $validated['product_fragrance_id'],
+                    'due_date' => $due_date
                 ]);
 
                 //potong stok di table products
                 $product->stock = (int)$product->stock - (int)$validated['qty'];
                 $product->save();
 
-                return response('/order/' . $sale->id . '/payment');
+                $result = '/order/' . $sale->id . '/result';
+                return $result;
             });
+
+            return $result;
         } else {
             return response()->json([
                 'errors' => ['qty' => [0 => 'Stok tidak mencukupi!']]
             ], 404);
         }
+    }
+
+    public function result(Sale $sale)
+    {
+        $due = Carbon::parse($sale->created_at)->addDay()->format('Y m d H:i:s');
+        $now = Carbon::now()->format('Y m d H:i:s');
+        
+        return view('beranda.result', compact('sale', 'due', 'now'));
     }
 
     public function searchProvince(Request $request)
@@ -100,7 +123,7 @@ class OrderController extends Controller
         return Province::where('name', 'LIKE', "%$search%")->select('id', 'name')->get();
     }
 
-    public function searchBank(Request $request, $province_id)
+    public function searchCity(Request $request)
     {
         $search = $request->search;
         return City::where('name', 'LIKE', "%$search%")->where('province_id', $request->province_id)->select('id', 'name')->get();

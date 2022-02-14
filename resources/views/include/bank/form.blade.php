@@ -14,5 +14,10 @@
     {!! Form::text('account_number', null, ['class' => 'form-control', 'id' => 'account_number']) !!}
 </div>
 
+<div class="form-group">
+    <label for="account_name">{{ __('Rekening Atas Nama') }}</label>
+    {!! Form::text('account_name', null, ['class' => 'form-control', 'id' => 'account_name']) !!}
+</div>
+
 
 {!! Form::close() !!}
