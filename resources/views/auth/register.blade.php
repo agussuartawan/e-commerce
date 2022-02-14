@@ -131,7 +131,7 @@
                                         <button type="submit" class="btn btn-primary btn-block mb-2">
                                             {{ __('Daftar') }}
                                         </button>
-                                        <p class="text-center">Sudah punya akun? <a href="{{route('panel.login')}}">Login</a></p>
+                                        <p class="text-center">Sudah punya akun? <a href="{{route('login')}}">Login</a></p>
                                     </div>
                                 </div>
                             </form>

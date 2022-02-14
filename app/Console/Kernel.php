@@ -20,7 +20,11 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             Sale::where('due_date', '<' , Carbon::now())
                 ->where('payment_status', 'menunggu pembayaran')
-                ->update(['is_cancle' => 1]);
+                ->update([
+                    'is_cancle' => 1,
+                    'delivery_status' => 'dibatalkan',
+                    'payment_status' => 'dibatalkan',
+                ]);
         })->hourly();;
     }
 

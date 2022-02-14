@@ -38,11 +38,11 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             {!! Form::open([
-    'route' => 'products.store',
-    'method' => 'POST',
-    'id' => 'form-product',
-    'files' => true,
-]) !!}
+                                'route' => 'products.store',
+                                'method' => 'POST',
+                                'id' => 'form-product',
+                                'files' => true,
+                            ]) !!}
 
                             <div class="row mb-3">
                                 <div class="col">

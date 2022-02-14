@@ -35,4 +35,34 @@ class Sale extends Model
     {
         return $this->belongsTo(Bank::class);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function product_color()
+    {
+        return $this->belongsTo(ProductColor::class);
+    }
+
+    public function product_fragrance()
+    {
+        return $this->belongsTo(ProductFragrance::class);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Panel\BankController;
 use App\Http\Controllers\Beranda\OrderController;
@@ -7,7 +8,9 @@ use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
 use App\Http\Controllers\Panel\CustomerController;
 use App\Http\Controllers\Beranda\BerandaController;
+use App\Http\Controllers\Beranda\PaymentController;
 use App\Http\Controllers\Panel\DashboardController;
+use App\Http\Controllers\Beranda\DeliveryController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\ProductFragranceController;
@@ -73,12 +76,19 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses beranda'], function () {
 		Route::get('order/{product}/create', [OrderController::class, 'create'])->name('order.create');
 		Route::post('order/{product}/create', [OrderController::class, 'store'])->name('order.store');
-		Route::get('order/{sale}/payment', [OrderController::class, 'payment'])->name('order.payment');
 		Route::get('order/{sale}/result', [OrderController::class, 'result'])->name('order.result');
+		Route::get('order/{sale}/show', [OrderController::class, 'show'])->name('order.show');
 
-		Route::get('bank-search', [BankController::class, 'searchBank']);
 		Route::get('province-search', [OrderController::class, 'searchProvince']);
 		Route::get('city-search/{province_id}', [OrderController::class, 'searchCity']);
+
+		Route::get('payment/{sale}/create', [PaymentController::class, 'create'])->name('payment.create');
+		Route::get('payment', [PaymentController::class, 'index'])->name('payment.index');
+		Route::post('payment/{sale}', [PaymentController::class, 'store'])->name('payment.store');
+
+		Route::get('delivery', [DeliveryController::class, 'index'])->name('delivery.index');
+
+		Route::get('bank-search', [BankController::class, 'searchBank']);
 	});
 
 });

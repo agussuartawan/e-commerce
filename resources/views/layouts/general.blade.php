@@ -39,12 +39,12 @@
                         </li>
                     @else
                         @can('akses beranda')
-                            <li class="nav-item {{ request()->is('payment') ? 'active' : '' }}">
-                                <a class="nav-link" href="#">Pembayaran</a>
+                            <li class="nav-item {{ request()->is('payment*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('payment.index') }}">Pembayaran</a>
                             </li>
 
-                            <li class="nav-item {{ request()->is('delivery') ? 'active' : '' }}">
-                                <a class="nav-link" href="#">Pengiriman</a>
+                            <li class="nav-item {{ request()->is('order*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('delivery.index') }}">Pesanan</a>
                             </li>
                         @endcan
                     @endguest

@@ -8,10 +8,10 @@
     @endpush
     <div class="container py-2">
         {!! Form::open([
-    'route' => ['order.store', $product->id],
-    'method' => 'POST',
-    'id' => 'form-order',
-]) !!}
+            'route' => ['order.store', $product->id],
+            'method' => 'POST',
+            'id' => 'form-order',
+        ]) !!}
 
         <div class="card">
             <div class="card-header">
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row fragrance-row">
                                     <div class="col">
                                         @foreach ($product->product_fragrance as $key => $fragrance)
                                             <div class="custom-control custom-radio custom-control-inline">
@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row color-row">
                                     <div class="col">
                                         @foreach ($product->product_color as $key => $color)
                                             <div class="custom-control custom-radio custom-control-inline">

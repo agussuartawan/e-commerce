@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Beranda;
 
+use DB;
 use Carbon\Carbon;
 use App\Models\Bank;
 use App\Models\City;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Province;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Carbon\CarbonInterval;
-use DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -34,7 +35,7 @@ class OrderController extends Controller
                 $year_month = $now->year . $now->month;
                 $sale_count = Sale::count();
                 if($sale_count == 0){
-                    $number = 10000;
+                    $number = 10001;
                     $fullnumber = 'CVMN' . $year_month . $number;
                 } else {
                     $number = Sale::all()->last();
@@ -111,6 +112,9 @@ class OrderController extends Controller
 
     public function result(Sale $sale)
     {
+        if($sale->user_id != Auth::user()->id){
+            abort(404);
+        }
         $due = Carbon::parse($sale->created_at)->addDay()->format('Y m d H:i:s');
         $now = Carbon::now()->format('Y m d H:i:s');
         
@@ -127,5 +131,10 @@ class OrderController extends Controller
     {
         $search = $request->search;
         return City::where('name', 'LIKE', "%$search%")->where('province_id', $request->province_id)->select('id', 'name')->get();
+    }
+
+    public function show(Sale $sale)
+    {
+        return view('beranda.order.show', compact('sale'));
     }
 }

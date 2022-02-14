@@ -29,6 +29,7 @@ $(function () {
 
                 $(".form-control").removeClass("is-invalid");
                 $(".invalid-feedback").remove();
+                $(".text-danger").remove();
 
                 $.ajax({
                     url: url,
@@ -59,6 +60,12 @@ $(function () {
                                         .after(
                                             `<span class="invalid-feedback">${value}</span>`
                                         );
+                                    if(key === 'product_fragrance_id'){
+                                        $('.fragrance-row').after(`<small class="text-danger">${value}</small>`);
+                                    }
+                                    if(key === 'product_color_id'){
+                                        $('.color-row').after(`<small class="text-danger">${value}</small>`);
+                                    }
                                 }
                             });
                         }
