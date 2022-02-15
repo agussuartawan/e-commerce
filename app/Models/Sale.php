@@ -65,4 +65,9 @@ class Sale extends Model
     {
         return $this->belongsTo(ProductFragrance::class);
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

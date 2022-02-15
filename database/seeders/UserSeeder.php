@@ -32,6 +32,7 @@ class UserSeeder extends Seeder
 			$dashboard = Permission::create(['name' => 'akses dashboard']);
 			$user = Permission::create(['name' => 'akses user']);
 
+			$superadmin_role = Role::create(['name' => 'Super Admin']);
 			$admin_role = Role::create(['name' => 'Admin']);
 			$accounting_role = Role::create(['name' => 'Akunting']);
 			$warehouse_role = Role::create(['name' => 'Staff Gudang']);
@@ -44,6 +45,11 @@ class UserSeeder extends Seeder
 			$owner_role->syncPermissions([$laporan, $user, $dashboard]);
 			$customer_role->syncPermissions([$beranda]);
 
+			$superadmin = User::create([
+				'name' => 'SuperAdmin',
+				'email' => 'superadmin@gmail.com',
+				'password' => Hash::make('password')
+			]);
 
 			$admin = User::create([
 				'name' => 'Admin',
@@ -69,6 +75,7 @@ class UserSeeder extends Seeder
 				'password' => Hash::make('password')
 			]);
 
+			$superadmin->assignRole($superadmin_role);
 			$admin->assignRole($admin_role);
 			$warehouse->assignRole($warehouse_role);
 			$accounting->assignRole($accounting_role);

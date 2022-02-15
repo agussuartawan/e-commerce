@@ -16,7 +16,7 @@ CountDownTimer = () => {
     function showRemaining() {
         const now = new Date();
         var distance = end - now;
-        console.log(distance);
+
         if (distance <= 0) {
             clearInterval(timer);
             $("#countdown").text("Batas waktu telah habis!");

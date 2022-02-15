@@ -9,7 +9,6 @@ use App\Models\City;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Province;
-use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -75,7 +74,7 @@ class OrderController extends Controller
                 //insert ke table sales
                 $sale = Sale::create([
                     'sale_number' => $fullnumber,
-                    'date' => $now,
+                    'date' => Carbon::now(),
                     'qty' => $validated['qty'],
                     'note' => $request->note,
                     'address' => $validated['address'],
@@ -114,7 +113,12 @@ class OrderController extends Controller
     {
         if($sale->user_id != Auth::user()->id){
             abort(404);
+        } else if($sale->payment_status == 'lunas' || $sale->payment_status == 'menunggu konfirmasi'){
+            return redirect()->route('order.show', $sale);
+        } else if($sale->payment_status == 'dibatalkan'){
+            return redirect()->route('beranda');
         }
+        
         $due = Carbon::parse($sale->created_at)->addDay()->format('Y m d H:i:s');
         $now = Carbon::now()->format('Y m d H:i:s');
         
@@ -135,6 +139,9 @@ class OrderController extends Controller
 
     public function show(Sale $sale)
     {
+        if($sale->payment_status == 'menunggu pembayaran'){
+            return redirect()->route('order.result', $sale);
+        }
         return view('beranda.order.show', compact('sale'));
     }
 }

@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{route('dashboard')}}" class="brand-link">
+    <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('img/logo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
         <span class="brand-text font-weight-bold">CV. Murni Sejati</span>
@@ -92,7 +92,8 @@
 
                 @can('akses pembayaran')
                     <li class="nav-item">
-                        <a href="pages/widgets.html" class="nav-link {{ request()->is('payments*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.index') }}"
+                            class="nav-link {{ request()->is('payments*') ? 'active' : '' }}">
                             <i class="far fa-solid fa-credit-card nav-icon"></i>
                             <p>
                                 Pembayaran
@@ -103,7 +104,8 @@
 
                 @can('akses penjualan')
                     <li class="nav-item">
-                        <a href="pages/widgets.html" class="nav-link {{ request()->is('sales*') ? 'active' : '' }}">
+                        <a href="{{ route('sales.index') }}"
+                            class="nav-link {{ request()->is('sales*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart nav-icon"></i>
                             <p>
                                 Penjualan

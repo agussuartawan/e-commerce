@@ -8,12 +8,14 @@ use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
 use App\Http\Controllers\Panel\CustomerController;
 use App\Http\Controllers\Beranda\BerandaController;
-use App\Http\Controllers\Beranda\PaymentController;
+use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
+use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Panel\DashboardController;
 use App\Http\Controllers\Beranda\DeliveryController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\ProductFragranceController;
+use App\Http\Controllers\Panel\SaleController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -82,13 +84,27 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('province-search', [OrderController::class, 'searchProvince']);
 		Route::get('city-search/{province_id}', [OrderController::class, 'searchCity']);
 
-		Route::get('payment/{sale}/create', [PaymentController::class, 'create'])->name('payment.create');
-		Route::get('payment', [PaymentController::class, 'index'])->name('payment.index');
-		Route::post('payment/{sale}', [PaymentController::class, 'store'])->name('payment.store');
+		Route::get('payment/{sale}/create', [BerandaPaymentController::class, 'create'])->name('payment.create');
+		Route::get('payment', [BerandaPaymentController::class, 'index'])->name('payment.index');
+		Route::post('payment/{sale}', [BerandaPaymentController::class, 'store'])->name('payment.store');
 
 		Route::get('delivery', [DeliveryController::class, 'index'])->name('delivery.index');
+		Route::put('delivery/{sale}/received', [DeliveryController::class, 'deliveryReceived'])->name('delivery.received');
 
 		Route::get('bank-search', [BankController::class, 'searchBank']);
 	});
 
+	// route data penjualan admin
+	Route::group(['middleware' => 'can:akses penjualan'], function () {
+		Route::put('sale/{sale}/confirm', [SaleController::class, 'deliveryConfirm']);
+		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
+		Route::resource('sales', SaleController::class)->except('destroy');
+	});
+
+	// route data pembayaran admin
+	Route::group(['middleware' => 'can:akses pembayaran'], function () {
+		Route::get('payment/get-list', [PanelPaymentController::class, 'getPaymentList']);
+		Route::put('payment/{sale}/confirm', [PanelPaymentController::class, 'paymentConfirm']);
+		Route::resource('payments', PanelPaymentController::class)->except('destroy');
+	});
 });
