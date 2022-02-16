@@ -69,10 +69,14 @@ $(function () {
         $("#daterange").change(function () {
             dTable.draw();
         });
+    });
 
-        $(".modal-footer").append(
-            '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
-        );
+    inputQtyMask();
+
+    $('body').on('change', ".input-number", function () {
+        var price = $("#price").val();
+        var qty = $(this).val();
+        countGrandTotal(qty, price);
     });
 
     $("body").on("click", ".btn-confirm", function (event) {
@@ -133,10 +137,108 @@ $(function () {
             type: "GET",
             dataType: "html",
             success: function (response) {
+                $(".modal-footer").append(
+                    '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
+                );
                 $(".modal-body").html(response);
             },
             error: function (xhr, status) {
+                $("#modal").modal("hide");
                 alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $("body").on("click", ".modal-edit", function (event) {
+        event.preventDefault();
+        $("#modal").modal("show");
+
+        var me = $(this),
+            url = me.attr("href"),
+            title = me.attr("title");
+
+        $(".modal-title").text(title);
+        $(".print-sale").remove();
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+                const product_id = $('#product_id').val();
+                const sale_id = $('#sale_id').val();
+                const province_id = $('#province_id').val();
+
+                searchBank();
+                searchProvince();
+                searchCustomer();
+                searchCity(province_id);
+                searchProduct();
+                showVariant(product_id, sale_id);
+
+                const price = $("#price").val();
+                const qty = $(".input-number").val();
+                countGrandTotal(qty, price);
+            },
+            error: function (xhr, status) {
+                $("#modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $(".modal-save").on("click", function (event) {
+        event.preventDefault();
+
+        var form = $("#form-order"),
+            url = form.attr("action"),
+            method = "PUT",
+            message = "Data penjualan berhasil diubah";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $(".btn").attr("disabled", true);
+            },
+            complete: function () {
+                $(".btn").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+                $("#sale-table").DataTable().ajax.reload();
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        if (key === "qty") {
+                            $("#qty").addClass("is-invalid");
+                            $("#input-qty").append(
+                                `<span class="invalid-feedback">${value}</span>`
+                            );
+                        } else {
+                            $("#" + key)
+                                .addClass("is-invalid")
+                                .after(
+                                    `<span class="invalid-feedback">${value}</span>`
+                                );
+                            if(key === 'product_fragrance_id'){
+                                $('.fragrance-row').after(`<small class="text-danger">${value}</small>`);
+                            }
+                            if(key === 'product_color_id'){
+                                $('.color-row').after(`<small class="text-danger">${value}</small>`);
+                            }
+                        }
+                    });
+                }
             },
         });
     });
@@ -148,4 +250,276 @@ showSuccessToast = (message) => {
 
 showErrorToast = () => {
     Swal.fire("Opps..", "Terjadi kesalahan", "error");
+};
+
+inputQtyMask = () => {
+    $("body").on("click", ".btn-number", function (event) {
+        event.preventDefault();
+        const fieldName = $(this).attr("data-field"),
+            type = $(this).attr("data-type"),
+            input = $('input[name="qty"]');
+
+        var currentVal = parseInt(input.val());
+        if (!isNaN(currentVal)) {
+            if (type == "minus") {
+                if (currentVal > input.attr("min")) {
+                    input.val(currentVal - 1).change();
+                }
+                if (parseInt(input.val()) == input.attr("min")) {
+                    $(this).attr("disabled", true);
+                }
+            } else if (type == "plus") {
+                if (currentVal < input.attr("max")) {
+                    input.val(currentVal + 1).change();
+                }
+                if (parseInt(input.val) == input.attr("max")) {
+                    $(this).attr("disabled", true);
+                }
+            } else {
+                input.val(0);
+            }
+        }
+    });
+
+    $('body').on('focusin', ".input-number", function () {
+        $(this).data("oldValue", $(this).val());
+    });
+
+    $('body').on('change', ".input-number", function () {
+        minValue = parseInt($(this).attr("min"));
+        maxValue = parseInt($(this).attr("max"));
+        valueCurrent = parseInt($(this).val());
+
+        name = $(this).attr("name");
+        if (valueCurrent >= minValue) {
+            $(
+                ".btn-number[data-type='minus'][data-field='" + name + "']"
+            ).removeAttr("disabled");
+        } else {
+            $(this).val($(this).data("oldValue"));
+        }
+        if (valueCurrent <= maxValue) {
+            $(
+                ".btn-number[data-type='plus'][data-field='" + name + "']"
+            ).removeAttr("disabled");
+        } else {
+            $(this).val($(this).data("oldValue"));
+        }
+    });
+    $('body').on('keydown', ".input-number", function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if (
+            $.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)
+        ) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if (
+            (e.shiftKey || e.keyCode < 48 || e.keyCode > 57) &&
+            (e.keyCode < 96 || e.keyCode > 105)
+        ) {
+            e.preventDefault();
+        }
+    });
+}
+
+searchProvince = () => {
+    $("#province_id")
+        .select2({
+            theme: "bootstrap4",
+            ajax: {
+                url: "/province-search",
+                dataType: "json",
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                            };
+                        }),
+                    };
+                },
+            },
+            placeholder: "Cari provinsi",
+            cache: true,
+        })
+        .on("change", function () {
+            const province_id = $(this).val();
+            searchCity(province_id);
+        });
+};
+
+searchCustomer = () => {
+    $("#customer_id")
+        .select2({
+            theme: "bootstrap4",
+            ajax: {
+                url: "/customer-search",
+                dataType: "json",
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.fullname,
+                                id: item.id,
+                                address: item.address
+                            };
+                        }),
+                    };
+                },
+            },
+            placeholder: "Cari pelanggan",
+            cache: true,
+        })
+        .on("select2:select", function (event) {
+            const customer_id = $(this).val();
+            $('#address').val(event.params.data.address);
+        });
+};
+
+searchBank = () => {
+    $("#bank_id").select2({
+        theme: "bootstrap4",
+        ajax: {
+            url: "/bank-search",
+            dataType: "json",
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                };
+
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id,
+                        };
+                    }),
+                };
+            },
+        },
+        placeholder: "Cari bank",
+        cache: true,
+    });
+};
+
+searchCity = (province_id) => {
+    $("#city_id").select2({
+        theme: "bootstrap4",
+        ajax: {
+            url: "/city-search/" + province_id,
+            dataType: "json",
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                };
+
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id,
+                        };
+                    }),
+                };
+            },
+        },
+        placeholder: "Cari kota",
+        cache: true,
+    });
+};
+
+searchProduct = () => {
+    $("#product_id").select2({
+        theme: "bootstrap4",
+        ajax: {
+            url: "/product-search",
+            dataType: "json",
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                };
+    
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.product_name,
+                            id: item.id,
+                        };
+                    }),
+                };
+            },
+        },
+        placeholder: "Cari provinsi",
+        cache: true,
+    })
+    .on("change", function () {
+        const product_id = $(this).val();
+        const sale_id = $('#sale_id').val();
+        showVariant(product_id, sale_id);
+    });
+}
+
+showVariant = (product_id, sale_id) => {
+    $.ajax({
+        url: `/sale/${product_id}/${sale_id}/get-variant-list`,
+        type: "GET",
+        dataType: "html",
+        success: function (response) {
+            $("#load-variant-here").html(response);
+        },
+        error: function (xhr, status) {
+            $("#modal").modal("hide");
+            alert("Terjadi kesalahan");
+        },
+    });
+}
+
+rupiah = (bilangan) => {
+    var number_string = bilangan.toString(),
+        sisa = number_string.length % 3,
+        rupiah = number_string.substr(0, sisa),
+        ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+    if (ribuan) {
+        separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+    }
+
+    // Cetak hasil
+    return rupiah;
+};
+
+countGrandTotal = (qty, price) => {
+    var grand_total = parseInt(price) * parseInt(qty);
+    $("#grand_total").text(rupiah(grand_total));
 };

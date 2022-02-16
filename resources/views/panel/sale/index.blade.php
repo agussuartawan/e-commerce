@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 @endpush
 
 @section('content')
@@ -81,7 +83,8 @@
     <script src="/plugins/moment/moment.min.js"></script>
     <script src="/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-
+    
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>

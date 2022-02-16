@@ -2,8 +2,8 @@
 @section('title', 'Order')
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
         <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+        <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
         <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     @endpush
     <div class="container py-2">
@@ -20,16 +20,10 @@
 
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col">
                         <h4>{{ $product->product_name }}</h4>
                         <h5>Rp. {{ rupiah($product->selling_price) }} / {{ $product->product_unit->name }}</h5>
                         <input type="hidden" id="price" value="{{ $product->selling_price }}">
-                    </div>
-                    <div class="col text-right">
-                        <h4>Total (Rp)</h4>
-                    </div>
-                    <div class="d-flex flex-column text-right pr-3">
-                        <h4 id="grand_total">0</h4>
                     </div>
                 </div>
 
@@ -113,15 +107,6 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="address">Tujuan Pengiriman</label>
-                            {!! Form::textarea('address', auth()->user()->customer->address, ['class' => 'form-control', 'rows' => 2, 'id' => 'address']) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="province">Provinsi</label>
@@ -142,6 +127,24 @@
                             {!! Form::select('bank_id', [], null, ['class' => 'form-control custom-select', 'id' => 'bank_id']) !!}
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="address">Tujuan Pengiriman</label>
+                            {!! Form::textarea('address', auth()->user()->customer->address, ['class' => 'form-control', 'rows' => 2, 'id' => 'address']) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-right">
+                    <h4>Total (Rp)</h4>
+                </div>
+                <div class="d-flex flex-column text-right pr-5">
+                    <h4 id="grand_total">0</h4>
                 </div>
             </div>
 

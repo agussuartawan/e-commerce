@@ -75,6 +75,16 @@ $(function () {
         });
     });
 
+    inputQtyMask();
+
+    $(".input-number").change(function () {
+        var price = $("#price").val();
+        var qty = $(this).val();
+        countGrandTotal(qty, price);
+    });
+});
+
+inputQtyMask = () => {
     $("body").on("click", ".btn-number", function (event) {
         event.preventDefault();
         const fieldName = $(this).attr("data-field"),
@@ -118,7 +128,6 @@ $(function () {
                 ".btn-number[data-type='minus'][data-field='" + name + "']"
             ).removeAttr("disabled");
         } else {
-            alert("Maaf, maximum qty telah dicapai");
             $(this).val($(this).data("oldValue"));
         }
         if (valueCurrent <= maxValue) {
@@ -126,7 +135,6 @@ $(function () {
                 ".btn-number[data-type='plus'][data-field='" + name + "']"
             ).removeAttr("disabled");
         } else {
-            alert("Maaf, minimum qty telah dicapai");
             $(this).val($(this).data("oldValue"));
         }
     });
@@ -150,13 +158,7 @@ $(function () {
             e.preventDefault();
         }
     });
-
-    $(".input-number").change(function () {
-        var price = $("#price").val();
-        var qty = $(this).val();
-        countGrandTotal(qty, price);
-    });
-});
+}
 
 searchProvince = () => {
     $("#province_id")

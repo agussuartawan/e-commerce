@@ -189,4 +189,10 @@ class ProductController extends Controller
             ->rawColumns(['action', 'category', 'selling_price'])
             ->make(true);
     }
+
+    public function searchProduct(Request $request)
+    {
+        $search = $request->search;
+        return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name')->get();
+    }
 }

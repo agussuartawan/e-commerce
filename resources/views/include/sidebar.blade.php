@@ -1,3 +1,6 @@
+@php   
+    $user = auth()->user();
+@endphp
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -15,7 +18,7 @@
                 <img src="/img/null-avatar.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="pb-3 info">
-                <a href="#">{{ auth()->user()->name }}</a>
+                <a href="#">{{ $user->name }}</a>
             </div>
         </div>
 
@@ -24,7 +27,19 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                @if (auth()->user()->hasAnyPermission(['akses kategori', 'akses barang', 'akses akun', 'akses bank', 'akses pelanggan']))
+                @can('akses user')
+                    <li class="nav-item">
+                        <a href="{{ route('users.index') }}"
+                            class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
+                            <i class="fas fa-users nav-icon"></i>
+                            <p>
+                                User
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+
+                @if($user->can('akses barang') || $user->can('akses kategori') || $user->can('akses pelanggan') || $user->can('akses bank') || $user->can('akses akun'))
                     <li
                         class="nav-item {{ request()->is('categories*') ||request()->is('products*') ||request()->is('banks*') ||request()->is('accounts') ||request()->is('customers*')? 'menu-open': '' }}">
                         <a href="#" class="nav-link">
@@ -121,18 +136,6 @@
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Jurnal Umum
-                            </p>
-                        </a>
-                    </li>
-                @endcan
-
-                @can('akses user')
-                    <li class="nav-item">
-                        <a href="{{ route('users.index') }}"
-                            class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
-                            <i class="fas fa-users nav-icon"></i>
-                            <p>
-                                User
                             </p>
                         </a>
                     </li>

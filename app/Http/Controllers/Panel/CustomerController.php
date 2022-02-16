@@ -144,4 +144,10 @@ class CustomerController extends Controller
             ->rawColumns(['action', 'email'])
             ->make(true);
     }
+
+    public function searchCustomer(Request $request)
+    {
+        $search = $request->search;
+        return Customer::where('fullname', 'LIKE', "%$search%")->select('id', 'fullname', 'address')->get();
+    }
 }

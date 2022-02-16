@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::group(['middleware' => 'can:akses barang'], function () {
 		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
+		Route::get('product-search', [ProductController::class, 'searchProduct']);
 		Route::resource('products', ProductController::class)->except('destroy');
 		
 		#product color route
@@ -67,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses pelanggan'], function () {
 		Route::get('customers/get-list', [CustomerController::class, 'getCustomerLists']);
 		Route::resource('customers', CustomerController::class)->except('destroy', 'show');
+		Route::get('customer-search', [CustomerController::class, 'searchCustomer']);
 	});
 
 	# bank route
@@ -99,6 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses penjualan'], function () {
 		Route::put('sale/{sale}/confirm', [SaleController::class, 'deliveryConfirm']);
 		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
+		Route::get('sale/{product}/{sale}/get-variant-list', [SaleController::class, 'getVariantList']);
 		Route::resource('sales', SaleController::class)->except('destroy', 'create', 'store');
 	});
 

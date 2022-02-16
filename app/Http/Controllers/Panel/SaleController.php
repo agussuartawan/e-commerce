@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Controllers\Controller;
-use App\Models\Sale;
 use Carbon\Carbon;
+use App\Models\Bank;
+use App\Models\City;
+use App\Models\Sale;
+use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class SaleController extends Controller
 {
@@ -42,7 +48,12 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-        return view('include.sale.edit', compact('sale'));
+        $provinces = Province::pluck('name', 'id');
+        $cities = City::pluck('name', 'id');
+        $banks = Bank::pluck('name', 'id');
+        $customers = Customer::pluck('fullname', 'id');
+        $products = Product::pluck('product_name', 'id');
+        return view('include.sale.edit', compact('customers', 'sale', 'provinces', 'cities', 'banks', 'products'));
     }
 
     /**
@@ -54,31 +65,65 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        // validasi input
-        $messages = [
-            'qty.required' => 'Qty tidak boleh kosong!',
-            'qty.integer' => 'Qty harus angka!',
-            'address.required' => 'Tujuan Pengiriman tidak boleh kosong!',
-            'province_id.required' => 'Provinsi tidak boleh kosong!',
-            'city_id.required' => 'Kota tidak boleh kosong!',
-            'bank_id.required' => 'Bank tidak boleh kosong!',
-            'product_color_id.required' => 'Mohon pilih warna produk!',
-            'product_fragrance_id.required' => 'Mohon pilih aroma product!',
-        ];
+        // balikin stok produk ke semula
+        $product = Product::findOrFail($request->product_id)->first();
+        $product->stock = (int)$product->stock + (int)$sale->qty;
+        $product->save();
 
-        $validated = $request->validate([
-            'product_id' => ['required'],
+        if($product->stock >= $request->qty){
+            DB::transaction(function () use ($request, $product, $sale){
+                // validasi input
+                $messages = [
+                    'qty.required' => 'Qty tidak boleh kosong!',
+                    'qty.integer' => 'Qty harus angka!',
+                    'address.required' => 'Tujuan Pengiriman tidak boleh kosong!',
+                    'province_id.required' => 'Provinsi tidak boleh kosong!',
+                    'city_id.required' => 'Kota tidak boleh kosong!',
+                    'bank_id.required' => 'Bank tidak boleh kosong!',
+                    'product_color_id.required' => 'Mohon pilih warna produk!',
+                    'product_fragrance_id.required' => 'Mohon pilih aroma product!',
+                ];
 
-            'qty' => ['required', 'integer'],
-            'address' => ['required'],
-            'province_id' => ['required'],
-            'city_id' => ['required'],
-            'bank_id' => ['required'],
-            'product_color_id' => ['required'],
-            'product_fragrance_id' => ['required'],
-        ], $messages);
+                $validated = $request->validate([
+                    'product_id' => ['required'],
+                    'customer_id' => ['required'],
+                    'province_id' => ['required'],
+                    'city_id' => ['required'],
+                    'product_color_id' => ['required'],
+                    'product_fragrance_id' => ['required'],
 
-        // return $sale->update($validated);
+                    'qty' => ['required', 'integer'],
+                    'address' => ['required'],
+                    'date' => ['required'],
+                ], $messages);
+
+                //hitung grand total
+                $price = $product->selling_price;
+                $grand_total = (int)$price * (int)$validated['qty'];
+
+                // hitung tanggal jatuh tempo
+                $date = Carbon::parse($validated['date']);
+                $due_date = $date->addDay();
+                
+                $user_id = Customer::find($validated['customer_id'])->first()->id;
+                
+                $validated['user_id'] = $user_id;
+                $validated['grand_total'] = $grand_total;
+                $validated['due_date'] = $due_date;
+
+                $sale->update($validated);
+                
+                //potong stok di table products
+                $product->stock = (int)$product->stock - (int)$validated['qty'];
+                $product->save();
+
+                return $sale;
+            });
+        } else {
+            return response()->json([
+                'errors' => ['qty' => [0 => 'Stok tidak mencukupi!']]
+            ], 404);
+        }
     }
 
     public function getSaleList(Request $request)
@@ -158,5 +203,10 @@ class SaleController extends Controller
         $sale->save();
 
         return $sale;
+    }
+
+    public function getVariantList(Product $product, Sale $sale)
+    {
+        return view('include.sale.variant', compact('product', 'sale'));
     }
 }
