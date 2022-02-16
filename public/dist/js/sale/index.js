@@ -42,16 +42,7 @@ $(function () {
                 { data: "delivery_status", name: "delivery_status" },
                 { data: "action", name: "action", orderable: false },
             ],
-            dom: "<'row'<'col'B><'col filter'><'col'f>>tipr",
-            buttons: [
-                {
-                    text: "Tambah",
-                    className: "btn btn-info",
-                    action: function (e, dt, node, config) {
-                        window.location.href = "/products/create";
-                    },
-                },
-            ],
+            dom: "<'row'<'col-sm-3 mb-1 filter'><'col'f>>tipr",
             initComplete: function (settings, json) {
                 $('input[type="search"').unbind();
                 $('input[type="search"').bind("keyup", function (e) {
@@ -79,37 +70,9 @@ $(function () {
             dTable.draw();
         });
 
-        $("select")
-            .select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "/categories-search",
-                    dataType: "json",
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                        };
-
-                        return query;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.name,
-                                    id: item.id,
-                                };
-                            }),
-                        };
-                    },
-                },
-                placeholder: "Cari kategori",
-                cache: true,
-                allowClear: true,
-            })
-            .on("change", function () {
-                dTable.draw();
-            });
+        $(".modal-footer").append(
+            '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
+        );
     });
 
     $("body").on("click", ".btn-confirm", function (event) {

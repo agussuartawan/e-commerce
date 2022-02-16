@@ -45,16 +45,7 @@ $(function () {
                 { data: "payment_status", name: "payment_status" },
                 { data: "action", name: "action", orderable: false },
             ],
-            dom: "<'row'<'col'B><'col filter'><'col'f>>tipr",
-            buttons: [
-                {
-                    text: "Tambah",
-                    className: "btn btn-info",
-                    action: function (e, dt, node, config) {
-                        window.location.href = "/products/create";
-                    },
-                },
-            ],
+            dom: "<'row'<'col-sm-3 mb-1 filter'><'col'f>>tipr",
             initComplete: function (settings, json) {
                 $('input[type="search"').unbind();
                 $('input[type="search"').bind("keyup", function (e) {
@@ -83,6 +74,47 @@ $(function () {
         });
     });
 
+    $(".modal-save").on("click", function (event) {
+        event.preventDefault();
+
+        var form = $("#form-payment"),
+            url = form.attr("action"),
+            method = "PUT",
+            message = "Data pembayaran berhasil diubah";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $(".btn").attr("disabled", true);
+            },
+            complete: function () {
+                $(".btn").removeAttr("disabled");
+            },
+            success: function (response) {
+                $("#modal").modal("hide");
+                $("#payment-table").DataTable().ajax.reload();
+                showSuccessToast(message);
+            },
+            error: function (xhr) {
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<small class="invalid-feedback">${value}</small>`
+                            );
+                    });
+                }
+            },
+        });
+    });
+
     $("body").on("click", ".btn-show", function (event) {
         event.preventDefault();
         $("#modal").modal("show");
@@ -93,6 +125,29 @@ $(function () {
 
         $(".modal-title").text(title);
         $(".modal-save").remove();
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+            },
+            error: function (xhr, status) {
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $("body").on("click", ".modal-edit", function (event) {
+        event.preventDefault();
+        $("#modal").modal("show");
+
+        var me = $(this),
+            url = me.attr("href"),
+            title = me.attr("title");
+
+        $(".modal-title").text(title);
 
         $.ajax({
             url: url,

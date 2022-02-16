@@ -24,35 +24,14 @@ class SaleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Sale $sale)
     {
-        //
+        return view('include.sale.show', compact('sale'));
     }
 
     /**
@@ -61,9 +40,9 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Sale $sale)
     {
-        //
+        return view('include.sale.edit', compact('sale'));
     }
 
     /**
@@ -73,9 +52,33 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Sale $sale)
     {
-        //
+        // validasi input
+        $messages = [
+            'qty.required' => 'Qty tidak boleh kosong!',
+            'qty.integer' => 'Qty harus angka!',
+            'address.required' => 'Tujuan Pengiriman tidak boleh kosong!',
+            'province_id.required' => 'Provinsi tidak boleh kosong!',
+            'city_id.required' => 'Kota tidak boleh kosong!',
+            'bank_id.required' => 'Bank tidak boleh kosong!',
+            'product_color_id.required' => 'Mohon pilih warna produk!',
+            'product_fragrance_id.required' => 'Mohon pilih aroma product!',
+        ];
+
+        $validated = $request->validate([
+            'product_id' => ['required'],
+
+            'qty' => ['required', 'integer'],
+            'address' => ['required'],
+            'province_id' => ['required'],
+            'city_id' => ['required'],
+            'bank_id' => ['required'],
+            'product_color_id' => ['required'],
+            'product_fragrance_id' => ['required'],
+        ], $messages);
+
+        // return $sale->update($validated);
     }
 
     public function getSaleList(Request $request)
@@ -101,6 +104,8 @@ class SaleController extends Controller
                     return '<span class="badge badge-success">'.$data->delivery_status.'</span>';
                 } else if($data->delivery_status == 'dalam pengiriman'){
                     return '<span class="badge badge-warning">'.$data->delivery_status.'</span>';
+                } else if($data->payment_status == 'menunggu pembayaran'){
+                    return '<span class="badge badge-secondary">'.$data->payment_status.'</span>';
                 }         
 
                 $confirm = '<form action="/sale/'.$data->id.'/confirm" method="POST" class="d-none form-send'.$data->id.'">';

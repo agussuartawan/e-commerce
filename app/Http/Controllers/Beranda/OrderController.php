@@ -35,11 +35,11 @@ class OrderController extends Controller
                 $sale_count = Sale::count();
                 if($sale_count == 0){
                     $number = 10001;
-                    $fullnumber = 'CVMN' . $year_month . $number;
+                    $fullnumber = 'CVMS' . $year_month . $number;
                 } else {
                     $number = Sale::all()->last();
                     $number_plus = (int)substr($number->sale_number, -5) + 1;
-                    $fullnumber = 'CVMN' . $year_month . $number_plus;
+                    $fullnumber = 'CVMS' . $year_month . $number_plus;
                 }
 
                 // validasi input

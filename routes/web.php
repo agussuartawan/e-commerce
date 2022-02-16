@@ -16,6 +16,7 @@ use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\SaleController;
+use App\Http\Controllers\Panel\UserController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -98,13 +99,20 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses penjualan'], function () {
 		Route::put('sale/{sale}/confirm', [SaleController::class, 'deliveryConfirm']);
 		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
-		Route::resource('sales', SaleController::class)->except('destroy');
+		Route::resource('sales', SaleController::class)->except('destroy', 'create', 'store');
 	});
 
 	// route data pembayaran admin
 	Route::group(['middleware' => 'can:akses pembayaran'], function () {
 		Route::get('payment/get-list', [PanelPaymentController::class, 'getPaymentList']);
 		Route::put('payment/{sale}/confirm', [PanelPaymentController::class, 'paymentConfirm']);
-		Route::resource('payments', PanelPaymentController::class)->except('destroy');
+		Route::resource('payments', PanelPaymentController::class)->except('destroy', 'create', 'store');
+	});
+
+	// route data user
+	Route::group(['middleware' => 'can:akses user'], function () {
+		Route::get('user/get-list', [UserController::class, 'getUserList']);
+		Route::get('roles-search', [UserController::class, 'searchRoles']);
+		Route::resource('users', UserController::class)->except('destroy');
 	});
 });

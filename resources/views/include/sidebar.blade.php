@@ -126,6 +126,18 @@
                     </li>
                 @endcan
 
+                @can('akses user')
+                    <li class="nav-item">
+                        <a href="{{ route('users.index') }}"
+                            class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
+                            <i class="fas fa-users nav-icon"></i>
+                            <p>
+                                User
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('akses laporan')
                     <li class="nav-item">
                         <a href="#" class="nav-link">

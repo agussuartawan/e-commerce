@@ -32,36 +32,9 @@ class PaymentController extends Controller
         return $sale;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Payment $payment)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return view('include.payment.show', compact('payment'));
     }
 
     /**
@@ -70,9 +43,9 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Payment $payment)
     {
-        
+        return view('include.payment.edit', compact('payment'));
     }
 
     /**
@@ -82,9 +55,30 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Payment $payment)
     {
-        //
+        $messages = [
+            'destination_bank.required' => 'Bank tujuan tidak boleh kosong!',
+            'destination_bank.max' => 'Bank tujuan tidak boleh lebih dari 255 huruf!',
+            'sender_bank.required' => 'Bank pengirim tidak boleh kosong!',
+            'sender_bank.max' => 'Bank pengirim tidak boleh lebih dari 255 huruf!',
+            'sender_account_number.required' => 'Rekening pengirim tidak boleh kosong!',
+            'sender_account_number.max' => 'Rekening pengirim tidak boleh lebih dari 255 huruf!',
+            'sender_account_name.required' => 'Nama pengirim tidak boleh kosong!',
+            'sender_account_name.max' => 'Nama pengirim tidak boleh lebih dari 255 huruf!',
+            'date.required' => 'Tanggal transfer tidak boleh kosong!',
+            'date.date' => 'Tanggal transfer tidak valid!',
+        ];
+
+        $validated = $request->validate([
+            'destination_bank' => ['required', 'max:255'],
+            'sender_bank' => ['required', 'max:255'],
+            'sender_account_name' => ['required', 'max:255'],
+            'sender_account_number' => ['required', 'max:255'],
+            'date' => ['required', 'date'],
+        ], $messages);
+
+        return $payment->update($validated);
     }
 
     public function getPaymentList(Request $request)
@@ -117,9 +111,9 @@ class PaymentController extends Controller
             })
             ->addColumn('action', function ($data) {
                 $buttons = '<div class="row"><div class="col">';
-                $buttons .= '<a href="/payments/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show">Detail</a>';
+                $buttons .= '<a href="/payments/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail Pembayaran">Detail</a>';
                 $buttons .= '</div><div class="col">';
-                $buttons .= '<a href="/payments/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit">Edit</a>';
+                $buttons .= '<a href="/payments/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit Pembayaran">Edit</a>';
                 $buttons .= '</div></div>';                
 
                 return $buttons;
