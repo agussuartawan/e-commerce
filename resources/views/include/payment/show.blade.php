@@ -3,12 +3,12 @@
         <h6>
             <strong>No. Pesanan : {{ $payment->sale->sale_number }}</strong>
             &ensp;
-            @if ($payment->sale->payment_status == 'lunas')
-                <span class="badge badge-success">{{ $payment->sale->payment_status }}</span>
-            @elseif($payment->sale->payment_status == 'menunggu pembayaran')
-                <span class="badge badge-warning">{{ $payment->sale->payment_status }}</span>
-            @elseif($payment->sale->payment_status == 'menunggu konfirmasi')
-                <span class="badge badge-warning">{{ $payment->sale->payment_status }}</span>
+            @if ($payment->sale->payment_status_id == \App\Models\PaymentStatus::LUNAS)
+                <span class="badge badge-success">{{ $payment->sale->payment_status->name }}</span>
+            @elseif($payment->sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
+                <span class="badge badge-warning">{{ $payment->sale->payment_status->name }}</span>
+            @elseif($payment->sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI)
+                <span class="badge badge-warning">{{ $payment->sale->payment_status->name }}</span>
             @elseif($payment->sale->is_cancle == 1)
                 <span class="text-italic text-danger">(Dibatalkan)</span>
             @endif

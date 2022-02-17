@@ -46,6 +46,7 @@ $(function () {
                         window.location.href = data;
                     },
                     error: function (xhr) {
+                        showErrorToast();
                         var res = xhr.responseJSON;
                         if ($.isEmptyObject(res) == false) {
                             $.each(res.errors, function (key, value) {
@@ -60,11 +61,15 @@ $(function () {
                                         .after(
                                             `<span class="invalid-feedback">${value}</span>`
                                         );
-                                    if(key === 'product_fragrance_id'){
-                                        $('.fragrance-row').after(`<small class="text-danger">${value}</small>`);
+                                    if (key === "product_fragrance_id") {
+                                        $(".fragrance-row").after(
+                                            `<small class="text-danger">${value}</small>`
+                                        );
                                     }
-                                    if(key === 'product_color_id'){
-                                        $('.color-row').after(`<small class="text-danger">${value}</small>`);
+                                    if (key === "product_color_id") {
+                                        $(".color-row").after(
+                                            `<small class="text-danger">${value}</small>`
+                                        );
                                     }
                                 }
                             });
@@ -158,7 +163,7 @@ inputQtyMask = () => {
             e.preventDefault();
         }
     });
-}
+};
 
 searchProvince = () => {
     $("#province_id")
@@ -254,6 +259,10 @@ searchCity = (province_id) => {
 
 showSuccessToast = (message) => {
     Swal.fire("Berhasil!", message, "success");
+};
+
+showErrorToast = () => {
+    Swal.fire("Opps!", "Terjadi kesalahan!", "error");
 };
 
 rupiah = (bilangan) => {

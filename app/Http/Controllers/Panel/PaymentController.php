@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\PaymentStatus;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class PaymentController extends Controller
 
     public function paymentConfirm(Sale $sale)
     {
-        $sale->payment_status = 'lunas';
+        $sale->payment_status_id = PaymentStatus::LUNAS;
         $sale->save();
 
         return $sale;
@@ -97,7 +98,7 @@ class PaymentController extends Controller
                 return '<a href="/storage/'. $data->transfer_proof .'" class="btn btn-sm btn-outline-primary btn-block" target=”_blank”>Lihat</a>';
             })
             ->addColumn('payment_status', function ($data) {  
-                if($data->sale->payment_status == 'lunas'){
+                if($data->sale->payment_status_id == PaymentStatus::LUNAS){
                     return '<span class="badge badge-success">selesai</span>';
                 }         
 

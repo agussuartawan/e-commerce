@@ -22,8 +22,8 @@ class Sale extends Model
         'date',
         'note',
         'address',
-        'payment_status',
-        'delivery_status',
+        'payment_status_id',
+        'delivery_status_id',
         'is_received',
         'product_color_id',
         'product_fragrance_id',
@@ -69,5 +69,15 @@ class Sale extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function delivery_status()
+    {
+        return $this->belongsTo(DeliveryStatus::class);
+    }
+
+    public function payment_status()
+    {
+        return $this->belongsTo(PaymentStatus::class);
     }
 }

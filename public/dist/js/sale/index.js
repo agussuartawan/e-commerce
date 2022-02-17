@@ -69,11 +69,14 @@ $(function () {
         $("#daterange").change(function () {
             dTable.draw();
         });
+
+        $(".modal-save").remove();
+        $(".print-sale").remove();
     });
 
     inputQtyMask();
 
-    $('body').on('change', ".input-number", function () {
+    $("body").on("change", ".input-number", function () {
         var price = $("#price").val();
         var qty = $(this).val();
         countGrandTotal(qty, price);
@@ -130,16 +133,15 @@ $(function () {
             title = me.attr("title");
 
         $(".modal-title").text(title);
-        $(".modal-save").remove();
+        $(".modal-footer").append(
+            '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
+        );
 
         $.ajax({
             url: url,
             type: "GET",
             dataType: "html",
             success: function (response) {
-                $(".modal-footer").append(
-                    '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
-                );
                 $(".modal-body").html(response);
             },
             error: function (xhr, status) {
@@ -152,13 +154,15 @@ $(function () {
     $("body").on("click", ".modal-edit", function (event) {
         event.preventDefault();
         $("#modal").modal("show");
+        $(".modal-footer").append(
+            '<button type="button" class="btn btn-primary modal-save">Simpan</button>'
+        );
 
         var me = $(this),
             url = me.attr("href"),
             title = me.attr("title");
 
         $(".modal-title").text(title);
-        $(".print-sale").remove();
 
         $.ajax({
             url: url,
@@ -166,9 +170,9 @@ $(function () {
             dataType: "html",
             success: function (response) {
                 $(".modal-body").html(response);
-                const product_id = $('#product_id').val();
-                const sale_id = $('#sale_id').val();
-                const province_id = $('#province_id').val();
+                const product_id = $("#product_id").val();
+                const sale_id = $("#sale_id").val();
+                const province_id = $("#province_id").val();
 
                 searchBank();
                 searchProvince();
@@ -188,7 +192,7 @@ $(function () {
         });
     });
 
-    $(".modal-save").on("click", function (event) {
+    $("body").on("click", ".modal-save", function (event) {
         event.preventDefault();
 
         var form = $("#form-order"),
@@ -230,17 +234,26 @@ $(function () {
                                 .after(
                                     `<span class="invalid-feedback">${value}</span>`
                                 );
-                            if(key === 'product_fragrance_id'){
-                                $('.fragrance-row').after(`<small class="text-danger">${value}</small>`);
+                            if (key === "product_fragrance_id") {
+                                $(".fragrance-row").after(
+                                    `<small class="text-danger">${value}</small>`
+                                );
                             }
-                            if(key === 'product_color_id'){
-                                $('.color-row').after(`<small class="text-danger">${value}</small>`);
+                            if (key === "product_color_id") {
+                                $(".color-row").after(
+                                    `<small class="text-danger">${value}</small>`
+                                );
                             }
                         }
                     });
                 }
             },
         });
+    });
+
+    $("#modal").on("hidden.bs.modal", function () {
+        $(".modal-save").remove();
+        $(".print-sale").remove();
     });
 });
 
@@ -281,11 +294,11 @@ inputQtyMask = () => {
         }
     });
 
-    $('body').on('focusin', ".input-number", function () {
+    $("body").on("focusin", ".input-number", function () {
         $(this).data("oldValue", $(this).val());
     });
 
-    $('body').on('change', ".input-number", function () {
+    $("body").on("change", ".input-number", function () {
         minValue = parseInt($(this).attr("min"));
         maxValue = parseInt($(this).attr("max"));
         valueCurrent = parseInt($(this).val());
@@ -306,7 +319,7 @@ inputQtyMask = () => {
             $(this).val($(this).data("oldValue"));
         }
     });
-    $('body').on('keydown', ".input-number", function (e) {
+    $("body").on("keydown", ".input-number", function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if (
             $.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
@@ -326,7 +339,7 @@ inputQtyMask = () => {
             e.preventDefault();
         }
     });
-}
+};
 
 searchProvince = () => {
     $("#province_id")
@@ -382,7 +395,7 @@ searchCustomer = () => {
                             return {
                                 text: item.fullname,
                                 id: item.id,
-                                address: item.address
+                                address: item.address,
                             };
                         }),
                     };
@@ -393,7 +406,7 @@ searchCustomer = () => {
         })
         .on("select2:select", function (event) {
             const customer_id = $(this).val();
-            $('#address').val(event.params.data.address);
+            $("#address").val(event.params.data.address);
         });
 };
 
@@ -456,38 +469,44 @@ searchCity = (province_id) => {
 };
 
 searchProduct = () => {
-    $("#product_id").select2({
-        theme: "bootstrap4",
-        ajax: {
-            url: "/product-search",
-            dataType: "json",
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-    
-                return query;
+    $("#product_id")
+        .select2({
+            theme: "bootstrap4",
+            ajax: {
+                url: "/product-search",
+                dataType: "json",
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.product_name,
+                                id: item.id,
+                                selling_price: item.selling_price,
+                            };
+                        }),
+                    };
+                },
             },
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.product_name,
-                            id: item.id,
-                        };
-                    }),
-                };
-            },
-        },
-        placeholder: "Cari provinsi",
-        cache: true,
-    })
-    .on("change", function () {
-        const product_id = $(this).val();
-        const sale_id = $('#sale_id').val();
-        showVariant(product_id, sale_id);
-    });
-}
+            placeholder: "Cari provinsi",
+            cache: true,
+        })
+        .on("select2:select", function (event) {
+            const product_id = $(this).val();
+            const sale_id = $("#sale_id").val();
+            const price = event.params.data.selling_price;
+            $("#price").val(price);
+            showVariant(product_id, sale_id);
+            const qty = $(".input-number").val();
+            countGrandTotal(qty, price);
+        });
+};
 
 showVariant = (product_id, sale_id) => {
     $.ajax({
@@ -502,7 +521,7 @@ showVariant = (product_id, sale_id) => {
             alert("Terjadi kesalahan");
         },
     });
-}
+};
 
 rupiah = (bilangan) => {
     var number_string = bilangan.toString(),

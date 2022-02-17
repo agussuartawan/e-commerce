@@ -11,6 +11,8 @@ use App\Models\Product;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryStatus;
+use App\Models\PaymentStatus;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -78,9 +80,8 @@ class OrderController extends Controller
                     'qty' => $validated['qty'],
                     'note' => $request->note,
                     'address' => $validated['address'],
-                    'payment_status' => 'menunggu pembayaran',
-                    'delivery_status' => 'menunggu',
-                    'is_received' => 0,
+                    'payment_status_id' => PaymentStatus::MENUNGGU_PEMBAYARAN,
+                    'delivery_status_id' => DeliveryStatus::MENUNGGU,
                     'grand_total' => $grand_total,
                     'customer_id' => auth()->user()->customer->id,
                     'product_id' => $product->id,
@@ -113,13 +114,13 @@ class OrderController extends Controller
     {
         if($sale->user_id != Auth::user()->id){
             abort(404);
-        } else if($sale->payment_status == 'lunas' || $sale->payment_status == 'menunggu konfirmasi'){
+        } else if($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
             return redirect()->route('order.show', $sale);
-        } else if($sale->payment_status == 'dibatalkan'){
+        } else if($sale->payment_status_id == PaymentStatus::DIBATALKAN){
             return redirect()->route('beranda');
         }
         
-        $due = Carbon::parse($sale->created_at)->addDay()->format('Y m d H:i:s');
+        $due = Carbon::parse($sale->date)->addDay()->format('Y m d H:i:s');
         $now = Carbon::now()->format('Y m d H:i:s');
         
         return view('beranda.result', compact('sale', 'due', 'now'));
@@ -139,7 +140,7 @@ class OrderController extends Controller
 
     public function show(Sale $sale)
     {
-        if($sale->payment_status == 'menunggu pembayaran'){
+        if($sale->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
             return redirect()->route('order.result', $sale);
         }
         return view('beranda.order.show', compact('sale'));

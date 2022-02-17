@@ -14,8 +14,8 @@ class ModifyColumnInSalesTable extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->bigInteger('product_color_id');
-            $table->bigInteger('product_fragrance_id');
+            $table->foreignId('product_color_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('product_fragrance_id')->constrained()->onUpdate('cascade');
             $table->dateTime('due_date')->nullable();
         });
     }

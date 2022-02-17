@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Beranda;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryStatus;
 use Illuminate\Support\Facades\Auth;
 
 class DeliveryController extends Controller
@@ -17,8 +18,7 @@ class DeliveryController extends Controller
 
     public function deliveryReceived(Sale $sale)
     {
-        $sale->delivery_status = 'dikirim';
-        $sale->is_received = 1;
+        $sale->delivery_status_id = DeliveryStatus::DIKIRIM;
         $sale->save();
 
         return redirect()->route('delivery.index')->with('success', 'Konfirmasi pengiriman berhasil');

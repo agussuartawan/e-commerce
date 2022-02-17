@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PaymentStatus;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
@@ -15,9 +16,9 @@ class PaymentController extends Controller
     {
         if($sale->user_id != Auth::user()->id){
             abort(404);
-        } else if($sale->payment_status == 'lunas' || $sale->payment_status == 'menunggu konfirmasi'){
+        } else if($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
             return redirect()->route('order.show', $sale);
-        } else if($sale->payment_status == 'dibatalkan'){
+        } else if($sale->payment_status_id == PaymentStatus::DIBATALKAN){
             return redirect()->route('beranda');
         }
 
@@ -55,7 +56,7 @@ class PaymentController extends Controller
             ], $messages);
 
             // ubah status pembayaran menjadi menunggu konfirmasi
-            $sale->payment_status = 'menunggu konfirmasi';
+            $sale->payment_status_id = PaymentStatus::MENUNGGU_KONFIRMASI;
             $sale->save();
 
             // upload foto bukti transfer

@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\DeliveryStatus;
+use App\Models\PaymentStatus;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
@@ -18,14 +20,20 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            Sale::where('due_date', '<' , Carbon::now())
-                ->where('payment_status', 'menunggu pembayaran')
+            $sales = tap(Sale::where('due_date', '<' , Carbon::now())
+                ->where('payment_status_id', PaymentStatus::MENUNGGU_PEMBAYARAN)
+                ->where('is_cancle', 0)
                 ->update([
                     'is_cancle' => 1,
-                    'delivery_status' => 'dibatalkan',
-                    'payment_status' => 'dibatalkan',
-                ]);
-        })->hourly();;
+                    'delivery_status_id' => DeliveryStatus::DIBATALKAN,
+                    'payment_status_id' => PaymentStatus::DIBATALKAN,
+                ]))
+                ->get();
+            foreach($sales as $sale){
+                $sale = Sale::find($sale->id);
+                $sale->product->increment('stock', $sale->qty);
+            }
+        })->everyMinute();
     }
 
     /**

@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryStatus;
+use App\Models\PaymentStatus;
 
 class SaleController extends Controller
 {
@@ -64,66 +66,71 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Sale $sale)
-    {
+    {        
+        // validasi input
+        $messages = [
+            'qty.required' => 'Qty tidak boleh kosong!',
+            'qty.integer' => 'Qty harus angka!',
+            'address.required' => 'Tujuan Pengiriman tidak boleh kosong!',
+            'province_id.required' => 'Provinsi tidak boleh kosong!',
+            'city_id.required' => 'Kota tidak boleh kosong!',
+            'product_color_id.required' => 'Mohon pilih warna produk!',
+            'product_fragrance_id.required' => 'Mohon pilih aroma product!',
+            'customer_id.required' => 'Pelanggan tidak boleh kosong!',
+            'product_id.required' => 'Produk tidak boleh kosong!',
+            'date.required' => 'Waktu Penjualan tidak boleh kosong!'
+        ];
+        $validated = $request->validate([
+            'product_id' => ['required'],
+            'customer_id' => ['required'],
+            'province_id' => ['required'],
+            'city_id' => ['required'],
+            'product_color_id' => ['required'],
+            'product_fragrance_id' => ['required'],
+            'qty' => ['required', 'integer'],
+            'address' => ['required'],
+            'date' => ['required'],
+        ], $messages);
+
         // balikin stok produk ke semula
-        $product = Product::findOrFail($request->product_id)->first();
-        $product->stock = (int)$product->stock + (int)$sale->qty;
-        $product->save();
+        $product = Product::findOrFail($request->product_id);
+        $product->increment('stock', $sale->qty);
 
-        if($product->stock >= $request->qty){
-            DB::transaction(function () use ($request, $product, $sale){
-                // validasi input
-                $messages = [
-                    'qty.required' => 'Qty tidak boleh kosong!',
-                    'qty.integer' => 'Qty harus angka!',
-                    'address.required' => 'Tujuan Pengiriman tidak boleh kosong!',
-                    'province_id.required' => 'Provinsi tidak boleh kosong!',
-                    'city_id.required' => 'Kota tidak boleh kosong!',
-                    'bank_id.required' => 'Bank tidak boleh kosong!',
-                    'product_color_id.required' => 'Mohon pilih warna produk!',
-                    'product_fragrance_id.required' => 'Mohon pilih aroma product!',
-                ];
+        if($product->stock < $validated['qty']){// cek apakah stok mencukupi
+            $product->decrement('stock', $sale->qty);
 
-                $validated = $request->validate([
-                    'product_id' => ['required'],
-                    'customer_id' => ['required'],
-                    'province_id' => ['required'],
-                    'city_id' => ['required'],
-                    'product_color_id' => ['required'],
-                    'product_fragrance_id' => ['required'],
-
-                    'qty' => ['required', 'integer'],
-                    'address' => ['required'],
-                    'date' => ['required'],
-                ], $messages);
-
-                //hitung grand total
-                $price = $product->selling_price;
-                $grand_total = (int)$price * (int)$validated['qty'];
-
-                // hitung tanggal jatuh tempo
-                $date = Carbon::parse($validated['date']);
-                $due_date = $date->addDay();
-                
-                $user_id = Customer::find($validated['customer_id'])->first()->id;
-                
-                $validated['user_id'] = $user_id;
-                $validated['grand_total'] = $grand_total;
-                $validated['due_date'] = $due_date;
-
-                $sale->update($validated);
-                
-                //potong stok di table products
-                $product->stock = (int)$product->stock - (int)$validated['qty'];
-                $product->save();
-
-                return $sale;
-            });
-        } else {
+            // return error jika stok tidak mencukupi
             return response()->json([
                 'errors' => ['qty' => [0 => 'Stok tidak mencukupi!']]
             ], 404);
         }
+
+        DB::transaction(function () use ($sale, $product, $validated){
+            //hitung grand total
+            $price = $product->selling_price;
+            $grand_total = $price * $validated['qty'];
+
+            // hitung tanggal jatuh tempo
+            $date = Carbon::parse($validated['date']);
+            $due_date = $date->addDay();
+            
+            // cari user id berdasarkan data customer
+            $customer = Customer::findOrFail($validated['customer_id']);
+            $user_id = $customer->user->id;
+            
+            // update variable validated
+            $validated['user_id'] = $user_id;
+            $validated['grand_total'] = $grand_total;
+            $validated['due_date'] = $due_date;
+
+            // update tabel penjualan
+            $sale->update($validated);
+            
+            //potong stok di table products
+            $product->decrement('stock', $validated['qty']);
+
+            return $sale;
+        });
     }
 
     public function getSaleList(Request $request)
@@ -145,13 +152,15 @@ class SaleController extends Controller
                 return Carbon::parse($data->date)->format('d/m/Y');
             })
             ->addColumn('delivery_status', function ($data) {
-                if($data->delivery_status == 'dikirim'){
-                    return '<span class="badge badge-success">'.$data->delivery_status.'</span>';
-                } else if($data->delivery_status == 'dalam pengiriman'){
-                    return '<span class="badge badge-warning">'.$data->delivery_status.'</span>';
-                } else if($data->payment_status == 'menunggu pembayaran'){
-                    return '<span class="badge badge-secondary">'.$data->payment_status.'</span>';
-                }         
+                if($data->delivery_status_id == DeliveryStatus::DIKIRIM){
+                    return '<span class="badge badge-success">'.$data->delivery_status->name.'</span>';
+                } else if($data->delivery_status_id == DeliveryStatus::DALAM_PENGIRIMAN){
+                    return '<span class="badge badge-warning">'.$data->delivery_status->name.'</span>';
+                } else if($data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
+                    return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
+                } else if($data->is_cancle == 1){
+                    return '<span class="badge badge-danger">dibatalkan</span>';
+                }        
 
                 $confirm = '<form action="/sale/'.$data->id.'/confirm" method="POST" class="d-none form-send'.$data->id.'">';
                 $confirm .= '<input type="hidden" value="'.csrf_token().'" name="_token">';
@@ -199,7 +208,7 @@ class SaleController extends Controller
 
     public function deliveryConfirm(Sale $sale)
     {
-        $sale->delivery_status = 'dalam pengiriman';
+        $sale->delivery_status_id = DeliveryStatus::DALAM_PENGIRIMAN;
         $sale->save();
 
         return $sale;

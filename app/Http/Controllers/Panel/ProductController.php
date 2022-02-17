@@ -31,7 +31,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('panel.product.create');
+        // membuat nomor penjualan otomatis
+        $product_count = Product::count();
+        if($product_count == 0){
+            $number = 10001;
+            $fullnumber = 'BRG' . $number;
+        } else {
+            $number = Product::all()->last();
+            $number_plus = (int)substr($number->code, -5) + 1;
+            $fullnumber = 'BRG' . $number_plus;
+        }
+        return view('panel.product.create', compact('fullnumber'));
     }
 
     /**
@@ -42,6 +52,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $product_count = Product::count();
+        if($product_count == 0){
+            $number = 10001;
+            $fullnumber = 'BRG' . $number;
+        } else {
+            $number = Product::all()->last();
+            $number_plus = (int)substr($number->code, -5) + 1;
+            $fullnumber = 'BRG' . $number_plus;
+        }
+
         $messages = [
             'product_name.required' => 'Nama tidak boleh kosong!',
             'product_name.string' => ' Nama tidak boleh mengandung simbol!',
@@ -70,7 +90,7 @@ class ProductController extends Controller
 
         $validatedData['size'] = $request->size;
         $validatedData['description'] = $request->description;
-        $validatedData['code'] = $request->code;
+        $validatedData['code'] = $fullnumber;
         
         $product = Product::create($validatedData);
 
@@ -193,6 +213,6 @@ class ProductController extends Controller
     public function searchProduct(Request $request)
     {
         $search = $request->search;
-        return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name')->get();
+        return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name', 'selling_price')->get();
     }
 }

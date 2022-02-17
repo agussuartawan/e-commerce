@@ -3,12 +3,14 @@
         <h6>
             <strong>No. Pesanan : {{ $sale->sale_number }}</strong>
             &ensp;
-            @if ($sale->delivery_status == 'dikirim')
-                <span class="badge badge-success">{{ $sale->delivery_status }}</span>
-            @elseif($sale->delivery_status == 'dalam pengiriman')
-                <span class="badge badge-warning">{{ $sale->delivery_status }}</span>
-            @elseif($sale->payment_status == 'menunggu pembayaran')
-                <span class="badge badge-secondary">{{ $sale->payment_status }}</span>
+            @if ($sale->delivery_status_id == \App\Models\DeliveryStatus::DIKIRIM)
+                <span class="badge badge-success">{{ $sale->delivery_status->name }}</span>
+            @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DALAM_PENGIRIMAN)
+                <span class="badge badge-warning">{{ $sale->delivery_status->name }}</span>
+            @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
+                <span class="badge badge-secondary">{{ $sale->payment_status->name }}</span>
+            @elseif($sale->is_cancle == 1)
+                <span class="badge badge-danger">dibatalkan</span>
             @endif
         </h6>
     </div>

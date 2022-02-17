@@ -21,6 +21,8 @@ class CreateSalesTable extends Migration
             $table->foreignId('province_id')->constrained()->onUpdate('cascade');
             $table->foreignId('city_id')->constrained()->onUpdate('cascade');
             $table->foreignId('bank_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('payment_status_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('delivery_status_id')->constrained()->onUpdate('cascade');
 
             $table->string('sale_number');
             $table->integer('qty');
@@ -28,8 +30,6 @@ class CreateSalesTable extends Migration
             $table->dateTime('date');
             $table->text('note')->nullable();
             $table->text('address');
-            $table->string('payment_status');
-            $table->string('delivery_status');
             $table->timestamps();
         });
     }

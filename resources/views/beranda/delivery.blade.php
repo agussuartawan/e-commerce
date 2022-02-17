@@ -44,9 +44,9 @@
                                     <td>{{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</td>
                                     <td>{{ rupiah($sale->grand_total) }}</td>
                                     <td>
-                                        @if ($sale->delivery_status == 'menunggu')
-                                            <span class="badge badge-secondary">{{ $sale->delivery_status }}</span>
-                                        @elseif($sale->delivery_status == 'dalam pengiriman')
+                                        @if ($sale->delivery_status_id == \App\Models\DeliveryStatus::MENUNGGU)
+                                            <span class="badge badge-secondary">{{ $sale->delivery_status->name }}</span>
+                                        @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DALAM_PENGIRIMAN)
                                             {!! Form::open([
     'route' => ['delivery.received', $sale->id],
     'method' => 'PUT',
@@ -57,20 +57,20 @@
                                             <a href="#" class="btn btn-block btn-sm btn-outline-success btn-confirm"
                                                 data-id="form-confirm{{ $sale->id }}">Terima
                                                 Barang</a>
-                                        @elseif($sale->delivery_status == 'dikirim')
-                                            <span class=" badge badge-success">{{ $sale->delivery_status }}</span>
-                                        @elseif($sale->is_cancle == 1)
+                                        @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DIKIRIM)
+                                            <span class=" badge badge-success">{{ $sale->delivery_status->name }}</span>
+                                        @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DIBATALKAN)
                                             <span class="text-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($sale->payment_status == 'lunas')
-                                            <span class="badge badge-success">{{ $sale->payment_status }}</span>
-                                        @elseif($sale->payment_status == 'menunggu pembayaran')
+                                        @if ($sale->payment_status_id == \App\Models\PaymentStatus::LUNAS)
+                                            <span class="badge badge-success">{{ $sale->payment_status->name }}</span>
+                                        @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
                                             <a href="{{ route('payment.create', $sale) }}"
                                                 class="btn btn-block btn-sm btn-outline-success">Kirim Pembayaran</a>
-                                        @elseif($sale->payment_status == 'menunggu konfirmasi')
-                                            <span class="badge badge-warning">{{ $sale->payment_status }}</span>
+                                        @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI)
+                                            <span class="badge badge-warning">{{ $sale->payment_status->name }}</span>
                                         @elseif($sale->is_cancle == 1)
                                             <span class="text-italic text-danger">(Dibatalkan)</span>
                                         @endif
