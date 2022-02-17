@@ -52,7 +52,7 @@
                                 <a class="nav-link" href="{{ route('payment.index') }}">Pembayaran</a>
                             </li>
 
-                            <li class="nav-item {{ request()->is('order*') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('delivery*') || request()->is('order*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('delivery.index') }}">Pesanan</a>
                             </li>
                         @endcan

@@ -9,7 +9,7 @@
                 <span class="badge badge-warning">{{ $sale->delivery_status->name }}</span>
             @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
                 <span class="badge badge-secondary">{{ $sale->payment_status->name }}</span>
-            @elseif($sale->is_cancle == 1)
+            @elseif($sale->is_cancel == 1)
                 <span class="badge badge-danger">dibatalkan</span>
             @endif
         </h6>

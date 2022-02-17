@@ -9,12 +9,14 @@ use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Province;
+use App\Events\SaleUpdated;
+use App\Events\SaleUpdating;
 use Illuminate\Http\Request;
+use App\Models\PaymentStatus;
+use App\Models\DeliveryStatus;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\DeliveryStatus;
-use App\Models\PaymentStatus;
 
 class SaleController extends Controller
 {
@@ -50,6 +52,9 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
+        if($sale->is_cancel == 1){
+            abort(403);
+        }
         $provinces = Province::pluck('name', 'id');
         $cities = City::pluck('name', 'id');
         $banks = Bank::pluck('name', 'id');
@@ -67,6 +72,9 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {        
+        if($sale->is_cancel == 1){
+            abort(403);
+        }
         // validasi input
         $messages = [
             'qty.required' => 'Qty tidak boleh kosong!',
@@ -94,7 +102,7 @@ class SaleController extends Controller
 
         // balikin stok produk ke semula
         $product = Product::findOrFail($request->product_id);
-        $product->increment('stock', $sale->qty);
+        event(new SaleUpdating($sale, $product));
 
         if($product->stock < $validated['qty']){// cek apakah stok mencukupi
             $product->decrement('stock', $sale->qty);
@@ -102,7 +110,7 @@ class SaleController extends Controller
             // return error jika stok tidak mencukupi
             return response()->json([
                 'errors' => ['qty' => [0 => 'Stok tidak mencukupi!']]
-            ], 404);
+            ], 422);
         }
 
         DB::transaction(function () use ($sale, $product, $validated){
@@ -127,7 +135,7 @@ class SaleController extends Controller
             $sale->update($validated);
             
             //potong stok di table products
-            $product->decrement('stock', $validated['qty']);
+            event(new SaleUpdated($sale, $validated));
 
             return $sale;
         });
@@ -158,7 +166,9 @@ class SaleController extends Controller
                     return '<span class="badge badge-warning">'.$data->delivery_status->name.'</span>';
                 } else if($data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
                     return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
-                } else if($data->is_cancle == 1){
+                } else if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
+                    return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
+                } else if($data->is_cancel == 1 || $data->payment_status_id == PaymentStatus::DIBATALKAN || $data->delivery_status_id == DeliveryStatus::DIBATALKAN){
                     return '<span class="badge badge-danger">dibatalkan</span>';
                 }        
 
@@ -171,11 +181,19 @@ class SaleController extends Controller
                 return $confirm;
             })
             ->addColumn('action', function ($data) {
-                $buttons = '<div class="row"><div class="col">';
+                $buttons = '<div class="row">';
+
+                $buttons .= '<div class="col">';
                 $buttons .= '<a href="/sales/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->sale_number.'">Detail</a>';
-                $buttons .= '</div><div class="col">';
-                $buttons .= '<a href="/sales/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->sale_number.'">Edit</a>';
-                $buttons .= '</div></div>';                
+                $buttons .= '</div>';
+                
+                if($data->is_cancel != 1){
+                    $buttons .= '<div class="col">';
+                    $buttons .= '<a href="/sales/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->sale_number.'">Edit</a>';
+                    $buttons .= '</div>';
+                }
+
+                $buttons .= '</div>';                
 
                 return $buttons;
             })

@@ -14,7 +14,7 @@ class AddIsCancleColumnToSalesTable extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('is_cancle')->default(false);
+            $table->boolean('is_cancel')->default(false);
         });
     }
 

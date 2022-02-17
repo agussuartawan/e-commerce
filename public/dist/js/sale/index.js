@@ -39,7 +39,7 @@ $(function () {
                 { data: "product", name: "product" },
                 { data: "date", name: "date" },
                 { data: "grand_total", name: "grand_total" },
-                { data: "delivery_status", name: "delivery_status" },
+                { data: "delivery_status", name: "delivery_status", orderable: false },
                 { data: "action", name: "action", orderable: false },
             ],
             dom: "<'row'<'col-sm-3 mb-1 filter'><'col'f>>tipr",

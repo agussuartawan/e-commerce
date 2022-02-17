@@ -9,10 +9,11 @@ use App\Models\City;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Province;
+use App\Events\SaleCreated;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\DeliveryStatus;
 use App\Models\PaymentStatus;
+use App\Models\DeliveryStatus;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -94,9 +95,9 @@ class OrderController extends Controller
                     'due_date' => $due_date
                 ]);
 
+                
                 //potong stok di table products
-                $product->stock = (int)$product->stock - (int)$validated['qty'];
-                $product->save();
+                event(new SaleCreated($sale, $validated));
 
                 $result = '/order/' . $sale->id . '/result';
                 return $result;
@@ -142,6 +143,8 @@ class OrderController extends Controller
     {
         if($sale->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
             return redirect()->route('order.result', $sale);
+        } elseif($sale->is_cancel == 1){
+            return redirect()->route('delivery.index');
         }
         return view('beranda.order.show', compact('sale'));
     }

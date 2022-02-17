@@ -84,7 +84,7 @@ class PaymentController extends Controller
 
     public function index()
     {
-        $payment = Payment::with('sale')->where('user_id', Auth::user()->id)->oderBy('created_at', 'DESC')->get();
-        return view('beranda.payment.index', $payment);
+        $payments = Payment::with('sale')->where('user_id', Auth::user()->id)->paginate(10);
+        return view('beranda.payment.index', compact('payments'));
     }
 }

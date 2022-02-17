@@ -37,7 +37,7 @@
                                     <td>{{ $sale->sale_number }}</td>
                                     <td>
                                         {{ $sale->product->product_name }}
-                                        @if ($sale->is_cancle == 1)
+                                        @if ($sale->is_cancel == 1)
                                             <span class="text-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
@@ -71,13 +71,15 @@
                                                 class="btn btn-block btn-sm btn-outline-success">Kirim Pembayaran</a>
                                         @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI)
                                             <span class="badge badge-warning">{{ $sale->payment_status->name }}</span>
-                                        @elseif($sale->is_cancle == 1)
+                                        @elseif($sale->is_cancel == 1)
                                             <span class="text-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
                                     <td>
+                                        @if($sale->is_cancel != 1)
                                         <a href="{{ route('order.show', $sale) }}"
                                             class="btn btn-sm btn-outline-success btn-block btn-show">Detail</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
