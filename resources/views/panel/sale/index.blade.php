@@ -56,7 +56,7 @@
                                             <th>Tgl</th>
                                             <th>Total</th>
                                             <th>Status</th>
-                                            <th width="15%">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody><input type="hidden" value="{{ $now }}" id="daterange"></tbody>
@@ -83,7 +83,7 @@
     <script src="/plugins/moment/moment.min.js"></script>
     <script src="/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    
+
     <script src="/plugins/select2/js/select2.full.min.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>

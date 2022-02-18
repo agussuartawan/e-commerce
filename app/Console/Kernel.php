@@ -33,7 +33,16 @@ class Kernel extends ConsoleKernel
                     'payment_status_id' => PaymentStatus::DIBATALKAN,
                 ]);
             }
+
+            $orders = Sale::where('delivery_status_id', DeliveryStatus::DALAM_PENGIRIMAN)->get();
+            foreach($orders as $order){
+                $delivery_due = Carbon::parse($order->date)->addDays(2);
+                if($delivery_due < Carbon::now()){
+                    $order->update(['delivery_status_id' => DeliveryStatus::DIKIRIM]);
+                }
+            }
         })->twiceDaily(8, 17);
+        // })->everyMinute();
     }
 
     /**

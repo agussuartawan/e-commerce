@@ -39,7 +39,11 @@ $(function () {
                 { data: "product", name: "product" },
                 { data: "date", name: "date" },
                 { data: "grand_total", name: "grand_total" },
-                { data: "delivery_status", name: "delivery_status", orderable: false },
+                {
+                    data: "delivery_status",
+                    name: "delivery_status",
+                    orderable: false,
+                },
                 { data: "action", name: "action", orderable: false },
             ],
             dom: "<'row'<'col-sm-3 mb-1 filter'><'col'f>>tipr",
@@ -87,7 +91,7 @@ $(function () {
 
         Swal.fire({
             title: "Yakin melanjutkan konfirmasi?",
-            text: "Konfirmasi dapat dibatalkan lewat menu detail.",
+            text: "Konfirmasi tidak dapat dibatalkan!",
             icon: "warning",
             showCancelButton: true,
             cancelButtonText: "Batal",
@@ -135,6 +139,9 @@ $(function () {
         $(".modal-title").text(title);
         $(".modal-footer").append(
             '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
+        );
+        $(".modal-footer").append(
+            '<a href="#" target="_blanc" class="btn btn-primary print-fo">Cetak Form Order</a>'
         );
 
         $.ajax({
@@ -254,6 +261,7 @@ $(function () {
     $("#modal").on("hidden.bs.modal", function () {
         $(".modal-save").remove();
         $(".print-sale").remove();
+        $(".print-fo").remove();
     });
 });
 

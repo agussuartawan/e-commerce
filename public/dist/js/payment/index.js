@@ -124,7 +124,7 @@ $(function () {
             title = me.attr("title");
 
         $(".modal-title").text(title);
-        $(".modal-save").remove();
+        $(".modal-save").hide();
 
         $.ajax({
             url: url,
@@ -139,9 +139,52 @@ $(function () {
         });
     });
 
+    $("body").on("click", ".btn-cancle", function (event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "Yakin membatalkan pembayaran?",
+            text: "Validasi atas pembayaran ini akan dibatalkan.",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, batalkan",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = $(`.form-cancle`),
+                    url = form.attr("action"),
+                    method = "POST",
+                    message = "Konfirmasi pembayaran telah dibatalkan.";
+
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: form.serialize(),
+                    beforeSend: function () {
+                        $(".btn").attr("disabled", true);
+                    },
+                    complete: function () {
+                        $(".btn").removeAttr("disabled");
+                    },
+                    success: function (data) {
+                        $("#modal").modal("hide");
+                        showSuccessToast(message);
+                        $("#payment-table").DataTable().ajax.reload();
+                    },
+                    error: function (xhr) {
+                        showErrorToast();
+                    },
+                });
+            }
+        });
+    });
+
     $("body").on("click", ".modal-edit", function (event) {
         event.preventDefault();
         $("#modal").modal("show");
+        $(".modal-save").show();
 
         var me = $(this),
             url = me.attr("href"),

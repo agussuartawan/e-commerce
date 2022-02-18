@@ -51,3 +51,18 @@
         <h6><strong>{{ $payment->sender_account_number }}</strong></h6>
     </div>
 </div>
+@if ($payment->sale->delivery_status_id == \App\Models\DeliveryStatus::MENUNGGU && $payment->sale->payment_status_id == \App\Models\PaymentStatus::LUNAS)
+    <div class="row mt-3">
+        <div class="col d-flex justify-content-center">
+            {!! Form::open([
+    'route' => ['payment.cancle', $payment->id],
+    'method' => 'PUT',
+    'class' => 'd-none form-cancle',
+]) !!}
+
+            {!! Form::close() !!}
+            <a href="#" class="btn btn-sm btn-outline-danger btn-cancle" data-id="form-cancle">Batalkan
+                Pembayaran</a>
+        </div>
+    </div>
+@endif

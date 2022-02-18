@@ -142,4 +142,12 @@ class PaymentController extends Controller
             ->rawColumns(['action',' customer', 'date', 'sale_number', 'transfer_proof', 'payment_status'])
             ->make(true);
     }
+
+    public function paymentCancle(Payment $payment)
+    {
+        $payment->sale->payment_status_id = PaymentStatus::MENUNGGU_KONFIRMASI;
+        $payment->sale->save();
+
+        return $payment;
+    }
 }

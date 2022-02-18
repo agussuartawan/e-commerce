@@ -38,7 +38,7 @@
                                     <td>
                                         {{ $sale->product->product_name }}
                                         @if ($sale->is_cancel == 1)
-                                            <span class="text-italic text-danger">(Dibatalkan)</span>
+                                            <span class="font-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</td>
@@ -54,13 +54,13 @@
 ]) !!}
 
                                             {!! Form::close() !!}
-                                            <a href="#" class="btn btn-block btn-sm btn-outline-success btn-confirm"
+                                            <a href="#" class="btn btn-block btn-sm btn-outline-primary btn-confirm"
                                                 data-id="form-confirm{{ $sale->id }}">Terima
                                                 Barang</a>
                                         @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DIKIRIM)
                                             <span class=" badge badge-success">{{ $sale->delivery_status->name }}</span>
                                         @elseif($sale->delivery_status_id == \App\Models\DeliveryStatus::DIBATALKAN)
-                                            <span class="text-italic text-danger">(Dibatalkan)</span>
+                                            <span class="font-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
                                     <td>
@@ -68,17 +68,17 @@
                                             <span class="badge badge-success">{{ $sale->payment_status->name }}</span>
                                         @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
                                             <a href="{{ route('payment.create', $sale) }}"
-                                                class="btn btn-block btn-sm btn-outline-success">Kirim Pembayaran</a>
+                                                class="btn btn-block btn-sm btn-outline-primary">Kirim Pembayaran</a>
                                         @elseif($sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI)
                                             <span class="badge badge-warning">{{ $sale->payment_status->name }}</span>
                                         @elseif($sale->is_cancel == 1)
-                                            <span class="text-italic text-danger">(Dibatalkan)</span>
+                                            <span class="font-italic text-danger">(Dibatalkan)</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if($sale->is_cancel != 1)
-                                        <a href="{{ route('order.show', $sale) }}"
-                                            class="btn btn-sm btn-outline-success btn-block btn-show">Detail</a>
+                                        @if ($sale->is_cancel != 1)
+                                            <a href="{{ route('order.show', $sale) }}"
+                                                class="btn btn-sm btn-outline-info btn-block btn-show">Detail</a>
                                         @endif
                                     </td>
                                 </tr>

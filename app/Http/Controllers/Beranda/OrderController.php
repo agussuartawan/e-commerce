@@ -121,10 +121,9 @@ class OrderController extends Controller
             return redirect()->route('beranda');
         }
         
-        $due = Carbon::parse($sale->date)->addDay()->format('Y m d H:i:s');
-        $now = Carbon::now()->format('Y m d H:i:s');
+        $due = Carbon::parse($sale->due_date);
         
-        return view('beranda.result', compact('sale', 'due', 'now'));
+        return view('beranda.result', compact('sale', 'due'));
     }
 
     public function searchProvince(Request $request)
