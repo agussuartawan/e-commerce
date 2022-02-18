@@ -73,7 +73,7 @@
 
                             @can('akses akun')
                                 <li class="nav-item">
-                                    <a href="./index2.html"
+                                    <a href="{{ route('accounts.index') }}"
                                         class="nav-link {{ request()->is('accounts*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Akun</p>

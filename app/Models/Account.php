@@ -9,5 +9,10 @@ class Account extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['account_type_id', 'name', 'account_number', 'description']
+    protected $fillable = ['account_type_id', 'name', 'account_number', 'description'];
+
+    public function account_type()
+    {
+        return $this->belongsTo(AccountType::class);
+    }
 }

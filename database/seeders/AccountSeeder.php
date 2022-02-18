@@ -47,9 +47,15 @@ class AccountSeeder extends Seeder
             [
                 'account_type_id' => 1,
                 'name' => 'Kas',
-                'account_number',
-                'description'
-            ]
+                'account_number' => '1-101',
+                'description' => 'Kas'
+            ],
+            [
+                'account_type_id' => 4,
+                'name' => 'Penjualan',
+                'account_number' => '4-401',
+                'description' => 'Penjualan'
+            ],
         ]);
     }
 }

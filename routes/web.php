@@ -3,20 +3,21 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Panel\BankController;
+use App\Http\Controllers\Panel\SaleController;
+use App\Http\Controllers\Panel\UserController;
 use App\Http\Controllers\Beranda\OrderController;
+use App\Http\Controllers\Panel\AccountController;
 use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\Panel\CategoryController;
 use App\Http\Controllers\Panel\CustomerController;
 use App\Http\Controllers\Beranda\BerandaController;
-use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
-use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Panel\DashboardController;
 use App\Http\Controllers\Beranda\DeliveryController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\ProductFragranceController;
-use App\Http\Controllers\Panel\SaleController;
-use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
+use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -118,5 +119,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses user'], function () {
 		Route::get('user/get-list', [UserController::class, 'getUserList']);
 		Route::resource('users', UserController::class)->except('destroy');
+	});
+
+	// route data akun
+	Route::group(['middleware' => 'can:akses akun'], function () {
+		Route::resource('accounts', AccountController::class)->except('destroy','show');
+		Route::get('account/get-list', [AccountController::class, 'getAccountList']);
 	});
 });
