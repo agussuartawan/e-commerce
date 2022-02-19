@@ -17,7 +17,7 @@ class CreateGeneralJournalsTable extends Migration
             $table->id();
             $table->foreignId('account_id')->constrained()->onUpdate('cascade');
             $table->date('date');
-            $table->decimal('debet', $precission = 18, $scale = 2)->nullable();
+            $table->decimal('debit', $precission = 18, $scale = 2)->nullable();
             $table->decimal('credit', $precission = 18, $scale = 2)->nullable();
             $table->timestamps();
         });

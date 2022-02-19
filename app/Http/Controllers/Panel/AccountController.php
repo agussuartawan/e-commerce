@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Models\Account;
 use App\Models\AccountType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
 class AccountController extends Controller
@@ -26,7 +27,9 @@ class AccountController extends Controller
      */
     public function create()
     {
-        
+        $account = new Account();
+        $account_types = AccountType::pluck('name', 'id');
+        return view('include.account.form', compact('account', 'account_types'));
     }
 
     /**
@@ -41,6 +44,8 @@ class AccountController extends Controller
             'account_type_id.required' => 'Tipe Akun tidak boleh kosong!',
             'account_number.required' => 'No Reff tidak boleh kosong!',
             'account_number.max' => 'No Reff tidak boleh lebih dari 255 karakter!',
+            'account_number.unique' => 'No Reff sudah digunakan!',
+            'account_number.numeric' => 'No Reff harus berupa angka!',
             'name.required' => 'Nama tidak boleh kosong!',
             'name.max' => 'Nama tidak boleh lebih dari 255 karakter!',
             'description.required' => 'Deskripsi tidak boleh kosong!',
@@ -48,10 +53,11 @@ class AccountController extends Controller
         ];
         $validated = $request->validate([
             'account_type_id' => ['required'],
-            'account_number' => ['required', 'max:255'],
+            'account_number' => ['required', 'numeric', 'max:255', 'unique:accounts'],
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
         ], $messages);
+        $validated['account_number'] = AccountType::find($validated['account_type_id'])->id . '-' . $validated['account_number'];
 
         $account = Account::create($validated);
 
@@ -64,9 +70,10 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Account $account)
     {
-        //
+        $account_types = AccountType::pluck('name', 'id');
+        return view('include.account.form', compact('account', 'account_types'));
     }
 
     /**
@@ -82,6 +89,7 @@ class AccountController extends Controller
             'account_type_id.required' => 'Tipe Akun tidak boleh kosong!',
             'account_number.required' => 'No Reff tidak boleh kosong!',
             'account_number.max' => 'No Reff tidak boleh lebih dari 255 karakter!',
+            'account_number.unique' => 'No Reff sudah digunakan!',
             'name.required' => 'Nama tidak boleh kosong!',
             'name.max' => 'Nama tidak boleh lebih dari 255 karakter!',
             'description.required' => 'Deskripsi tidak boleh kosong!',
@@ -89,7 +97,7 @@ class AccountController extends Controller
         ];
         $validated = $request->validate([
             'account_type_id' => ['required'],
-            'account_number' => ['required', 'max:255'],
+            'account_number' => ['required', 'max:255', Rule::unique('accounts')->ignore($account->id)],
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
         ], $messages);
@@ -97,6 +105,11 @@ class AccountController extends Controller
         $account->update($validated);
 
         return $validated;
+    }
+
+    public function destroy(Account $account)
+    {
+        return $account->delete();
     }
 
     public function getAccountList(Request $request)

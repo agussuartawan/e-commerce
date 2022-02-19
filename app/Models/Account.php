@@ -15,4 +15,15 @@ class Account extends Model
     {
         return $this->belongsTo(AccountType::class);
     }
+
+    public function trial_balance()
+    {
+        return $this->belongsToMany(TrialBalance::class);
+    }
+
+    public function general_journal()
+    {
+        return $this->hasMany(GeneralJournal::class);
+    }
 }
+

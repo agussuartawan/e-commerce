@@ -123,7 +123,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// route data akun
 	Route::group(['middleware' => 'can:akses akun'], function () {
-		Route::resource('accounts', AccountController::class)->except('destroy','show');
+		Route::resource('accounts', AccountController::class)->except('show');
 		Route::get('account/get-list', [AccountController::class, 'getAccountList']);
 	});
 });

@@ -15,7 +15,7 @@ class CreateAccountTypesTable extends Migration
     {
         Schema::create('account_types', function (Blueprint $table) {
             $table->id();
-            $table->integer('account_number');
+            $table->integer('account_number')->unique();
             $table->string('name');
             $table->enum('balance_type', ['Debet', 'Kredit']);
             $table->timestamps();

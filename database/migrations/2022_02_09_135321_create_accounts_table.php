@@ -16,7 +16,7 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('account_type_id')->constrained()->onUpdate('cascade');
-            $table->string('account_number');
+            $table->string('account_number')->unique();
             $table->string('name');
             $table->string('description');
             $table->timestamps();

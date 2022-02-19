@@ -1,6 +1,7 @@
 @extends('layouts.panel')
 @section('title', 'Akun')
 @push('css')
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 @endpush
@@ -50,20 +51,27 @@
                                     </div>
                                 </div>
                                 <div class="col-md d-flex justify-content-end">
-                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary">Tambah Akun</a>
+                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary mr-2" id="btn-add-account" title="Tambah Akun">
+                                        <i class="fas fa-plus mr-1"></i>
+                                        Tambah Akun
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-book mr-1"></i>
+                                        Atur Saldo Awal
+                                    </a>
                                 </div>
                             </div>
             
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0" style="max-height: 400px;">
+                        <div class="card-body table-responsive p-0" style="max-height: 25rem;">
                             <table class="table table-head-fixed text-nowrap table-hover" id="account-table">
                               <thead>
                                 <tr>
                                   <th width="15%">No Ref</th>
                                   <th width="25%">Nama Akun</th>
                                   <th>Keterangan</th>
-                                  <th width="10%"></th>
+                                  <th width="20%"></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -86,6 +94,7 @@
 
 @endsection
 @push('js')
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
     <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script src="/dist/js/account/index.js"></script>
 @endpush
