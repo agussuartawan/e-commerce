@@ -143,7 +143,6 @@ class SaleController extends Controller
 
     public function getSaleList(Request $request)
     {
-
         $data  = Sale::query();
 
         return DataTables::of($data)

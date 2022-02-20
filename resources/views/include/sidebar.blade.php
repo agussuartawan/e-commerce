@@ -131,8 +131,8 @@
 
                 @can('akses jurnal umum')
                     <li class="nav-item">
-                        <a href="pages/widgets.html"
-                            class="nav-link {{ request()->is('general journal*') ? 'active' : '' }}">
+                        <a href="{{ route('journals.index') }}"
+                            class="nav-link {{ request()->is('journal*') ? 'active' : '' }}">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Jurnal Umum

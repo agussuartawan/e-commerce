@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class GeneralJournal extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['account_id', 'date', 'debit', 'credit'];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

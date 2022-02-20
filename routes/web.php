@@ -16,6 +16,7 @@ use App\Http\Controllers\Beranda\DeliveryController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
 use App\Http\Controllers\Panel\TrialBalanceController;
+use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
@@ -133,4 +134,13 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('trial-balance/first-create', [TrialBalanceController::class, 'firstCreate'])->name('trial-balance.first-create');
 		Route::post('trial-balance/first-create', [TrialBalanceController::class, 'firstStore'])->name('trial-balance.first-store');
 	});
+
+	// jurnal umum route
+	Route::group(['middleware' => 'can:akses jurnal umum'], function () {
+		Route::resource('journals', GeneralJournalController::class)->except('destroy', 'show');
+		Route::get('journal/get-list', [GeneralJournalController::class, 'getJournalList']);
+		Route::get('search-month', [GeneralJournalController::class, 'searchMonth']);
+		Route::get('search-year', [GeneralJournalController::class, 'searchYear']);
+	});
+
 });

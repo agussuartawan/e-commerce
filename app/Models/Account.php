@@ -45,5 +45,8 @@ class Account extends Model
         }
         return false;
     }
+
+    public const KAS = 2;
+    public const PENJUALAN = 18;
 }
 
