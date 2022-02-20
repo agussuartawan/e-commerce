@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Models\Account;
 use App\Models\AccountType;
+use App\Models\TrialBalance;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -17,7 +18,8 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return view('panel.account.index');
+        $trial_balance_exists = TrialBalance::exists();
+        return view('panel.account.index', compact('trial_balance_exists'));
     }
 
     /**
@@ -29,7 +31,9 @@ class AccountController extends Controller
     {
         $account = new Account();
         $account_types = AccountType::pluck('name', 'id');
-        return view('include.account.form', compact('account', 'account_types'));
+        $disable = false;
+        
+        return view('include.account.form', compact('account', 'account_types', 'disable'));
     }
 
     /**
@@ -73,7 +77,12 @@ class AccountController extends Controller
     public function edit(Account $account)
     {
         $account_types = AccountType::pluck('name', 'id');
-        return view('include.account.form', compact('account', 'account_types'));
+        if($account->accountUsed()){
+            $disable = false;
+        } else {
+            $disable = true;
+        }
+        return view('include.account.form', compact('account', 'account_types', 'disable'));
     }
 
     /**

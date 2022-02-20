@@ -15,6 +15,7 @@ use App\Http\Controllers\Panel\DashboardController;
 use App\Http\Controllers\Beranda\DeliveryController;
 use App\Http\Controllers\Panel\ProductUnitController;
 use App\Http\Controllers\Panel\ProductColorController;
+use App\Http\Controllers\Panel\TrialBalanceController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
@@ -123,7 +124,13 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// route data akun
 	Route::group(['middleware' => 'can:akses akun'], function () {
+		// akun route
 		Route::resource('accounts', AccountController::class)->except('show');
 		Route::get('account/get-list', [AccountController::class, 'getAccountList']);
+		
+		//neraca saldo route
+		Route::get('trial-balance/get-form', [TrialBalanceController::class, 'getForm']);
+		Route::get('trial-balance/first-create', [TrialBalanceController::class, 'firstCreate'])->name('trial-balance.first-create');
+		Route::post('trial-balance/first-create', [TrialBalanceController::class, 'firstStore'])->name('trial-balance.first-store');
 	});
 });

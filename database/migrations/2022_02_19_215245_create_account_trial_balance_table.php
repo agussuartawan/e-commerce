@@ -16,8 +16,8 @@ class CreateAccountTrialBalanceTable extends Migration
         Schema::create('account_trial_balance', function (Blueprint $table) {
             $table->foreignId('account_id')->constrained()->onUpdate('cascade');
             $table->foreignId('trial_balance_id')->constrained()->onUpdate('cascade');
-            $table->decimal('debit', $precission = 18, $scale = 2);
-            $table->decimal('credit', $precission = 18, $scale = 2);
+            $table->decimal('debit', $precission = 18, $scale = 2)->default(0);
+            $table->decimal('credit', $precission = 18, $scale = 2)->default(0);
         });
     }
 

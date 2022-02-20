@@ -41,7 +41,7 @@
 
                 @if($user->can('akses barang') || $user->can('akses kategori') || $user->can('akses pelanggan') || $user->can('akses bank') || $user->can('akses akun'))
                     <li
-                        class="nav-item {{ request()->is('categories*') ||request()->is('products*') ||request()->is('banks*') ||request()->is('accounts') ||request()->is('customers*')? 'menu-open': '' }}">
+                        class="nav-item {{ request()->is('categories*') ||request()->is('products*') ||request()->is('banks*') ||request()->is('accounts') || request()->is('customers*') || request()->is('trial-balance/first-create') ? 'menu-open': '' }}">
                         <a href="#" class="nav-link">
                             <i class="fas fa-file-archive nav-icon"></i>
                             <p>
@@ -74,7 +74,7 @@
                             @can('akses akun')
                                 <li class="nav-item">
                                     <a href="{{ route('accounts.index') }}"
-                                        class="nav-link {{ request()->is('accounts*') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->is('accounts*') ||  request()->is('trial-balance/first-create') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Akun</p>
                                     </a>

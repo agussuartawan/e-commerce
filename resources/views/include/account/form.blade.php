@@ -6,13 +6,13 @@
 
     <div class="form-group">
         <label for="account_type_id">Akun Tipe</label>
-        {!! Form::select('account_type_id', $account_types, null, ['class' => 'form-control', 'id' => 'account_type_id']) !!}
+        {!! Form::select('account_type_id', $account_types, null, ['class' => 'form-control custom-select', 'id' => 'account_type_id', 'disabled' => $disable]) !!}
     </div>
 
     @if($account->exists)
         <div class="form-group">
             <label for="account_number">No Ref</label>
-            {!! Form::text('account_number', null, ['class' => 'form-control', 'id' => 'account_number']) !!}
+            {!! Form::text('account_number', null, ['class' => 'form-control', 'id' => 'account_number', 'disabled' => $disable]) !!}
         </div>
     @else
         <label for="account_number">No Ref</label>
@@ -20,7 +20,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text" id="account_type_number">1 -</span>
             </div>
-            {!! Form::text('account_number', null, ['class' => 'form-control', 'id' => 'account_number']) !!}
+            {!! Form::text('account_number', null, ['class' => 'form-control', 'id' => 'account_number', 'disabled' => $disable]) !!}
         </div>
     @endif
 

@@ -1,7 +1,14 @@
 $(function () {
     $(document).ready(function () {
-        const search = $('input[type="search"]').val();
-        loadData(search);
+        loadData();
+    });
+
+    $('body').on('change', '.input-debit', function(){
+        countTotalDebit();
+    });
+
+    $('body').on('change', '.input-credit', function(){
+        countTotalCredit();
     });
 
     $("body").on('keydown', '#account_number', function (e) {
@@ -26,54 +33,28 @@ $(function () {
         }
     });
 
-    $('input[type="search"]').keypress(function(event){
-        if(event.keyCode == 13) {
-            const search = $(this).val();
-            loadData(search);
-        }
+    $('button[type="submit"]').click(function(event){
+        event.preventDefault();
+        Swal.fire({
+            title: "Yakin menyimpan saldo awal?",
+            text: "Data neraca saldo awal tidak dapat diubah!",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, atur saldo awal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#form-trial-balance').submit();
+            }
+        });
     });
 
     $('body').on('click', '#btn-add-account', function(event){
         event.preventDefault();
         const me = $(this);
         showModal(me);
-    });
-
-    $("body").on("click", ".modal-edit", function (event) {
-        event.preventDefault();
-        const me = $(this);
-        showModal(me);
-    });
-
-    $("body").on("click", ".btn-delete", function (event) {
-        event.preventDefault();
-        const me = $(this),
-            url = me.attr('href'),
-            title = me.attr('title'),
-            token = $('meta[name="csrf-token"]').attr('content');
-        if(confirm('Yakin ' + title +'?')){
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: {
-                    '_method': 'DELETE',
-                    '_token': token, 
-                },
-                success: function(response){
-                    const search = $('input[type="search"]').val();
-                    loadData(search);
-                    showSuccessToast('Data akun berhasil dihapus');
-                },
-                error: function(xhr){
-                    showErrorToast();
-                }
-            });
-        }
-    });
-
-    $('body').on('change', '#account_type_id', function(){
-        const id = $(this).children(':selected').attr('value');
-        $('#account_type_number').text(`${id} -`);
     });
 
     $(".modal-save").on("click", function (event) {
@@ -102,13 +83,10 @@ $(function () {
                 $(".btn").removeAttr("disabled");
             },
             success: function (response) {
-                showSuccessToast(message);
                 $("#modal").modal("hide");
-                const search = $('input[type="search"]').val();
-                loadData(search);
+                loadData();
             },
             error: function (xhr) {
-                showErrorToast();
                 var res = xhr.responseJSON;
                 if ($.isEmptyObject(res) == false) {
                     $.each(res.errors, function (key, value) {
@@ -124,30 +102,9 @@ $(function () {
     });
 });
 
-var Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-});
-
-showSuccessToast = (message) => {
-    Toast.fire({
-        icon: "success",
-        title: message,
-    });
-};
-
-showErrorToast = () => {
-    Toast.fire({
-        icon: "error",
-        title: "&nbsp;Terjadi Kesalahan!",
-    });
-};
-
-loadData = (search) => {
+loadData = () => {
     $.ajax({
-        url: '/account/get-list?search=' + search,
+        url: '/trial-balance/get-form',
         type: "GET",
         dataType: "html",
         beforeSend: function(){
@@ -157,12 +114,54 @@ loadData = (search) => {
             $('#preloader').fadeOut();
         },
         success: function (response) {
-            $("#account-table tbody").html(response);
+            $("#trial-balance-table tbody").html(response);
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");
         },
     });
+}
+
+countTotalDebit = () => {
+    var last_debit_id = $('.input-debit').last().attr('id'), 
+        debit_row = last_debit_id.split("-").pop(), 
+        total = 0;
+
+    for (let index = 1; index <= debit_row; index++) {
+        var this_value = $(`#debit-${index}`).val();
+        if (this_value && this_value != undefined) {
+            var this_total = this_value.replaceAll('.', '');
+            total = parseInt(total) + parseInt(this_total);
+        }
+    }
+    $('#total-debit').text(rupiah(total));
+}
+
+countTotalCredit = () => {
+    var last_credit_id = $('.input-credit').last().attr('id'), 
+        credit_row = last_credit_id.split("-").pop(), 
+        total = 0;
+
+    for (let index = 1; index <= credit_row; index++) {
+        var this_value = $(`#credit-${index}`).val();
+        if (this_value && this_value != undefined) {
+            var this_total = this_value.replaceAll('.', '');
+            total = parseInt(total) + parseInt(this_total);
+        }
+    }
+    $('#total-credit').text(rupiah(total));
+}
+
+rupiah = (bilangan) => {
+    var number_string = bilangan.toString(), sisa = number_string.length % 3, rupiah = number_string.substr(0, sisa), ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+    if (ribuan) {
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    // Cetak hasil
+    return rupiah;
 }
 
 showModal = (me) => {

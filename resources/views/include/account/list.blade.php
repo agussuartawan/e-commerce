@@ -21,7 +21,7 @@
                     <div class="col">
                         <a href="{{ route('accounts.edit', $account) }}" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit {{ $account->name }}">Edit</a>
                     </div>
-                    @if(!$account->trial_balance()->exists() || !$account->general_journal()->exists())
+                    @if($account->accountUsed())
                         <div class="col">
                             <a href="{{ route('accounts.destroy', $account) }}" class="btn btn-sm btn-block btn-outline-danger btn-delete" title="Hapus {{ $account->name }}">Hapus</a>
                         </div>

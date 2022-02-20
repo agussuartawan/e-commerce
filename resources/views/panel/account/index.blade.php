@@ -30,6 +30,15 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
+                    @if (Session::has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Berhasil </strong><br>
+                            <span>{{ Session::get('success') }}</span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     <div class="card card-outline card-info" style="position: relative;">
                         @include('include.preloader')
                         <div class="card-header">
@@ -51,14 +60,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md d-flex justify-content-end">
-                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary mr-2" id="btn-add-account" title="Tambah Akun">
+                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary" id="btn-add-account" title="Tambah Akun">
                                         <i class="fas fa-plus mr-1"></i>
                                         Tambah Akun
                                     </a>
-                                    <a href="#" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-book mr-1"></i>
-                                        Atur Saldo Awal
-                                    </a>
+                                    @if(!$trial_balance_exists)
+                                        <a href="{{ route('trial-balance.first-create') }}" class="btn btn-sm btn-primary ml-2">
+                                            <i class="fas fa-book mr-1"></i>
+                                            Atur Saldo Awal
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
             
