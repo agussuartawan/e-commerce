@@ -17,7 +17,7 @@ $(function () {
 
 loadData = (search) => {
     $.ajax({
-        url: '/report/sales/get-lists?search=' + search,
+        url: '/report/journals/get-lists?search=' + search,
         type: "GET",
         dataType: "html",
         beforeSend: function(){
@@ -37,7 +37,7 @@ loadData = (search) => {
                                 </button>`;
 
             $('#btn-action').html(btnAction);
-            $("#sale-report tbody").html(response);
+            $("#journal-report tbody").html(response);
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");

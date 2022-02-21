@@ -1,7 +1,7 @@
 <style>
     #preloader {
         position: absolute; /* Sit on top of the page content */
-         /* Hidden by default */
+        display: none; /* Hidden by default */
         width: 100%; /* Full width (cover the whole page) */
         height: auto; /* Full height (cover the whole page) */
         top: 0;

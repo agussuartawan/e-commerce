@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info" style="position: relative;">
-                        {{-- @include('include.preloader') --}}
+                        @include('include.preloader')
                         <div class="card-header">
                             <h3 class="card-title">Cari Laporan Penjualan</h3>
                         </div>
@@ -40,21 +40,14 @@
                                     <input type="text" name="dateFilter" class="form-control" id="dateFilter">
 
                                     <div class="input-group-append">
-                                        <button class="btn btn-default">
+                                        <button class="btn btn-default" id="btn-search">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-danger mr-2">
-                                    <i class="fas fa-download mr-1"></i>
-                                    Download PDF
-                                </button>
-                                <button class="btn btn-secondary">
-                                    <div class="fas fa-print mr-1"></div>
-                                    Cetak
-                                </button>
+                            <div class="d-flex justify-content-center" id="btn-action">
+                                
                             </div>
                         </div>
                     </div>
@@ -65,18 +58,20 @@
                 <div class="col-12">
                     <div class="card card-outline card-info" style="position: relative;">
                         <div class="card-body table-responsive p-0">
-                            <table class="table table-bordered" style="min-width: 50rem">
-                                <thead>
+                            <table class="table table-bordered" style="min-width: 50rem" id="sale-report">
+                                <thead class="text-center">
                                     <tr>
                                         <th>No Penjualan</th>
                                         <th>Pelanggan</th>
                                         <th>Produk</th>
-                                        <th>Tgl</th>
+                                        <th>Qty</th>
                                         <th>Total</th>
+                                        <th>Tgl</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td colspan="5" class="text-center">Data tidak ditemukan.</td>
+                                        <td colspan="6" class="text-center">Tidak ada data.</td>
                                     </tr>
                                 </tbody>
                             </table>

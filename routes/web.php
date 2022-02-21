@@ -145,6 +145,21 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// laporan route
 	Route::group(['middleware' => 'can:akses laporan'], function () {
+		// laporan penjualan
 		Route::get('report/sales', [ReportController::class, 'sales'])->name('report.sales');
+		Route::get('report/sales/get-lists', [ReportController::class, 'getSaleLists']);
+
+		// laporan jurnal umum
+		Route::get('report/journals', [ReportController::class, 'journals'])->name('report.journals');
+		Route::get('report/journals/get-lists', [ReportController::class, 'getJournalLists']);
+
+		// buku besar route
+		Route::get('report/big-books', [ReportController::class, 'bigBooks'])->name('report.bigBooks');
+		Route::get('report/big-books/get-lists', [ReportController::class, 'getBigBookLists']);
+
+		// neraca saldo route
+		Route::get('report/trial-balances', [ReportController::class, 'trialBalance'])->name('report.trialBalances');
+		Route::get('report/trial-balances/get-lists', [ReportController::class, 'getTrialBalanceLists']);
+		Route::get('month', [ReportController::class, 'storeTrialBalance']);
 	});
 });

@@ -46,6 +46,11 @@ class Account extends Model
         return false;
     }
 
+    public function getBalanceTypeAttribute()
+    {
+        return $this->account_type->balance_type;
+    }
+
     public const KAS = 2;
     public const PENJUALAN = 18;
 }

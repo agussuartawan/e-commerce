@@ -1,23 +1,15 @@
 $(function () {
     "use strict";
-    $(document).ready(function () {
-        $("#dateFilter").daterangepicker({
-            locale: {
-                format: "DD-MM-YYYY",
-                separator: " / ",
-            },
-        });
-    });
-
     $('#btn-search').click(function(){
-        const search = $('#dateFilter').val();
-        loadData(search);
+        const month = $('#month').val();
+        const year = $('#year').val();
+        loadData(month, year);
     });
 });
 
-loadData = (search) => {
+loadData = (month, year) => {
     $.ajax({
-        url: '/report/sales/get-lists?search=' + search,
+        url: `/report/trial-balances/get-lists?month=${month}&year=${year}`,
         type: "GET",
         dataType: "html",
         beforeSend: function(){
@@ -37,7 +29,7 @@ loadData = (search) => {
                                 </button>`;
 
             $('#btn-action').html(btnAction);
-            $("#sale-report tbody").html(response);
+            $("#trial-balance-report tbody").html(response);
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");

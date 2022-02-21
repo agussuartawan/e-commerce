@@ -66,7 +66,7 @@ $user = auth()->user();
                                     <a href="{{ route('products.index') }}"
                                         class="nav-link {{ request()->is('products*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Barang</p>
+                                        <p>Produk</p>
                                     </a>
                                 </li>
                             @endcan
@@ -159,19 +159,19 @@ $user = auth()->user();
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="./index2.html" class="nav-link">
+                                <a href="{{ route('report.journals') }}" class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Jurnal Umum</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="./index2.html" class="nav-link">
+                                <a href="{{ route('report.bigBooks') }}" class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Buku Besar</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="./index2.html" class="nav-link">
+                                <a href="{{ route('report.trialBalances') }}" class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Neraca Saldo</p>
                                 </a>
