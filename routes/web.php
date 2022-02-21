@@ -20,6 +20,7 @@ use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
+use App\Http\Controllers\Panel\ReportController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -128,6 +129,7 @@ Route::group(['middleware' => 'auth'], function () {
 		// akun route
 		Route::resource('accounts', AccountController::class)->except('show');
 		Route::get('account/get-list', [AccountController::class, 'getAccountList']);
+		Route::get('account-search', [AccountController::class, 'searchAccount']);
 		
 		//neraca saldo route
 		Route::get('trial-balance/get-form', [TrialBalanceController::class, 'getForm']);
@@ -139,8 +141,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses jurnal umum'], function () {
 		Route::resource('journals', GeneralJournalController::class)->except('destroy', 'show');
 		Route::get('journal/get-list', [GeneralJournalController::class, 'getJournalList']);
-		Route::get('search-month', [GeneralJournalController::class, 'searchMonth']);
-		Route::get('search-year', [GeneralJournalController::class, 'searchYear']);
 	});
 
+	// laporan route
+	Route::group(['middleware' => 'can:akses laporan'], function () {
+		Route::get('report/sales', [ReportController::class, 'sales'])->name('report.sales');
+	});
 });

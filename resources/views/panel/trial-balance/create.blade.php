@@ -5,8 +5,8 @@
 @endpush
 @section('content')
 
-     <!-- Content Header (Page header) -->
-     <section class="content-header">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -38,48 +38,50 @@
                                     <h3 class="card-title">Atur Neraca Saldo Awal</h3>
                                 </div>
                                 <div class="col-md d-flex justify-content-end">
-                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary" id="btn-add-account" title="Tambah Akun">
+                                    <a href="{{ route('accounts.create') }}" class="btn btn-sm btn-primary"
+                                        id="btn-add-account" title="Tambah Akun">
                                         <i class="fas fa-plus mr-1"></i>
                                         Tambah Akun
                                     </a>
                                 </div>
                             </div>
-                         </div>
+                        </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0" style="max-height: 25rem;">
                             {!! Form::open([
-                                'route' => 'trial-balance.first-store',
-                                'method' => 'POST',
-                                'id' => 'form-trial-balance'
-                            ]) !!}
+    'route' => 'trial-balance.first-store',
+    'method' => 'POST',
+    'id' => 'form-trial-balance',
+]) !!}
                             <div class="form-group px-4">
                                 <label for="date">Tanggal</label>
                                 {!! Form::date('date', date('Y-m-d'), ['class' => 'form-control', 'id' => 'date', 'required' => true]) !!}
                             </div>
 
 
-                            <table class="table table-head-fixed text-nowrap table-hover" id="trial-balance-table">
-                              <thead>
-                                <tr>
-                                  <th>No Ref</th>
-                                  <th>Nama Akun</th>
-                                  <th>Debet</th>
-                                  <th>Kredit</th>
-                                </tr>
-                              </thead>
+                            <table class="table table-head-fixed text-nowrap table-hover" id="trial-balance-table"
+                                style="min-width: 50rem">
+                                <thead>
+                                    <tr>
+                                        <th>No Ref</th>
+                                        <th>Nama Akun</th>
+                                        <th>Debet</th>
+                                        <th>Kredit</th>
+                                    </tr>
+                                </thead>
 
-                              <tbody>
-                              </tbody>
+                                <tbody>
+                                </tbody>
 
-                              <tfoot>
-                                <tr>
-                                    <th colspan="2" class="text-center">Jumlah</th>
-                                    <th id="total-debit">0</th>
-                                    <th id="total-credit">0</th>
-                                </tr>
-                              </tfoot>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="2" class="text-center">Jumlah</th>
+                                        <th id="total-debit">0</th>
+                                        <th id="total-credit">0</th>
+                                    </tr>
+                                </tfoot>
                             </table>
-                        </div>  
+                        </div>
                         <!-- /.card-body -->
                         <hr>
                         <div class="card-footer mx-auto p-0">

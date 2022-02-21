@@ -95,8 +95,6 @@ class AccountController extends Controller
     public function update(Request $request, Account $account)
     {
         $messages = [
-            'account_type_id.required' => 'Tipe Akun tidak boleh kosong!',
-            'account_number.required' => 'No Reff tidak boleh kosong!',
             'account_number.max' => 'No Reff tidak boleh lebih dari 255 karakter!',
             'account_number.unique' => 'No Reff sudah digunakan!',
             'name.required' => 'Nama tidak boleh kosong!',
@@ -105,8 +103,7 @@ class AccountController extends Controller
             'description.max' => 'Deskripsi tidak boleh lebih dari 255 karakter!',
         ];
         $validated = $request->validate([
-            'account_type_id' => ['required'],
-            'account_number' => ['required', 'max:255', Rule::unique('accounts')->ignore($account->id)],
+            'account_number' => ['max:255', Rule::unique('accounts')->ignore($account->id)],
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
         ], $messages);
@@ -140,5 +137,11 @@ class AccountController extends Controller
             $account_types = AccountType::with('account')->orderBy('account_number', 'ASC')->get();
         }
         return view('include.account.list', compact('account_types'));
+    }
+
+    public function searchAccount(Request $request)
+    {
+        $search = $request->search;
+        return Account::where('name', 'LIKE', "%$search%")->select('name', 'id', 'account_number')->get();
     }
 }

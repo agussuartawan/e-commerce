@@ -7,8 +7,8 @@
 @endpush
 @section('content')
 
-     <!-- Content Header (Page header) -->
-     <section class="content-header">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -49,8 +49,9 @@
                                 <div class="col-md">
                                     <div class="card-tools">
                                         <div class="input-group input-group-sm">
-                                            <input type="search" name="search" class="form-control float-right" placeholder="Cari nama akun, no ref, keterangan">
-                        
+                                            <input type="search" name="search" class="form-control float-right"
+                                                placeholder="Cari nama akun, no ref, keterangan">
+
                                             <div class="input-group-append">
                                                 <button class="btn btn-default">
                                                     <i class="fas fa-search"></i>
@@ -60,35 +61,38 @@
                                     </div>
                                 </div>
                                 <div class="col-md d-flex justify-content-end">
-                                    <a href="{{route('accounts.create')}}" class="btn btn-sm btn-primary" id="btn-add-account" title="Tambah Akun">
+                                    <a href="{{ route('accounts.create') }}" class="btn btn-sm btn-primary"
+                                        id="btn-add-account" title="Tambah Akun">
                                         <i class="fas fa-plus mr-1"></i>
                                         Tambah Akun
                                     </a>
-                                    @if(!$trial_balance_exists)
-                                        <a href="{{ route('trial-balance.first-create') }}" class="btn btn-sm btn-primary ml-2">
+                                    @if (!$trial_balance_exists)
+                                        <a href="{{ route('trial-balance.first-create') }}"
+                                            class="btn btn-sm btn-primary ml-2">
                                             <i class="fas fa-book mr-1"></i>
                                             Atur Saldo Awal
                                         </a>
                                     @endif
                                 </div>
                             </div>
-            
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0" style="max-height: 25rem;">
-                            <table class="table table-head-fixed text-nowrap table-hover" id="account-table">
-                              <thead>
-                                <tr>
-                                  <th width="15%">No Ref</th>
-                                  <th width="25%">Nama Akun</th>
-                                  <th>Keterangan</th>
-                                  <th width="20%"></th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                              </tbody>
+                            <table class="table table-head-fixed text-nowrap table-hover" id="account-table"
+                                style="min-width: 50rem">
+                                <thead>
+                                    <tr>
+                                        <th width="15%">No Ref</th>
+                                        <th width="25%">Nama Akun</th>
+                                        <th>Keterangan</th>
+                                        <th width="20%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
                             </table>
-                          </div>
+                        </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->

@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\SaleUpdated::class => [
             \App\Listeners\DecrementProductStockAfterSaleUpdated::class,
         ],
+        \App\Events\PaymentConfirmed::class => [
+            \App\Listeners\CreateJournalAfterPaymentConfirmed::class,
+        ],
     ];
 
     /**

@@ -29,7 +29,7 @@ $(function () {
                 url: "journal/get-list",
                 data: function (d) {
                     d.search = $('input[type="search"]').val();
-                    // d.category_id = $('select').val();
+                    d.dateFilter = $("#dateFilter").val();
                 },
             },
             columns: [
@@ -40,7 +40,7 @@ $(function () {
                 { data: "credit", name: "credit" },
                 { data: "action", name: "action", orderable: false },
             ],
-            dom: "<'row'<'col'B><'col month'><'col year'><'col'f>>tipr",
+            dom: "<'row'<'col'B><'col filter'><'col'f>>tipr",
             buttons: [
                 {
                     text: "Tambah",
@@ -50,81 +50,126 @@ $(function () {
                     },
                 },
             ],
+            initComplete: function (settings, json) {
+                $('input[type="search"').unbind();
+                $('input[type="search"').bind("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        dTable.search(this.value).draw();
+                    }
+                });
+            },
         });
 
+        $("#daterange").remove();
 
-        const month = '<select class="form-control" id="month"></select>';
-        const year = '<select class="form-control" id="year"></select>';
+        const dateFilter =
+            '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input class="form-control" type="text" id="dateFilter"></input></div>';
 
-        $("div.month").html(month);
-        $("div.year").html(year);
-        selectMonth();
-        selectYear();
+        $("div.filter").html(dateFilter);
+
+        const start = $("#start").val(),
+            end = $("#end").val();
+        $("#dateFilter").daterangepicker({
+            startDate: start,
+            endDate: end,
+            locale: {
+                format: "DD-MM-YYYY",
+                separator: " / ",
+            },
+        });
+        $("#end").remove();
+        $("#start").remove();
+
+        $("#dateFilter").change(function () {
+            dTable.draw();
+        });
+    });
+
+    $("body").on("click", ".modal-edit", function () {
+        event.preventDefault();
+        $("#modal").modal("show");
+
+        var me = $(this),
+            url = me.attr("href"),
+            title = me.attr("title");
+
+        $(".modal-title").text(title);
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $(".modal-body").html(response);
+                $("select").select2({ theme: "bootstrap4" });
+            },
+            error: function (xhr, status) {
+                $("#modal").modal("hide");
+                alert("Terjadi kesalahan");
+            },
+        });
+    });
+
+    $("body").on("click", ".modal-save", function (event) {
+        event.preventDefault();
+
+        var form = $("#form-journal"),
+            url = form.attr("action"),
+            method = "PUT",
+            message = "Data jurnal umum berhasil diubah";
+
+        $(".form-control").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            beforeSend: function () {
+                $(".btn").attr("disabled", true);
+            },
+            complete: function () {
+                $(".btn").removeAttr("disabled");
+            },
+            success: function (response) {
+                showSuccessToast(message);
+                $("#modal").modal("hide");
+                $("#journal-table").DataTable().ajax.reload();
+            },
+            error: function (xhr) {
+                showErrorToast();
+                var res = xhr.responseJSON;
+                if ($.isEmptyObject(res) == false) {
+                    $.each(res.errors, function (key, value) {
+                        $("#" + key)
+                            .addClass("is-invalid")
+                            .after(
+                                `<span class="invalid-feedback">${value}</span>`
+                            );
+                    });
+                }
+            },
+        });
     });
 });
 
-selectMonth = () => {
-    $('#month').select2({
-        theme: "bootstrap4",
-        ajax: {
-            url: "/search-month",
-            dataType: "json",
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-    
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.name,
-                            id: item.id,
-                        };
-                    }),
-                };
-            },
-        },
-        placeholder: "Filter Bulan",
-        cache: true,
-        allowClear: true,
-    })
-    .on('change', function(){
-        dTable.draw();
-    });
-}
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+});
 
-selectYear = () => {
-    $('#year').select2({
-        theme: "bootstrap4",
-        ajax: {
-            url: "/search-year",
-            dataType: "json",
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-    
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.name,
-                            id: item.id,
-                        };
-                    }),
-                };
-            },
-        },
-        placeholder: "Filter Tahun",
-        cache: true,
-        allowClear: true,
-    })
-    .on('change', function(){
-        dTable.draw();
+showSuccessToast = (message) => {
+    Toast.fire({
+        icon: "success",
+        title: message,
     });
-}
+};
+
+showErrorToast = () => {
+    Toast.fire({
+        icon: "error",
+        title: "&nbsp;Terjadi Kesalahan!",
+    });
+};
