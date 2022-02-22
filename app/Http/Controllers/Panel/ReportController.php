@@ -101,16 +101,35 @@ class ReportController extends Controller
     {
         $month = $request->month;
         $year = $request->year;
+
         $trialBalance = TrialBalance::with('account')->whereMonth('date', $month)->whereYear('date', $year)->first();
+        if(!$trialBalance){
+            // $this->storeTrialBalance($month, $year);
+            return;
+        }
+
+        $trialBalance->updateTrialBalance($month, $year);
+
         return view('include.report.trial-balance.list', compact('trialBalance'));
     }
 
-    public function storeTrialBalance()
+    public function storeTrialBalance($month,$year)
     {
         $date['previousMonthStartDate'] = new Carbon('first day of last month');
         $date['previousMonthEndDate'] = new Carbon('last day of last month');
+        
+        // $trialBalanceLastMonth = TrialBalance::whereBetween('date', $date)->exists();
+        // if($trialBalanceLastMonth){
+        //     \DB::transaction(function () use($month,$year){
+        //         $trialBalance = TrialBalance::create(['date' => now()]);
 
-        $trialBalance = TrialBalance::whereBetween('date', $date)->get();
-        dd($trialBalance);
+        //         $accounts = Account::orderBy('account_number', 'ASC')->get();
+        //         foreach($accounts as $account){
+        //             $account->trial_balance
+        //             $trialBalance->account->attach();
+        //         }
+    
+        //     });
+        // }
     }
 }
