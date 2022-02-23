@@ -16,6 +16,7 @@ class CreateTrialBalancesTable extends Migration
         Schema::create('trial_balances', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->boolean('is_first');
             $table->timestamps();
         });
     }

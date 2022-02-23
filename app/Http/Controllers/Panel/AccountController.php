@@ -47,7 +47,6 @@ class AccountController extends Controller
         $messages = [
             'account_type_id.required' => 'Tipe Akun tidak boleh kosong!',
             'account_number.required' => 'No Reff tidak boleh kosong!',
-            'account_number.max' => 'No Reff tidak boleh lebih dari 255 karakter!',
             'account_number.unique' => 'No Reff sudah digunakan!',
             'account_number.numeric' => 'No Reff harus berupa angka!',
             'name.required' => 'Nama tidak boleh kosong!',
@@ -57,7 +56,7 @@ class AccountController extends Controller
         ];
         $validated = $request->validate([
             'account_type_id' => ['required'],
-            'account_number' => ['required', 'numeric', 'max:255', 'unique:accounts'],
+            'account_number' => ['required', 'numeric', 'unique:accounts'],
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
         ], $messages);

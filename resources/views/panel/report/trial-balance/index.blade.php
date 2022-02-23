@@ -21,7 +21,7 @@
 
     <!-- Main content -->
     <section class="content">
-        @if($trialBalanceExists)
+        @if ($trialBalanceExists)
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center" id="btn-action">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -58,6 +58,7 @@
                                 <table class="table table-bordered" style="min-width: 50rem" id="trial-balance-report">
                                     <thead class="text-center">
                                         <tr>
+                                            <th></th>
                                             <th rowspan="2" class="align-middle">No Ref</th>
                                             <th rowspan="2" class="align-middle">Akun</th>
                                             <th colspan="2" class="text-center">Saldo</th>
@@ -84,7 +85,9 @@
                     <div class="col-12">
                         <div class="card card-outline card-danger">
                             <div class="card-body">
-                                <p class="text-center">Anda belum mengatur <strong>Neraca Saldo Awal</strong>, silahkan atur terlebih dahulu melalui <a href="{{ route('trial-balance.first-create') }}">link ini</a>!</p>
+                                <p class="text-center">Anda belum mengatur <strong>Neraca Saldo Awal</strong>, silahkan
+                                    atur terlebih dahulu melalui <a href="{{ route('trial-balance.first-create') }}">link
+                                        ini</a>!</p>
                             </div>
                         </div>
                     </div>

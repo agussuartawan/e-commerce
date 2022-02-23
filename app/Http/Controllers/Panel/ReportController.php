@@ -102,13 +102,14 @@ class ReportController extends Controller
         $month = $request->month;
         $year = $request->year;
 
-        $trialBalance = TrialBalance::with('account')->whereMonth('date', $month)->whereYear('date', $year)->first();
+        $trialBalance = TrialBalance::whereMonth('date', $month)->whereYear('date', $year)->first();
         if(!$trialBalance){
-            // $this->storeTrialBalance($month, $year);
-            return;
+            $this->storeTrialBalance($month, $year);
+        } else {
+            $trialBalance->updateTrialBalance($month, $year);
         }
 
-        $trialBalance->updateTrialBalance($month, $year);
+        $trialBalance = TrialBalance::with('account')->whereMonth('date', $month)->whereYear('date', $year)->first();
 
         return view('include.report.trial-balance.list', compact('trialBalance'));
     }
@@ -118,18 +119,30 @@ class ReportController extends Controller
         $date['previousMonthStartDate'] = new Carbon('first day of last month');
         $date['previousMonthEndDate'] = new Carbon('last day of last month');
         
-        // $trialBalanceLastMonth = TrialBalance::whereBetween('date', $date)->exists();
-        // if($trialBalanceLastMonth){
-        //     \DB::transaction(function () use($month,$year){
-        //         $trialBalance = TrialBalance::create(['date' => now()]);
+        $trialBalanceLastMonth = TrialBalance::whereBetween('date', $date)->first();
+        if($trialBalanceLastMonth){
+            \DB::transaction(function () use($month,$year, $trialBalanceLastMonth){
+                $trialBalance = TrialBalance::create(['date' => now(), 'is_first' => 0]);
 
-        //         $accounts = Account::orderBy('account_number', 'ASC')->get();
-        //         foreach($accounts as $account){
-        //             $account->trial_balance
-        //             $trialBalance->account->attach();
-        //         }
-    
-        //     });
-        // }
+                $accounts = Account::orderBy('account_number', 'ASC')->get();
+                foreach($accounts as $account){
+                    $journals = GeneralJournal::where('account_id', $account->id)->whereMonth('date', $month)->whereYear('date', $year)->get();
+                    $debitSum = $journals->sum('debit');
+                    $creditSum = $journals->sum('credit');
+
+                    if($trialBalanceLastMonth->account()->where('account_id', $account->id)->first()){
+                        $previousDebitSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->debit;
+                        $previousCreditSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->credit;
+                        $debitSum = $debitSum + $previousDebitSum - $previousCreditSum;
+                        $creditSum = $creditSum + $previousCreditSum - $previousDebitSum;
+                    }
+
+                    $trialBalance->account()->attach($account->id, [
+                        'debit' => $debitSum,
+                        'credit' => $creditSum
+                    ]);
+                }    
+            });
+        }
     }
 }

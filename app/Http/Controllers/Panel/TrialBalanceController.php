@@ -28,15 +28,13 @@ class TrialBalanceController extends Controller
 
     public function firstStore(Request $request)
     {
-        $trial_balance = \DB::transaction(function () use($request) {
-            $trial_balance = TrialBalance::create(['date' => $request->date]);
+        \DB::transaction(function () use($request) {
+            $trial_balance = TrialBalance::create(['date' => $request->date, 'is_first' => 1]);
             foreach($request->account_id as $key => $account_id){
                 $trial_balance->account()->attach($account_id, [
                     'debit' => $request->debit[$key], 'credit' => $request->credit[$key]
                 ]);
             }
-
-            return $trial_balance;
         });
 
         return redirect()->route('accounts.index')->with('success', 'Neraca saldo awal telah diatur');
