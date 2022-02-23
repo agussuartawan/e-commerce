@@ -103,9 +103,12 @@ class ReportController extends Controller
         $year = $request->year;
 
         $trialBalance = TrialBalance::whereMonth('date', $month)->whereYear('date', $year)->first();
-        if(!$trialBalance){
+
+        $now = $year . '-' . $month . '-' . date('d');
+
+        if(!$trialBalance && $now == date('Y-m-d')){
             $this->storeTrialBalance($month, $year);
-        } else {
+        } elseif($trialBalance) {
             $trialBalance->updateTrialBalance($month, $year);
         }
 
@@ -120,21 +123,40 @@ class ReportController extends Controller
         $date['previousMonthEndDate'] = new Carbon('last day of last month');
         
         $trialBalanceLastMonth = TrialBalance::whereBetween('date', $date)->first();
+
         if($trialBalanceLastMonth){
-            \DB::transaction(function () use($month,$year, $trialBalanceLastMonth){
+            \DB::transaction(function () use($month, $year, $trialBalanceLastMonth){
                 $trialBalance = TrialBalance::create(['date' => now(), 'is_first' => 0]);
 
                 $accounts = Account::orderBy('account_number', 'ASC')->get();
+
                 foreach($accounts as $account){
                     $journals = GeneralJournal::where('account_id', $account->id)->whereMonth('date', $month)->whereYear('date', $year)->get();
-                    $debitSum = $journals->sum('debit');
-                    $creditSum = $journals->sum('credit');
+                    $debitSum = 0;
+                    $creditSum = 0;
 
-                    if($trialBalanceLastMonth->account()->where('account_id', $account->id)->first()){
-                        $previousDebitSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->debit;
-                        $previousCreditSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->credit;
-                        $debitSum = $debitSum + $previousDebitSum - $previousCreditSum;
-                        $creditSum = $creditSum + $previousCreditSum - $previousDebitSum;
+                    if($journals){
+                        if($account->balance_type == 'Debet'){
+                            $debitSum = $journals->sum('debit') - $journals->sum('credit');
+                            $creditSum = 0;
+                        } elseif($account->balance_type == 'Kredit'){
+                            $creditSum = $journals->sum('credit') - $journals->sum('debit');
+                            $debitSum = 0;
+                        }
+    
+                        if($trialBalanceLastMonth->account()->where('account_id', $account->id)->first()){
+                            $previousDebitSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->debit;
+                            $previousCreditSum = $trialBalanceLastMonth->account()->where('account_id', $account->id)->first()->pivot->credit;
+    
+                            if($account->balance_type == 'Debet'){
+                                $debitSum = $debitSum + $previousDebitSum - $previousCreditSum;
+                                $creditSum = 0;
+                            } elseif($account->balance_type == 'Kredit'){
+                                $creditSum = $creditSum + $previousCreditSum - $previousDebitSum;
+                                $debitSum = 0;
+                            }
+                        }
+    
                     }
 
                     $trialBalance->account()->attach($account->id, [
@@ -144,5 +166,7 @@ class ReportController extends Controller
                 }    
             });
         }
+
+        return;
     }
 }

@@ -18,7 +18,7 @@
         </div>
         <hr>
         <div class="row">
-            @foreach ($products as $product)
+            @forelse ($products as $product)
                 <div class="col d-flex justify-content-center py-2">
                     <div class="card" style="width: 18rem;">
                         @if ($product->photo)
@@ -36,7 +36,21 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+            <div class="col py-2">
+                <div class="card p-2">
+                    <h3 class="text-center">Hello Esty..</h3>
+                    <p>&emsp;Selamat udah sampe tahap Skripsi, semangat ngerjainnya ya, do your best :)</p>
+                    <p>&emsp;Emmm... ada yang mau aku sampein. Mungkin suatu saat kita bakalan lost contact, entah karena kesibukan masing-masing atau alasan lain. Jadi mumpung sekarang masih bisa komunikasi, aku mau bilang kalo kali ini yang aku rasain ga main-main :).</p>
+                    <p>&emsp;Mungkin dikesempatan sebelumnya aku keliatan ga serius, iya karena aku gatau mau ku apa. Tapi sekarang aku udah belajar, aku udah punya tujuan.</p>
+                    <p>&emsp;Kamu pernah ga sih mikirin orang, setiap hari, dan tiap keinget dia rasanya seneng aja gitu. Padahal orang itu bukan siapa-siapa, bukan artis, bukan orang yang punya jasa dihidup kamu, tapi kok bisa kalo keinget dia malah bikin seneng. Iya, karena orang itu udah ada dihati kamu. Kalo kamu pernah ngerasain hal ini, artinya orang itu beruntung banget :).</p>
+                    <p>&emsp;Aku gatau sekarang hati kamu milik siapa, tapi aku sangat amat berharap bukan milik siapa-siapa hehehe</p>
+                    <p>&emsp;Aku pengen bisa komunikasi tiap hari sama kamu, pengen denger ceritamu, pengen tau hari hari mu, pengen dengerin keluh kesah mu, pengen selalu tau kabarmu dan masih banyak lagi.</p>
+                    <p>Kalo kamu tanya kenapa? ya karna aku suka kamu :)</p>
+                    <p class="mt-3">&emsp;Tenang, nanti pesan ini bakalan hilang kok kalo kamu udah nambah data produk hehehe. Mungkin banyak hal yang ga sesuai sama yang kamu pengen tapi jangan lupa selalu tersenyum ya, senyum mu indah banget soalnya :)</p>
+                </div>
+            </div>
+            @endforelse
         </div>
     </div>
 @endsection

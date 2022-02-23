@@ -58,7 +58,6 @@
                                 <table class="table table-bordered" style="min-width: 50rem" id="trial-balance-report">
                                     <thead class="text-center">
                                         <tr>
-                                            <th></th>
                                             <th rowspan="2" class="align-middle">No Ref</th>
                                             <th rowspan="2" class="align-middle">Akun</th>
                                             <th colspan="2" class="text-center">Saldo</th>

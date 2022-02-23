@@ -9,7 +9,7 @@ class TrialBalance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date'];
+    protected $fillable = ['date', 'is_first'];
 
     public function account()
     {
@@ -18,38 +18,53 @@ class TrialBalance extends Model
 
     public function updateTrialBalance($month, $year)
     {
-        $accounts = Account::with('general_journal')->get();
-        foreach($accounts as $account){
-            $journals = GeneralJournal::where('account_id', $account->id)->whereMonth('date', $month)->whereYear('date', $year)->get();
-            if(count($journals) != 0){
-                $date['previousMonthStartDate'] = new \Carbon\Carbon('first day of last month');
-                $date['previousMonthEndDate'] = new \Carbon\Carbon('last day of last month');
+        $date['previousMonthStartDate'] = new \Carbon\Carbon('first day of last month');
+        $date['previousMonthEndDate'] = new \Carbon\Carbon('last day of last month');
 
-                $previousTrialBalance = $this->whereBetween('date', $date)->first();
-                $previousTotalDebit = 0;
-                $previousTotalCredit = 0;
-                if($previousTrialBalance){
-                    if($previousTrialBalance->account->where('account_id', $account->id)->first()){
-                        $previousTotalDebit = $previousTrialBalance->account->where('account_id', $account->id)->first()->debit;
-                        $previousTotalCredit = $previousTrialBalance->account->where('account_id', $account->id)->first()->credit;
+        $previousTrialBalance = $this->whereBetween('date', $date)->first();              
+
+        if($previousTrialBalance){
+            $accounts = Account::with('general_journal')->get();
+            foreach($accounts as $account){
+                $journals = GeneralJournal::where('account_id', $account->id)->whereMonth('date', $month)->whereYear('date', $year)->get();
+                if($journals){
+                    if($account->balance_type == 'Debet'){
+                        $debitSum = $journals->sum('debit') - $journals->sum('credit');
+                        $creditSum = 0;
+                    } elseif($account->balance_type == 'Kredit'){
+                        $creditSum = $journals->sum('credit') - $journals->sum('debit');
+                        $debitSum = 0;
                     }
-                }
 
-                $debitSum = $journals->sum('debit') + $previousTotalDebit - $previousTotalCredit;
-                $creditSum = $journals->sum('credit') + $previousTotalCredit - $previousTotalDebit;
-    
-                $this->account()->updateExistingPivot($account->id, [
-                    'debit' => $debitSum,
-                    'credit' => $creditSum
-                ]);
-            } else {
-                if($this->is_first != 0){
-                    $this->account()->attach($account->id, [
-                        'debit' => 0,
-                        'credit' => 0
+                        if($previousTrialBalance->account()->where('account_id', $account->id)->first()){
+                            $previousTotalDebit = $previousTrialBalance->account()->where('account_id', $account->id)->first()->pivot->debit;
+                            $previousTotalCredit = $previousTrialBalance->account()->where('account_id', $account->id)->first()->pivot->credit;
+                            
+                            if($account->balance_type == 'Debet'){
+                                $debitSum = $debitSum + $previousTotalDebit - $previousTotalCredit;
+                                $creditSum = 0;
+                            } elseif($account->balance_type == 'Kredit'){
+                                $creditSum = $creditSum + $previousTotalCredit - $previousTotalDebit;
+                                $debitSum = 0;
+                            }
+                        }
+                    
+
+        
+                    $this->account()->updateExistingPivot($account->id, [
+                        'debit' => $debitSum,
+                        'credit' => $creditSum
                     ]);
-                }  
-            }
-        } 
+                    
+                } else {
+                    if($this->is_first != 1){
+                        $this->account()->attach($account->id, [
+                            'debit' => 0,
+                            'credit' => 0
+                        ]);
+                    }  
+                }
+            } 
+        }
     }
 }

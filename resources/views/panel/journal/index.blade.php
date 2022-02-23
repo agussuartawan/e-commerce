@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Penjualan')
+@section('title', 'Jurnal Umum')
 
 @push('css')
     <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
