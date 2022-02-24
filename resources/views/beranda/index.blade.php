@@ -39,7 +39,7 @@
                     </div>
                 </div>
             @empty
-                {{-- <div class="col py-2">
+                <div class="col py-2">
                     <div class="card p-2">
                         <h3 class="text-center">Hello Esty..</h3>
                         <p>&emsp;Selamat udah sampe tahap Skripsi, semangat ngerjainnya ya, do your best :)</p>
@@ -61,7 +61,7 @@
                             data produk hehehe. Mungkin banyak hal yang ga sesuai sama yang kamu pengen tapi jangan lupa
                             selalu tersenyum ya, senyum mu indah banget soalnya :)</p>
                     </div>
-                </div> --}}
+                </div>
             @endforelse
         </div>
     </div>
