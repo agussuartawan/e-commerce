@@ -17,6 +17,7 @@ use App\Models\DeliveryStatus;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SaleController extends Controller
 {
@@ -183,7 +184,7 @@ class SaleController extends Controller
                 $buttons = '<div class="row">';
 
                 $buttons .= '<div class="col">';
-                $buttons .= '<a href="/sales/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->sale_number.'">Detail</a>';
+                $buttons .= '<a href="/sales/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->sale_number.'" data-id="'.$data->id.'">Detail</a>';
                 $buttons .= '</div>';
                 
                 if($data->is_cancel != 1){
@@ -234,5 +235,12 @@ class SaleController extends Controller
     public function getVariantList(Product $product, Sale $sale)
     {
         return view('include.sale.variant', compact('product', 'sale'));
+    }
+
+    public function formOrder(Sale $sale)
+    {
+        // return view('pdf.form-order', compact('sale'));
+        $pdf = PDF::loadView('pdf.form-order', compact('sale'));
+        return $pdf->stream('form-order.pdf');
     }
 }

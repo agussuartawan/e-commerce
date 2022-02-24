@@ -4,16 +4,18 @@
     <div class="container mt-2">
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <select name="" id="" class="form-control mr-sm-2 custom-select my-2">
+                <div class="form-inline">
+                    <input class="form-control mr-sm-2" type="search" value="{{ $search }}" name="search"
+                        placeholder="Search" aria-label="Search" id="search">
+                    <select name="category_id" id="category_id" class="form-control mr-sm-2 custom-select my-2">
                         <option value="0">Semua</option>
                         @foreach ($categories as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            <option value="{{ $item->id }}" @if ($category_id == $item->id) selected @endif>
+                                {{ $item->name }}</option>
                         @endforeach
                     </select>
-                    <button class="btn btn-outline-success my-sm-0" type="submit">Cari</button>
-                </form>
+                    <button class="btn btn-outline-success my-sm-0" id="btn-search">Cari</button>
+                </div>
             </div>
         </div>
         <hr>
@@ -37,7 +39,7 @@
                     </div>
                 </div>
             @empty
-                <div class="col py-2">
+                {{-- <div class="col py-2">
                     <div class="card p-2">
                         <h3 class="text-center">Hello Esty..</h3>
                         <p>&emsp;Selamat udah sampe tahap Skripsi, semangat ngerjainnya ya, do your best :)</p>
@@ -59,8 +61,11 @@
                             data produk hehehe. Mungkin banyak hal yang ga sesuai sama yang kamu pengen tapi jangan lupa
                             selalu tersenyum ya, senyum mu indah banget soalnya :)</p>
                     </div>
-                </div>
+                </div> --}}
             @endforelse
         </div>
     </div>
 @endsection
+@push('js')
+    <script src="{{ asset('') }}/dist/js/beranda/index.js"></script>
+@endpush

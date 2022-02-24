@@ -134,14 +134,15 @@ $(function () {
 
         var me = $(this),
             url = me.attr("href"),
-            title = me.attr("title");
+            title = me.attr("title"),
+            sale_id = me.attr("data-id");
 
         $(".modal-title").text(title);
         $(".modal-footer").append(
             '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
         );
         $(".modal-footer").append(
-            '<a href="#" target="_blanc" class="btn btn-primary print-fo">Cetak Form Order</a>'
+            `<a href="/sale/form-order/${sale_id}" target="_blanc" class="btn btn-primary print-fo">Cetak Form Order</a>`
         );
 
         $.ajax({

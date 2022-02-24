@@ -106,6 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::put('sale/{sale}/confirm', [SaleController::class, 'deliveryConfirm']);
 		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
 		Route::get('sale/{product}/{sale}/get-variant-list', [SaleController::class, 'getVariantList']);
+		Route::get('sale/form-order/{sale}', [SaleController::class, 'formOrder']);
 		Route::resource('sales', SaleController::class)->except('destroy', 'create', 'store');
 	});
 
