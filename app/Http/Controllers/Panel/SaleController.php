@@ -239,8 +239,8 @@ class SaleController extends Controller
 
     public function formOrder(Sale $sale)
     {
-        // return view('pdf.form-order', compact('sale'));
         $pdf = PDF::loadView('pdf.form-order', compact('sale'));
+        $pdf->setPaper('A4', 'potrait');
         return $pdf->stream('form-order.pdf');
     }
 }

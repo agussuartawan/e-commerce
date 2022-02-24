@@ -13,6 +13,20 @@ $(function () {
         const search = $('#dateFilter').val();
         loadData(search);
     });
+
+    $('body').on('click', '#btn-download', function(event){
+        event.preventDefault();
+        const url = $(this).attr('href');
+        const search = $('#dateFilter').val();
+        window.open(url + '?search=' + search, '_blanc');
+    });
+
+    $('body').on('click', '#btn-print', function(event){
+        event.preventDefault();
+        const url = $(this).attr('href');
+        const search = $('#dateFilter').val();
+        window.open(url + '?search=' + search, '_blanc');
+    });
 });
 
 loadData = (search) => {
@@ -27,14 +41,14 @@ loadData = (search) => {
             $('#preloader').fadeOut();
         },
         success: function (response) {
-            const btnAction = `<button class="btn btn-danger mr-2">
+            const btnAction = `<a href="/report/journals-download" target="_blanc" class="btn btn-danger mr-2" id="btn-download">
                                     <i class="fas fa-download mr-1"></i>
                                     Download PDF
-                                </button>
-                                <button class="btn btn-secondary">
+                                </a>
+                                <a href="/report/journals-print" target="_blanc" class="btn btn-secondary" id="btn-print">
                                     <div class="fas fa-print mr-1"></div>
                                     Cetak
-                                </button>`;
+                                </a>`;
 
             $('#btn-action').html(btnAction);
             $("#journal-report tbody").html(response);
