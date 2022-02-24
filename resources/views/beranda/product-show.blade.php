@@ -22,7 +22,7 @@
                 @if ($product->photo)
                     <img src="{{ asset('storage/' . $product->photo) }}" alt="..." class="img-thumbnail">
                 @else
-                    <img src="/img/no-image.jpg" alt="..." class="img-thumbnail">
+                    <img src="{{ asset('') }}/img/no-image.jpg" alt="..." class="img-thumbnail">
                 @endif
             </div>
             <div class="col-md-6">

@@ -2,16 +2,16 @@
 @section('title', 'Order')
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
-        <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
-        <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+        <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.css">
+        <link rel="stylesheet" href="{{ asset('') }}/plugins/select2/css/select2.min.css">
+        <link rel="stylesheet" href="{{ asset('') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     @endpush
     <div class="container py-2">
         {!! Form::open([
-            'route' => ['order.store', $product->id],
-            'method' => 'POST',
-            'id' => 'form-order',
-        ]) !!}
+    'route' => ['order.store', $product->id],
+    'method' => 'POST',
+    'id' => 'form-order',
+]) !!}
 
         <div class="card">
             <div class="card-header">
@@ -158,7 +158,7 @@
     </div>
 @endsection
 @push('js')
-    <script src="/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="/dist/js/order/create.js"></script>
+    <script src="{{ asset('') }}/plugins/select2/js/select2.full.min.js"></script>
+    <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/dist/js/order/create.js"></script>
 @endpush

@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 @section('title', 'Saldo Awal')
 @push('css')
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
 
@@ -104,6 +104,6 @@
 
 @endsection
 @push('js')
-    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="/dist/js/trial-balance/first-create.js"></script>
+    <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/dist/js/trial-balance/first-create.js"></script>
 @endpush

@@ -1,9 +1,7 @@
-<img @if ($product->photo)
-src="{{ asset('storage/' . $product->photo) }}"
+<img @if ($product->photo) src="{{ asset('storage/' . $product->photo) }}"
 @else
-src="/img/no-image.jpg"
-@endif
-class="rounded mx-auto d-block col-sm-4">
+src="{{ asset('') }}/img/no-image.jpg" @endif
+    class="rounded mx-auto d-block col-sm-4">
 
 <div class="d-flex justify-content-center mt-2">
     <h5><span class="badge badge-secondary mr-2" title="Kategori">{{ $product->category->name }}</span></h5>
@@ -67,33 +65,34 @@ class="rounded mx-auto d-block col-sm-4">
                 <span class="col-form-label text-md-end">Aroma Tersedia</span>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col">
-                @if($product->product_fragrance)
+                @if ($product->product_fragrance)
                     @foreach ($product->product_fragrance as $fragrance)
                         <span class="badge badge-info mr-2" title="Aroma">{{ $fragrance->name }}</span>
                     @endforeach
-        
+
                 @else
                     <p>-</p>
                 @endif
             </div>
         </div>
     </div>
-        
+
     <div class="col">
         <div class="row">
             <div class="col">
                 <span class="col-form-label text-md-end">Warna Tersedia</span>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col">
-                @if($product->product_color)
+                @if ($product->product_color)
                     @foreach ($product->product_color as $color)
-                        <span class="badge mr-2" style="background-color: {{$color->hex_color}}!important;" title="Warna">{{ $color->name }}</span>
+                        <span class="badge mr-2" style="background-color: {{ $color->hex_color }}!important;"
+                            title="Warna">{{ $color->name }}</span>
                     @endforeach
                 @else
                     <p>-</p>

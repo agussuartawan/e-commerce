@@ -2,9 +2,9 @@
 @section('title', 'Tambah Jurnal Umum')
 
 @push('css')
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
-    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 @endpush
 
 @section('content')
@@ -106,7 +106,7 @@
 @endsection
 
 @push('js')
-    <script src="/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="/dist/js/journal/create.js"></script>
+    <script src="{{ asset('') }}/plugins/select2/js/select2.full.min.js"></script>
+    <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/dist/js/journal/create.js"></script>
 @endpush

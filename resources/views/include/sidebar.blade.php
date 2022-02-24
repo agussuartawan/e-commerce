@@ -15,7 +15,7 @@ $user = auth()->user();
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel pt-2 d-flex">
             <div class="image">
-                <img src="/img/null-avatar.png" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('') }}/img/null-avatar.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="pb-3 info">
                 <a href="#">{{ $user->name }}</a>
@@ -159,19 +159,22 @@ $user = auth()->user();
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.journals') }}" class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
+                                <a href="{{ route('report.journals') }}"
+                                    class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Jurnal Umum</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.bigBooks') }}" class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
+                                <a href="{{ route('report.bigBooks') }}"
+                                    class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Buku Besar</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.trialBalances') }}" class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
+                                <a href="{{ route('report.trialBalances') }}"
+                                    class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Neraca Saldo</p>
                                 </a>

@@ -1,7 +1,7 @@
 @extends('layouts.general')
 @section('title', 'Pembayaran')
 @push('css')
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="container py-2">
@@ -37,15 +37,19 @@
                                     <td>{{ $payment->sale->sale_number }}</td>
                                     <td>{{ \Carbon\Carbon::parse($payment->date)->isoFormat('DD MMMM Y') }}</td>
                                     <td>{{ $payment->sender_account_name }}</td>
-                                    <td class="text-center">{{ $payment->sender_bank }}<i class="fas fa-arrow-right mx-3"></i>{{ $payment->destination_bank }}</td>
+                                    <td class="text-center">{{ $payment->sender_bank }}<i
+                                            class="fas fa-arrow-right mx-3"></i>{{ $payment->destination_bank }}</td>
                                     <td>{{ rupiah($payment->sale->grand_total) }}</td>
                                     <td>
                                         @if ($payment->sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN)
-                                            <span class="badge badge-secondary">{{ $payment->sale->payment_status->name }}</span>
+                                            <span
+                                                class="badge badge-secondary">{{ $payment->sale->payment_status->name }}</span>
                                         @elseif($payment->sale->payment_status_id == \App\Models\PaymentStatus::LUNAS)
-                                            <span class=" badge badge-success">{{ $payment->sale->payment_status->name }}</span>
+                                            <span
+                                                class=" badge badge-success">{{ $payment->sale->payment_status->name }}</span>
                                         @elseif($payment->sale->payment_status_id == \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI)
-                                            <span class="text-italic text-warning">{{ $payment->sale->payment_status->name }}</span>
+                                            <span
+                                                class="text-italic text-warning">{{ $payment->sale->payment_status->name }}</span>
                                         @elseif($payment->sale->payment_status_id == \App\Models\PaymentStatus::DIBATALKAN)
                                             <span class="text-italic text-danger">(Dibatalkan)</span>
                                         @endif
@@ -71,6 +75,6 @@
     </div>
 @endsection
 @push('js')
-    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="/dist/js/delivery/index.js"></script>
+    <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/dist/js/delivery/index.js"></script>
 @endpush

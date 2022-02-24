@@ -1,7 +1,7 @@
 @extends('layouts.general')
 @section('title', 'Order')
 @push('css')
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="container py-2">
@@ -98,6 +98,6 @@
     </div>
 @endsection
 @push('js')
-    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="/dist/js/delivery/index.js"></script>
+    <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/dist/js/delivery/index.js"></script>
 @endpush

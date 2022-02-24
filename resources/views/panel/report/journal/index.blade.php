@@ -1,8 +1,9 @@
 @extends('layouts.panel')
 @section('title', 'Laporan Jurnal Umum')
 @push('css')
-    <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
-    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet"
+        href="{{ asset('') }}/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 @endpush
 @section('content')
     <!-- Content Header (Page header) -->
@@ -47,7 +48,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center" id="btn-action">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -82,9 +83,9 @@
     </section>
 @endsection
 @push('js')
-    <script src="/plugins/moment/moment.min.js"></script>
-    <script src="/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="{{ asset('') }}/plugins/moment/moment.min.js"></script>
+    <script src="{{ asset('') }}/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="{{ asset('') }}/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <script src="/dist/js/report/journal/index.js"></script>
+    <script src="{{ asset('') }}/dist/js/report/journal/index.js"></script>
 @endpush

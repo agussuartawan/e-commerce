@@ -96,5 +96,5 @@
     </section>
 @endsection
 @push('js')
-    <script src="/dist/js/report/trial-balance/index.js"></script>
+    <script src="{{ asset('') }}/dist/js/report/trial-balance/index.js"></script>
 @endpush

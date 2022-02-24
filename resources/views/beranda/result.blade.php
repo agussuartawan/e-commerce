@@ -42,5 +42,5 @@
     </div>
 @endsection
 @push('js')
-    <script src="/dist/js/order/result.js"></script>
+    <script src="{{ asset('') }}/dist/js/order/result.js"></script>
 @endpush
