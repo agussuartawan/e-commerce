@@ -62,7 +62,7 @@
                             <div class="col">
                                 <h6><strong>Rincian Pesanan</strong></h6>
                                 <h6>{{ $sale->product->product_name }}
-                                    {{ $sale->product->size }}{{ $sale->product->product_unit->name }} &emsp;&emsp; Rp.
+                                    {{ $sale->product->size }}{{ $sale->product->product_unit_name }} &emsp;&emsp; Rp.
                                     {{ rupiah($sale->product->selling_price) }} x {{ $sale->qty }}</h6>
                                 <small>(Variasi : {{ $sale->product_color->name }},
                                     {{ $sale->product_fragrance->name }})</small>
@@ -90,7 +90,8 @@
 
                     <div class="card-footer d-flex justify-content-center">
                         <a href="{{ route('delivery.index') }}" class="btn btn-danger mr-2">Kembali</a>
-                        <a href="#" class="btn btn-primary">Cetak Nota Pembelian</a>
+                        <a href="{{ route('order.invoice', $sale) }}" class="btn btn-primary" target="_blanc">Cetak Nota
+                            Pembelian</a>
                     </div>
                 </div>
             </div>

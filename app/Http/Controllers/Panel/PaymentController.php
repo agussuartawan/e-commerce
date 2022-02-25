@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Events\PaymentConfirmed;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentStatus;
@@ -31,8 +30,6 @@ class PaymentController extends Controller
         $sale = \DB::transaction(function() use($sale) {
             $sale->payment_status_id = PaymentStatus::LUNAS;
             $sale->save();
-
-            event(new PaymentConfirmed($sale));
 
             return $sale;
         });

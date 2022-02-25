@@ -139,7 +139,7 @@ $(function () {
 
         $(".modal-title").text(title);
         $(".modal-footer").append(
-            '<a href="#" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>'
+            `<a href="/order/${sale_id}/invoice" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>`
         );
         $(".modal-footer").append(
             `<a href="/sale/form-order/${sale_id}" target="_blanc" class="btn btn-primary print-fo">Cetak Form Order</a>`

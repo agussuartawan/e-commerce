@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Events\PaymentConfirmed;
 use Carbon\Carbon;
 use App\Models\Bank;
 use App\Models\City;
@@ -226,8 +227,12 @@ class SaleController extends Controller
 
     public function deliveryConfirm(Sale $sale)
     {
-        $sale->delivery_status_id = DeliveryStatus::DALAM_PENGIRIMAN;
-        $sale->save();
+
+        DB::transaction(function () use ($sale){
+            $sale->delivery_status_id = DeliveryStatus::DALAM_PENGIRIMAN;
+            $sale->save();
+            event(new PaymentConfirmed($sale));
+        });
 
         return $sale;
     }

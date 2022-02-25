@@ -87,6 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('order/{product}/create', [OrderController::class, 'store'])->name('order.store');
 		Route::get('order/{sale}/result', [OrderController::class, 'result'])->name('order.result');
 		Route::get('order/{sale}/show', [OrderController::class, 'show'])->name('order.show');
+		Route::get('order/{sale}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
 
 
 		Route::get('payment/{sale}/create', [BerandaPaymentController::class, 'create'])->name('payment.create');

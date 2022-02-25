@@ -15,6 +15,7 @@ use App\Models\PaymentStatus;
 use App\Models\DeliveryStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -146,5 +147,12 @@ class OrderController extends Controller
             return redirect()->route('delivery.index');
         }
         return view('beranda.order.show', compact('sale'));
+    }
+
+    public function invoice(Sale $sale)
+    {
+        $pdf = PDF::loadView('pdf.invoice', compact('sale'));
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream('invoice-penjualan.pdf');
     }
 }

@@ -18,6 +18,7 @@ class DeliveryController extends Controller
 
     public function deliveryReceived(Sale $sale)
     {
+
         $sale->delivery_status_id = DeliveryStatus::DIKIRIM;
         $sale->save();
 

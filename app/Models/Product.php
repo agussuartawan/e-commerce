@@ -40,4 +40,9 @@ class Product extends Model
     {
         return $this->belongsTo(ProductUnit::class);
     }
+
+    public function getProductUnitNameAttribute()
+    {
+        return $this->product_unit->name;
+    }
 }
