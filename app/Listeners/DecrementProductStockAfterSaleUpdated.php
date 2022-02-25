@@ -28,6 +28,8 @@ class DecrementProductStockAfterSaleUpdated
     {
         $sale = $event->sale;
         $request = $event->request;
-        $sale->product->decrement('stock', (int)$request['qty']);
+        // $sale->product->decrement('stock', (int)$request['qty']);
+        $sale->product->stock = $sale->product->stock - (int)$request['qty'];
+        $sale->product->save();
     }
 }
