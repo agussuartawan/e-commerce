@@ -36,7 +36,7 @@
                     <img src="{{ asset('img/logo.png') }}" class="rounded" alt="..." width="128px"
                         height="128px">
                 </div>
-                <a href="{{ route('beranda') }}" class="h1"><b>CV</b>Murni Sejati</a>
+                <a href="{{ route('beranda') }}" class="h1">CV. Murni Sejati</a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Selamat datang, silahkan login</p>
@@ -60,7 +60,8 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                    <p class="text-center mt-2">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
+                    <h6 class="mt-2">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></h6>
+                    <h6>Lupa password? <a href="{{ url('/password/reset') }}">Reset disini</a></h6>
                 </form>
             </div>
             <!-- /.card-body -->

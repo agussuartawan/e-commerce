@@ -41,7 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 	});
 
 	Route::group(['middleware' => 'can:akses kategori'], function () {
-		Route::resource('categories', CategoryController::class)->except('destroy', 'show');
+		Route::resource('categories', CategoryController::class)->except('show');
 		Route::get('categories/get-list', [CategoryController::class, 'getCategoryLists']);
 	});
 	Route::get('categories-search', [CategoryController::class, 'searchCategories']);
@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('unit-search', [ProductUnitController::class, 'searchUnit']);
 	Route::group(['middleware' => 'can:akses barang'], function () {
 		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
-		Route::resource('products', ProductController::class)->except('destroy');
+		Route::resource('products', ProductController::class);
 		
 		#product color route
 		Route::get('color-create', [ProductColorController::class, 'create']);

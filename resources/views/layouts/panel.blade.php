@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>CV. Murni Sejati | @yield('title')</title>
+    <title>{{env('APP_NAME')}} | @yield('title')</title>
 
     <!-- favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('') }}/img/apple-touch-icon.png">

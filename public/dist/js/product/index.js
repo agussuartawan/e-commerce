@@ -86,6 +86,12 @@ $(function () {
         });
     });
 
+    $("body").on("click", ".btn-delete", function (event) {
+        event.preventDefault();
+        var me = $(this);
+        showDeleteAlert(me);
+    });
+
     $("body").on("click", ".btn-show", function (event) {
         event.preventDefault();
         $("#modal").modal("show");
@@ -110,3 +116,59 @@ $(function () {
         });
     });
 });
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+});
+
+showErrorToast = () => {
+    Toast.fire({
+        icon: "error",
+        title: "&nbsp;Terjadi Kesalahan!",
+    });
+};
+
+showSuccessToast = (message) => {
+    Toast.fire({
+        icon: "success",
+        title: message,
+    });
+};
+
+showDeleteAlert = function(me) {
+    var url = me.attr('href'),
+                title = me.attr('title'),
+                token = $('meta[name="csrf-token"]').attr('content');
+
+    Swal.fire({
+        title: 'Perhatian!',
+        text: "Hapus data "+ title +"?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    '_method': 'DELETE',
+                    '_token': token, 
+                },
+                success: function(response){
+                    $('#product-table').DataTable().ajax.reload();
+                    showSuccessToast('Data produk berhasil dihapus');
+                },
+                error: function(xhr){
+                    showErrorToast();
+                }
+            });
+        }
+    });
+}

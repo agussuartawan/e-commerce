@@ -30,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'beranda';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -65,7 +65,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'fullname' => ['required', 'string', 'max:255'],
             'address' => ['required'],
             'phone' => ['required'],
         ], $messages);
@@ -86,7 +85,7 @@ class RegisterController extends Controller
         ]);
 
         Customer::create([
-            'fullname' => $data['fullname'],
+            'fullname' => $data['name'],
             'phone' => $data['phone'],
             'address' => $data['address'],
             'user_id' => $user->id

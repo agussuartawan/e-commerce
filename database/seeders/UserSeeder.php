@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
 			$customer_role->syncPermissions([$beranda]);
 
 			$superadmin = User::create([
-				'name' => 'SuperAdmin',
+				'name' => 'Super Admin',
 				'email' => 'superadmin@gmail.com',
 				'password' => Hash::make('password')
 			]);

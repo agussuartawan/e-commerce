@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'category_id', 
         'product_unit_id',
@@ -39,6 +37,11 @@ class Product extends Model
     public function product_unit()
     {
         return $this->belongsTo(ProductUnit::class);
+    }
+
+    public function sale()
+    {
+        return $this->hasMany(Sale::class);
     }
 
     public function getProductUnitNameAttribute()

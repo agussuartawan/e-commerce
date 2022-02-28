@@ -169,6 +169,15 @@ class ProductController extends Controller
 
         return $product;
     }
+
+    public function destroy(Product $product)
+    {
+        \DB::transaction(function () use ($product) {
+            $product->product_color()->detach();
+            $product->product_fragrance()->detach();
+            return $product->delete();
+        });
+    }
     
     public function getProductLists(Request $request)
     {
@@ -183,12 +192,19 @@ class ProductController extends Controller
                 $buttons .= '<a href="/products/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->product_name.'">Detail</a>';
                 $buttons .= '</div><div class="col">';
                 $buttons .= '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->product_name.'">Edit</a>';
-                $buttons .= '</div></div>';
+                if(!$data->sale()->exists()){
+                    $buttons .= '</div><div class="col">';
+                    $buttons .= '<a href="/products/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block btn-delete" title="Hapus '.$data->product_name.'">Hapus</a></div>';
+                }
+                $buttons .= '</div>';
 
                 return $buttons;
             })
             ->addColumn('selling_price', function($data){
                 return rupiah($data->selling_price);
+            })
+            ->addColumn('stock', function($data){
+                return $data->stock . ' ' . $data->product_unit->name;
             })
             ->filter(function ($instance) use ($request) {
                 if ($request->category_id) {
@@ -206,7 +222,7 @@ class ProductController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action', 'category', 'selling_price'])
+            ->rawColumns(['action', 'category', 'selling_price', 'stock'])
             ->make(true);
     }
 

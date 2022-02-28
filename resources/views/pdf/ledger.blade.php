@@ -100,7 +100,7 @@
         @endforelse
         <table style="width: 100%; margin-top: 20px">
             <tr>
-                <td class="text" style="text-align: right">Dalung, {{\Carbon\Carbon::now()->isoFormat('DD MMMM Y')}}</td>
+                <td class="text" style="text-align: right">Badung, {{\Carbon\Carbon::now()->isoFormat('DD MMMM Y')}}</td>
             </tr>
             <tr><td style="height: 40px"></td></tr>
             <tr>

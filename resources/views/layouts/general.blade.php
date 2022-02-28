@@ -21,7 +21,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     @stack('css')
-    <title>CV. Murni Sejati | @yield('title')</title>
+    <title>{{env('APP_NAME')}} | @yield('title')</title>
 </head>
 
 <body>
@@ -60,7 +60,7 @@
 
                 </ul>
                 @auth
-                    @can('akses beranda')
+                    {{-- @can('akses beranda') --}}
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -68,9 +68,12 @@
                                     {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                        {{ __('Dashboard') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                                                                                    document.getElementById('logout-form').submit();">
+                                        document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -81,7 +84,7 @@
                                 </div>
                             </li>
                         </ul>
-                    @endcan
+                    {{-- @endcan --}}
                 @endauth
             </div>
         </div>

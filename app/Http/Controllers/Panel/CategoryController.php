@@ -89,13 +89,27 @@ class CategoryController extends Controller
         return $category;
     }
 
+    public function destroy(Category $category)
+    {
+        return $category->delete();
+    }
+
     public function getCategoryLists(Request $request)
     {
         $data  = Category::query();
 
         return DataTables::of($data)
             ->addColumn('action', function ($data) {
-                return '<a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a>';
+                $buttons = '<div class="row">';
+
+                $buttons .= '<div class="col"><a href="/categories/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a></div>';
+                if(!$data->product()->exists()){
+                    $buttons .= '<div class="col"><a href="/categories/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block btn-delete" title="Hapus '.$data->name.'">Hapus</a></div>';
+                }
+
+                $buttons .= '</div>';
+                
+                return $buttons;
             })
             ->filter(function ($instance) use ($request) {
                 if (!empty($request->search)) {

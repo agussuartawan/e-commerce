@@ -27,6 +27,18 @@ $user = auth()->user();
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+               @can('akses dashboard')
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}"
+                            class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-tachometer-alt nav-icon"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('akses user')
                     <li class="nav-item">
                         <a href="{{ route('users.index') }}"
