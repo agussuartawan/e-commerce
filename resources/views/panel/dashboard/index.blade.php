@@ -97,8 +97,12 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  Grafik Pemesanan Tahun {{ date('Y') }}
+                  Grafik Pemesanan Tahun {{ $year ?? date('Y') }}
                 </h3>
+                <div class="card-tools form-inline">
+                    <label for="year" class="font-weight-normal">Tahun</label>
+                    {!! Form::select('year', $years, $year ?? date('Y'), ['class' => 'form-control custom-select ml-1', 'id' => 'year']) !!}
+                </div>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content p-0">
@@ -126,5 +130,81 @@
 @push('js')
   <script src="{{ asset('') }}/plugins/chart.js/Chart.min.js"></script>
   <script src="{{ asset('') }}/plugins/sparklines/sparkline.js"></script>
-  <script src="{{ asset('') }}/dist/js/dashboard.js" ></script>
+  <script>
+      $(document).ready(function () {
+          const chartData = JSON.parse(`{!! $salesChart !!}`);
+          var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d')
+          var salesChartData = {
+            labels: chartData.labels,
+            datasets: [
+              {
+                label: 'Jumlah Pesanan',
+                backgroundColor: 'rgba(60,141,188,0.9)',
+                borderColor: 'rgba(60,141,188,0.8)',
+                pointRadius: true,
+                pointColor: '#3b8bba',
+                pointStrokeColor: 'rgba(60,141,188,1)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data: chartData.data
+              },
+            ]
+          }
+        
+          var salesChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+              display: true
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                }
+              }],
+              yAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  beginAtZero: true,
+                  precision: 0,
+                  callback: function(value, index, values){
+                    return 'Rp. ' + rupiah(value);
+                  },
+                }
+              }]
+            }
+          }
+        
+          // This will get the first returned node in the jQuery collection.
+          // eslint-disable-next-line no-unused-vars
+          var salesChart = new Chart(salesChartCanvas, { // lgtm[js/unused-local-variable]
+            type: 'line',
+            data: salesChartData,
+            options: salesChartOptions
+          })
+      });
+
+      $('body').on('change', '#year', function(){
+         const year = $(this).val();
+         window.location.href = '/dashboard?year=' + year;
+      });
+
+      rupiah = (bilangan) => {
+        var number_string = bilangan.toString(),
+            sisa = number_string.length % 3,
+            rupiah = number_string.substr(0, sisa),
+            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+        if (ribuan) {
+            separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        // Cetak hasil
+        return rupiah;
+    };
+  </script>
 @endpush

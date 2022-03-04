@@ -26,6 +26,9 @@ class DashboardController extends Controller
             'new_order' => $this->getNewOrderCount(),
             'product' => $this->getProductCount(),
             'user' => $this->getNewUserCount(),
+            'salesChart' => $this->salesChart($request),
+            'years' => $this->getYear(),
+            'year' => $request->year,
         ]);
     }
 
@@ -47,5 +50,35 @@ class DashboardController extends Controller
     public function getNewUserCount()
     {
         return User::whereDate('created_at', Carbon::today())->count();
+    }
+
+    public function salesChart($request)
+    {
+        $monthName = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        $year = date('Y');
+
+        foreach($monthName as $key => $item){
+            $chartData['labels'][] = $item;
+            $saleData = Sale::whereMonth('date', $key+1);
+            if(empty($request->year)){
+                $chartData['data'][] = $saleData->whereYear('date', $year)->sum('grand_total');
+            }else{
+                $chartData['data'][] = $saleData->whereYear('date', $request->year)->sum('grand_total');
+            }
+        }
+
+        return json_encode($chartData);
+    }
+
+    public function getYear()
+    {
+        $now = date('Y');
+        for($i = 2020; $i <= $now; $i++){
+            $years[$i] = $i;
+        }
+
+        return $years;
     }
 }

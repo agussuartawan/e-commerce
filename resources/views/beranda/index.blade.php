@@ -39,8 +39,9 @@
                     </div>
                 </div>
             @empty
-                <div class="col py-2">
-                    <div class="card p-2">
+            <div class="col py-2">
+                     <p class="text-center">Tidak ada data.</p>
+                   {{-- <div class="card p-2">
                         <h3 class="text-center">Hello Esty..</h3>
                         <p>&emsp;Selamat udah sampe tahap Skripsi, semangat ngerjainnya ya, do your best :)</p>
                         <p>&emsp;Emmm... ada yang mau aku sampein. Mungkin suatu saat kita bakalan lost contact, entah
@@ -61,7 +62,7 @@
                             data produk hehehe. Mungkin banyak hal yang ga sesuai sama yang kamu pengen tapi jangan lupa
                             selalu tersenyum ya, senyum mu indah banget soalnya :)</p>
                     </div>
-                </div>
+                </div> --}}
             @endforelse
         </div>
     </div>
