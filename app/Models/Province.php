@@ -10,4 +10,9 @@ class Province extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function sale()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

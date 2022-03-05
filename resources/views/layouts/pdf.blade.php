@@ -39,6 +39,7 @@
         img {
             width: 110px;
         }
+
     </style>
     @stack('css')
 </head>
@@ -51,7 +52,7 @@
                     <img src="{{ asset('img/logo.png') }}">
                 </td>
                 <td class="heading">
-                    <h3>CV. Murni Sejati</h3>
+                    <h3>{{ env('APP_NAME') }}</h3>
                     <p>Jl. Raya Dalung Utara No. 99 ( belakang Gong Cafe ),</p>
                     <p>Abianbase, Badung - Bali, Dalung, Kuta Utara, Dalung,</p>
                     <p>Kec. Kuta Utara, Kabupaten Badung, Bali 80361</p>

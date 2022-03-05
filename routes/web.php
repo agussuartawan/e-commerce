@@ -20,7 +20,10 @@ use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\Panel\ReportController;
+use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\RegionController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -170,5 +173,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('report/trial-balances/get-lists', [ReportController::class, 'getTrialBalanceLists']);
 		Route::get('report/trial-balance-download', [ReportController::class, 'trialBalanceReportDownload']);
 		Route::get('report/trial-balance-print', [ReportController::class, 'trialBalanceReportPrint']);
+	});
+
+	Route::group(['middleware' => 'can:akses laporan'], function () {
+		Route::resource('region/provinces', ProvinceController::class)->except('show');
+		Route::resource('region/cities', CityController::class)->except('show');
+		Route::get('region', RegionController::class)->name('region.index');
 	});
 });
