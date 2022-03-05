@@ -53,32 +53,11 @@
                                         <table id="provinces-table" class="table table-bordered table-striped">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th width="10%">#</th>
                                                     <th>Nama Provinsi</th>
                                                     <th width="15%">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($provinces as $key => $item)
-                                                    <tr>
-                                                        <td>{{ $key + 1 }}</td>
-                                                        <td>{{ $item->name }}</td>
-                                                        <td>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <a href="{{ route('provinces.edit', $item) }}"
-                                                                        class="btn btn-sm btn-outline-info btn-block provinces-edit">Edit</a>
-                                                                </div>
-                                                                @if ($item->sale()->exists())
-                                                                    <div class="col">
-                                                                        <a href="{{ route('provinces.destroy', $item) }}"
-                                                                            class="btn btn-sm btn-outline-danger btn-block provinces-delete">Hapus</a>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -89,34 +68,13 @@
                                         <table id="cities-table" class="table table-bordered table-striped">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>Nama Kota</th>
                                                     <th>Provinsi</th>
-                                                    <th>Aksi</th>
+                                                    <th width="15%">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($cities as $key => $item)
-                                                    <tr>
-                                                        <td>{{ $key + 1 }}</td>
-                                                        <td>{{ $item->name }}</td>
-                                                        <td>{{ $item->province->name }}</td>
-                                                        <td>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <a href="{{ route('cities.edit', $item) }}"
-                                                                        class="btn btn-sm btn-outline-info btn-block cities-edit">Edit</a>
-                                                                </div>
-                                                                @if ($item->sale()->exists())
-                                                                    <div class="col">
-                                                                        <a href="{{ route('cities.destroy', $item) }}"
-                                                                            class="btn btn-sm btn-outline-danger btn-block cities-delete">Hapus</a>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                
                                             </tbody>
                                         </table>
                                     </div>

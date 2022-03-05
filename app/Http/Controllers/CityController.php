@@ -13,9 +13,38 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $data  = City::with('province');
+
+        return DataTables::of($data)
+            ->addColumn('action', function ($data) {
+                $buttons = '<div class="row">';
+
+                $buttons .= '<div class="col"><a href="/region/cities/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a></div>';
+                if(!$data->sale()->exists()){
+                    $buttons .= '<div class="col"><a href="/region/cities/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block btn-delete" title="Hapus '.$data->name.'">Hapus</a></div>';
+                }
+
+                $buttons .= '</div>';
+                
+                return $buttons;
+            })
+            ->addColumn('province', function($data){
+                return $data->province->name;
+            })
+            ->filter(function ($instance) use ($request) {
+                if (!empty($request->search)) {
+                    $instance->where(function ($w) use ($request) {
+                        $search = $request->search;
+                        $w->orWhere('name', 'LIKE', "%$search%");
+                    });
+                }
+
+                return $instance;
+            })
+            ->rawColumns(['action', 'province'])
+            ->make(true);
     }
 
     /**

@@ -175,7 +175,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('report/trial-balance-print', [ReportController::class, 'trialBalanceReportPrint']);
 	});
 
-	Route::group(['middleware' => 'can:akses laporan'], function () {
+	Route::group(['middleware' => 'can:akses wilayah'], function () {
 		Route::resource('region/provinces', ProvinceController::class)->except('show');
 		Route::resource('region/cities', CityController::class)->except('show');
 		Route::get('region', RegionController::class)->name('region.index');
