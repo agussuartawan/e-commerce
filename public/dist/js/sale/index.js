@@ -51,7 +51,7 @@ $(function () {
                 $('input[type="search"').unbind();
                 $('input[type="search"').bind("keyup", function (e) {
                     if (e.keyCode == 13) {
-                        dTable.search(this.value).draw();
+                        dTable.draw();
                     }
                 });
             },

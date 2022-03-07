@@ -8,43 +8,49 @@
                 font-size: 20pt;
                 text-align: center;
             }
-        
+
             .table {
                 border-collapse: collapse;
                 width: 100%;
                 font-size: 10pt;
             }
-        
+
             .table th {
                 padding: 8px 8px;
-                border:1px solid #000000;
+                border: 1px solid #000000;
                 text-align: center;
             }
-        
+
             .table td {
                 padding: 3px 3px;
-                border:1px solid #000000;
+                border: 1px solid #000000;
             }
 
             .text {
                 font-size: 10pt;
             }
-        
+
             .text-center {
                 text-align: center;
             }
+
+            .text-left {
+                text-align: left;
+            }
+
         </style>
     @endpush
 
     <div class="container">
         <h3 class="text-center" style="margin-bottom: 5px">Laporan Buku Besar</h3>
-        <span class="text-center text">Periode : {{ \Carbon\Carbon::parse($date['from'])->isoFormat('DD MMMM Y') }} - {{ \Carbon\Carbon::parse($date['to'])->isoFormat('DD MMMM Y') }}</span>
+        <span class="text-center text">Periode : {{ \Carbon\Carbon::parse($date['from'])->isoFormat('DD MMMM Y') }} -
+            {{ \Carbon\Carbon::parse($date['to'])->isoFormat('DD MMMM Y') }}</span>
         @forelse ($accounts as $account)
             <div class="inline" style="margin-bottom: 5px">
                 <span class="text">Akun : {{ $account->name }}</span>
                 <span class="text" style="float: right">No Ref : {{ $account->account_number }}</span>
             </div>
-    
+
             <table class="table" style="margin-top: 5px; margin-bottom: 15px">
                 <thead>
                     <tr>
@@ -61,8 +67,8 @@
                             <td>{{ \Carbon\Carbon::parse($journal->date)->isoFormat('DD MMMM Y') }}</td>
                             <td>{{ $journal->account->name }}</td>
                             <td class="text-center">{{ $journal->account->account_number }}</td>
-                            <td class="text-center">Rp. {{ rupiah($journal->debit) }}</td>
-                            <td class="text-center">Rp. {{ rupiah($journal->credit) }}</td>
+                            <td class="text-left">Rp. {{ rupiah($journal->debit) }}</td>
+                            <td class="text-left">Rp. {{ rupiah($journal->credit) }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -70,14 +76,18 @@
                         </tr>
                     @endforelse
                 </tbody>
-                @if($account->general_journal->whereBetween('date', $date)->count() > 0)
-                <tfoot>
-                    <tr>
-                        <th colspan="3">JUMLAH</th>
-                        <th>Rp. {{ rupiah($account->general_journal->whereBetween('date', $date)->sum('debit')) }}</th>
-                        <th>Rp. {{ rupiah($account->general_journal->whereBetween('date', $date)->sum('credit')) }}</th>
-                    </tr>
-                </tfoot>
+                @if ($account->general_journal->whereBetween('date', $date)->count() > 0)
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">JUMLAH</th>
+                            <th style="text-align: left">Rp.
+                                {{ rupiah($account->general_journal->whereBetween('date', $date)->sum('debit')) }}
+                            </th>
+                            <th style="text-align: left">Rp.
+                                {{ rupiah($account->general_journal->whereBetween('date', $date)->sum('credit')) }}
+                            </th>
+                        </tr>
+                    </tfoot>
                 @endif
             </table>
         @empty
@@ -100,9 +110,12 @@
         @endforelse
         <table style="width: 100%; margin-top: 20px">
             <tr>
-                <td class="text" style="text-align: right">Badung, {{\Carbon\Carbon::now()->isoFormat('DD MMMM Y')}}</td>
+                <td class="text" style="text-align: right">Badung,
+                    {{ \Carbon\Carbon::now()->isoFormat('DD MMMM Y') }}</td>
             </tr>
-            <tr><td style="height: 40px"></td></tr>
+            <tr>
+                <td style="height: 40px"></td>
+            </tr>
             <tr>
                 <td class="text" style="text-align: right">(...................)</td>
             </tr>

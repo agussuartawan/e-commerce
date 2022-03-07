@@ -21,9 +21,9 @@ class ProvinceController extends Controller
             ->addColumn('action', function ($data) {
                 $buttons = '<div class="row">';
 
-                $buttons .= '<div class="col"><a href="/region/provinces/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info modal-edit" title="Edit '.$data->name.'">Edit</a></div>';
+                $buttons .= '<div class="col"><a href="/region/provinces/'. $data->id .'/edit" class="btn btn-sm btn-block btn-outline-info province-edit" title="Edit '.$data->name.'">Edit</a></div>';
                 if(!$data->sale()->exists()){
-                    $buttons .= '<div class="col"><a href="/region/provinces/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block btn-delete" title="Hapus '.$data->name.'">Hapus</a></div>';
+                    $buttons .= '<div class="col"><a href="/region/provinces/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block province-delete" title="Hapus '.$data->name.'">Hapus</a></div>';
                 }
 
                 $buttons .= '</div>';
@@ -79,17 +79,6 @@ class ProvinceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Province  $province
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Province $province)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Province  $province
@@ -97,7 +86,7 @@ class ProvinceController extends Controller
      */
     public function edit(Province $province)
     {
-        //
+        return view('include.region.province.form', compact('province'));
     }
 
     /**
@@ -109,7 +98,19 @@ class ProvinceController extends Controller
      */
     public function update(Request $request, Province $province)
     {
-        //
+        $messages = [
+            'name.required' => 'Nama tidak boleh kosong!',
+            'name.string' => ' Nama tidak boleh mengandung simbol!',
+            'name.max' => ' Nama tidak boleh melebihi 255 huruf!',
+        ];
+
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255']
+        ], $messages);
+        
+        $province->update($validatedData);
+
+        return $province;
     }
 
     /**
@@ -120,6 +121,6 @@ class ProvinceController extends Controller
      */
     public function destroy(Province $province)
     {
-        //
+        return $province->delete();
     }
 }

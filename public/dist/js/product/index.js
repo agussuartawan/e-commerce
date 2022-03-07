@@ -29,7 +29,7 @@ $(function () {
                 url: "products/get-list",
                 data: function (d) {
                     d.search = $('input[type="search"]').val();
-                    d.category_id = $('select').val();
+                    d.category_id = $("select").val();
                 },
             },
             columns: [
@@ -50,40 +50,49 @@ $(function () {
                     },
                 },
             ],
+            initComplete: function (settings, json) {
+                $('input[type="search"').unbind();
+                $('input[type="search"').bind("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        dTable.draw();
+                    }
+                });
+            },
         });
 
         $("div.select").html('<select class="form-control"></select>');
 
-        $('select').select2({
-            theme: "bootstrap4",
-            ajax: {
-                url: "/categories-search",
-                dataType: "json",
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                    };
+        $("select")
+            .select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "/categories-search",
+                    dataType: "json",
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                        };
 
-                    return query;
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id,
+                                };
+                            }),
+                        };
+                    },
                 },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                text: item.name,
-                                id: item.id,
-                            };
-                        }),
-                    };
-                },
-            },
-            placeholder: "Cari kategori",
-            cache: true,
-            allowClear: true,
-        })
-        .on('change', function(){
-            dTable.draw();
-        });
+                placeholder: "Cari kategori",
+                cache: true,
+                allowClear: true,
+            })
+            .on("change", function () {
+                dTable.draw();
+            });
     });
 
     $("body").on("click", ".btn-delete", function (event) {
@@ -138,37 +147,37 @@ showSuccessToast = (message) => {
     });
 };
 
-showDeleteAlert = function(me) {
-    var url = me.attr('href'),
-                title = me.attr('title'),
-                token = $('meta[name="csrf-token"]').attr('content');
+showDeleteAlert = function (me) {
+    var url = me.attr("href"),
+        title = me.attr("title"),
+        token = $('meta[name="csrf-token"]').attr("content");
 
     Swal.fire({
-        title: 'Perhatian!',
-        text: "Hapus data "+ title +"?",
-        icon: 'warning',
+        title: "Perhatian!",
+        text: "Hapus data " + title + "?",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Hapus",
+        cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: url,
-                type: 'POST',
+                type: "POST",
                 data: {
-                    '_method': 'DELETE',
-                    '_token': token, 
+                    _method: "DELETE",
+                    _token: token,
                 },
-                success: function(response){
-                    $('#product-table').DataTable().ajax.reload();
-                    showSuccessToast('Data produk berhasil dihapus');
+                success: function (response) {
+                    $("#product-table").DataTable().ajax.reload();
+                    showSuccessToast("Data produk berhasil dihapus");
                 },
-                error: function(xhr){
+                error: function (xhr) {
                     showErrorToast();
-                }
+                },
             });
         }
     });
-}
+};

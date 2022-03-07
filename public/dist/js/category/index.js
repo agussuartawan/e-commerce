@@ -1,6 +1,6 @@
 $(function () {
     $(document).ready(function () {
-        $("#category-table").DataTable({
+        var dTable = $("#category-table").DataTable({
             lengthChange: false,
             paging: true,
             serverSide: true,
@@ -46,6 +46,14 @@ $(function () {
                     },
                 },
             ],
+            initComplete: function (settings, json) {
+                $('input[type="search"').unbind();
+                $('input[type="search"').bind("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        dTable.draw();
+                    }
+                });
+            },
         });
     });
 
@@ -157,37 +165,37 @@ showErrorToast = () => {
     });
 };
 
-showDeleteAlert = function(me) {
-    var url = me.attr('href'),
-                title = me.attr('title'),
-                token = $('meta[name="csrf-token"]').attr('content');
+showDeleteAlert = function (me) {
+    var url = me.attr("href"),
+        title = me.attr("title"),
+        token = $('meta[name="csrf-token"]').attr("content");
 
     Swal.fire({
-        title: 'Perhatian!',
-        text: "Hapus data "+ title +"?",
-        icon: 'warning',
+        title: "Perhatian!",
+        text: "Hapus data " + title + "?",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Hapus",
+        cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: url,
-                type: 'POST',
+                type: "POST",
                 data: {
-                    '_method': 'DELETE',
-                    '_token': token, 
+                    _method: "DELETE",
+                    _token: token,
                 },
-                success: function(response){
-                    $('#category-table').DataTable().ajax.reload();
-                    showSuccessToast('Data kategori berhasil dihapus');
+                success: function (response) {
+                    $("#category-table").DataTable().ajax.reload();
+                    showSuccessToast("Data kategori berhasil dihapus");
                 },
-                error: function(xhr){
+                error: function (xhr) {
                     showErrorToast();
-                }
+                },
             });
         }
     });
-}
+};

@@ -41,8 +41,8 @@ class Kernel extends ConsoleKernel
                     $order->update(['delivery_status_id' => DeliveryStatus::DIKIRIM]);
                 }
             }
-        })->twiceDaily(8, 17);
-        // })->everyMinute();
+        // })->twiceDaily(8, 17);
+        })->everyMinute();
     }
 
     /**

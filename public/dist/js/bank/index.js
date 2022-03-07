@@ -1,6 +1,6 @@
 $(function () {
     $(document).ready(function () {
-        $("#bank-table").DataTable({
+        var dTable = $("#bank-table").DataTable({
             lengthChange: false,
             paging: true,
             serverSide: true,
@@ -47,6 +47,14 @@ $(function () {
                     },
                 },
             ],
+            initComplete: function (settings, json) {
+                $('input[type="search"').unbind();
+                $('input[type="search"').bind("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        dTable.draw();
+                    }
+                });
+            },
         });
     });
 
@@ -133,7 +141,7 @@ fillModal = (me) => {
             $(".modal-body").html(response);
         },
         error: function (xhr, status) {
-            $('#modal').modal('hide');
+            $("#modal").modal("hide");
             alert("Terjadi kesalahan");
         },
     });

@@ -1,6 +1,6 @@
 $(function () {
     $(document).ready(function () {
-        $("#user-table").DataTable({
+        var dTable = $("#user-table").DataTable({
             lengthChange: false,
             paging: true,
             serverSide: true,
@@ -49,6 +49,14 @@ $(function () {
                     },
                 },
             ],
+            initComplete: function (settings, json) {
+                $('input[type="search"').unbind();
+                $('input[type="search"').bind("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        dTable.draw();
+                    }
+                });
+            },
         });
     });
 
