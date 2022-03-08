@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ asset('') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="{{ asset('') }}/plugins/jquery-minicolors/jquery.minicolors.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/img-uploader/image-uploader.min.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 @endpush
 @section('content')
 
@@ -48,13 +50,7 @@
                                 <div class="col">
                                     <label for="photo">Foto <span class="badge badge-info">Max 500
                                             KB</span></label>
-                                    <img class="rounded mb-3 mx-auto d-block col-sm-5" id="preview">
-                                    <div class="input-group" id="photos">
-                                        <div class="custom-file">
-                                            <input type="file" class="form-control" id="photo" name="photo"
-                                                onchange="previewImage()">
-                                        </div>
-                                    </div>
+                                    <div class="input-images" id="photo"></div>
                                 </div>
                             </div>
 
@@ -155,6 +151,7 @@
 @push('js')
     <script src="{{ asset('') }}/plugins/select2/js/select2.full.min.js"></script>
     <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('') }}/plugins/img-uploader/image-uploader.min.js"></script>
     <script src="{{ asset('plugins/jquery-minicolors/jquery.minicolors.min.js') }}"></script>
     <script src="{{ asset('') }}/dist/js/product/create.js"></script>
 @endpush

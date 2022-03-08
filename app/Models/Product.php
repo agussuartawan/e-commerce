@@ -15,7 +15,6 @@ class Product extends Model
         'stock',
         'selling_price',
         'size',
-        'photo',
         'description',
     ];
 
@@ -42,6 +41,11 @@ class Product extends Model
     public function sale()
     {
         return $this->hasMany(Sale::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsToMany(Image::class);
     }
 
     public function getProductUnitNameAttribute()

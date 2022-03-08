@@ -95,6 +95,13 @@ $(function () {
             });
     });
 
+    $("body").on("click", ".product-image-thumb", function () {
+        var $image_element = $(this).find("img");
+        $(".product-image").prop("src", $image_element.attr("src"));
+        $(".product-image-thumb.active").removeClass("active");
+        $(this).addClass("active");
+    });
+
     $("body").on("click", ".btn-delete", function (event) {
         event.preventDefault();
         var me = $(this);

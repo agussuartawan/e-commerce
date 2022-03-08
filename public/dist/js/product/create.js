@@ -6,6 +6,11 @@ $(function () {
         searchUnit();
     });
 
+    $(".input-images").imageUploader({
+        imagesInputName: "photo",
+        label: "Seret & Jatuhkan file di sini atau klik untuk menelusuri",
+    });
+
     //category
     $("body").on("click", "#add-category", function () {
         $("#modal").modal("show");
@@ -262,7 +267,7 @@ $(function () {
             url = me.attr("action"),
             method = "POST",
             formData = new FormData(this),
-            message = 'Data produk berhasil disimpan!';
+            message = "Data produk berhasil disimpan!";
 
         $(".form-control").removeClass("is-invalid");
         $(".invalid-feedback").remove();
@@ -291,7 +296,7 @@ $(function () {
                     $.each(res.errors, function (key, value) {
                         if (key === "photo") {
                             $("#" + key).addClass("is-invalid");
-                            $("#photos").after(
+                            $("#photo").after(
                                 "<p class='text-red' id='invalid-feedback'>Foto tidak valid!</p>"
                             );
                         } else {
@@ -327,20 +332,6 @@ showErrorToast = () => {
         icon: "error",
         title: "&nbsp;Terjadi Kesalahan!",
     });
-};
-
-const previewImage = () => {
-    const image = document.querySelector("#photo");
-    const imagePreview = document.querySelector("#preview");
-
-    imagePreview.style.display = "block";
-
-    const oFReader = new FileReader();
-    oFReader.readAsDataURL(image.files[0]);
-
-    oFReader.onload = function (oFREvent) {
-        imagePreview.src = oFREvent.target.result;
-    };
 };
 
 searchCategories = () => {

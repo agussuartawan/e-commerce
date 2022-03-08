@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductFragrance;
@@ -52,6 +53,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        \DB::transaction(function () use ($request){
         $product_count = Product::count();
         if($product_count == 0){
             $number = 10001;
@@ -80,24 +82,31 @@ class ProductController extends Controller
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
             'product_unit_id' => ['required'],
-            'photo' => ['image','file', 'max:512'],
+            'photo[]' => ['image','file', 'max:512'],
             'stock' => ['required', 'numeric']
         ], $messages);
 
-        if($request->file('photo')){
-            $validatedData['photo'] = $request->file('photo')->store('product-photo');
+        if($photos = $request->file('photo')){
+            foreach ($photos as $photo) {
+                $photoPath = $photo->store('product-photo');
+                $photo = Image::create(['path' => $photoPath]);
+                $validatedData['photo_id'][] = $photo->id;
+            }
         }
-
         $validatedData['size'] = $request->size;
         $validatedData['description'] = $request->description;
         $validatedData['code'] = $fullnumber;
-        
+
         $product = Product::create($validatedData);
 
         $product->product_color()->sync($validatedData['product_color_id']);
         $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
+        $product->image()->sync($validatedData['photo_id']);
+
 
         return $product;
+    });
+
     }
 
     public function show(Product $product)
