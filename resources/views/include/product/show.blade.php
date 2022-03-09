@@ -1,33 +1,11 @@
-{{-- //image album --}}
-{{-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        @foreach ($product->image as $key => $image)
-            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}"
-                @if ($key == 0) class="active" @endif></li>
-        @endforeach
-    </ol>
-    <div class="carousel-inner" style="width:100%; height:400px !important;">
-        @forelse ($product->image as $key => $image)
-            <div class="carousel-item @if ($key == 0) active @endif">
-                <img class="d-block w-100" src="{{ asset('storage/' . $image->path) }}" alt="Gambar Produk">
-            </div>
-        @empty
-            <img src="{{ asset('') }}/img/no-image.jpg" class="rounded mx-auto d-block col-sm-4">
-        @endforelse
-    </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div> --}}
 <div class="col-12">
     <div class="col-12">
-        <img src="{{ asset('storage/' . $product->image()->first()->path) }}" class="product-image"
-            alt="Product Image">
+        @if ($product->image()->count() > 0)
+            <img src="{{ asset('storage/' . $product->image()->first()->path) }}" class="product-image"
+                alt="Product Image">
+        @else
+            <img src="{{ asset('') }}/img/no-image.jpg" alt="..." class="img-thumbnail">
+        @endif
     </div>
     <div class="col-12 d-flex justify-content-center product-image-thumbs">
         @forelse ($product->image as $key => $image)

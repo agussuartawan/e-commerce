@@ -4,6 +4,16 @@ $(function () {
         searchColor();
         searchFragrance();
         searchUnit();
+
+        Dropzone.autoDiscover = false;
+        var myDropzone = new Dropzone("#form-product", {
+            autoProcessQueue: false,
+            parallelUploads: 10, // Number of files process at a time (default 2)
+        });
+
+        $("#uploadfiles").click(function () {
+            myDropzone.processQueue();
+        });
     });
 
     //category
@@ -260,8 +270,7 @@ $(function () {
         event.preventDefault();
         const me = $(this),
             url = me.attr("action"),
-            method = "POST",
-            formData = new FormData(this);
+            method = "POST";
 
         $(".form-control").removeClass("is-invalid");
         $(".invalid-feedback").remove();
@@ -270,9 +279,7 @@ $(function () {
         $.ajax({
             url: url,
             type: method,
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: me.serialize(),
             beforeSend: function () {
                 $(".btn").attr("disabled", true);
             },
@@ -326,20 +333,6 @@ showErrorToast = () => {
         icon: "error",
         title: "&nbsp;Terjadi Kesalahan!",
     });
-};
-
-const previewImage = () => {
-    const image = document.querySelector("#photo");
-    const imagePreview = document.querySelector("#preview");
-
-    imagePreview.style.display = "block";
-
-    const oFReader = new FileReader();
-    oFReader.readAsDataURL(image.files[0]);
-
-    oFReader.onload = function (oFREvent) {
-        imagePreview.src = oFREvent.target.result;
-    };
 };
 
 searchCategories = () => {

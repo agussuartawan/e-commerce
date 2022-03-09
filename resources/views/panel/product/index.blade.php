@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="{{ asset('') }}/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="{{ asset('') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}/plugins/dropzone/min/dropzone.min.css">
 @endpush
 
 @section('content')
@@ -52,7 +53,7 @@
                                             <th>Harga</th>
                                             <th>Stock</th>
                                             <th>Kategori</th>
-                                            <th>Aksi</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -84,5 +85,6 @@
     <script src="{{ asset('') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
     <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script src="{{ asset('') }}/plugins/select2/js/select2.full.min.js"></script>
+    <script src="{{ asset('') }}/plugins/dropzone/min/dropzone.min.js"></script>
     <script src="{{ asset('') }}/dist/js/product/index.js"></script>
 @endpush

@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\PaymentConfirmed::class => [
             \App\Listeners\CreateJournalAfterPaymentConfirmed::class,
         ],
+        \App\Events\ProductDeleted::class => [
+            \App\Listeners\RemoveImageAfterProductDeleted::class,
+        ],
     ];
 
     /**

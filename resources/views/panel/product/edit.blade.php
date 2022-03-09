@@ -41,23 +41,7 @@
     'route' => ['products.update', $product],
     'method' => 'PUT',
     'id' => 'form-product',
-    'files' => true,
 ]) !!}
-
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="photo">Foto <span class="badge badge-info">Max 500 KB</span></label>
-                                    <img class="rounded mx-auto d-block mb-3 col-sm-5" id="preview"
-                                        @if ($product->photo) src="{{ asset('storage/' . $product->photo) }}" @endif>
-                                    <div class="input-group" id="photos">
-                                        <div class="custom-file">
-                                            <input type="file" class="form-control" id="photo" name="photo"
-                                                onchange="previewImage()">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Events\ProductDeleted;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Image;
@@ -54,58 +55,58 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         \DB::transaction(function () use ($request){
-        $product_count = Product::count();
-        if($product_count == 0){
-            $number = 10001;
-            $fullnumber = 'BRG' . $number;
-        } else {
-            $number = Product::all()->last();
-            $number_plus = (int)substr($number->code, -5) + 1;
-            $fullnumber = 'BRG' . $number_plus;
-        }
-
-        $messages = [
-            'product_name.required' => 'Nama tidak boleh kosong!',
-            'product_name.string' => ' Nama tidak boleh mengandung simbol!',
-            'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
-            'selling_price.required' => 'Harga tidak boleh kosong!',
-            'category_id.required' => 'Kategori tidak boleh kosong!',
-            'product_color_id.required' => 'Warna tidak boleh kosong!',
-            'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
-            'product_unit_id.required' => 'Unit tidak boleh kosong!',
-        ];
-
-        $validatedData = $request->validate([
-            'product_name' => ['required', 'string', 'max:255'],
-            'selling_price' => ['required', 'numeric'],
-            'category_id' => ['required'],
-            'product_color_id' => ['required'],
-            'product_fragrance_id' => ['required'],
-            'product_unit_id' => ['required'],
-            'photo[]' => ['image','file', 'max:512'],
-            'stock' => ['required', 'numeric']
-        ], $messages);
-
-        if($photos = $request->file('photo')){
-            foreach ($photos as $photo) {
-                $photoPath = $photo->store('product-photo');
-                $photo = Image::create(['path' => $photoPath]);
-                $validatedData['photo_id'][] = $photo->id;
+            $product_count = Product::count();
+            if($product_count == 0){
+                $number = 10001;
+                $fullnumber = 'BRG' . $number;
+            } else {
+                $number = Product::all()->last();
+                $number_plus = (int)substr($number->code, -5) + 1;
+                $fullnumber = 'BRG' . $number_plus;
             }
-        }
-        $validatedData['size'] = $request->size;
-        $validatedData['description'] = $request->description;
-        $validatedData['code'] = $fullnumber;
 
-        $product = Product::create($validatedData);
+            $messages = [
+                'product_name.required' => 'Nama tidak boleh kosong!',
+                'product_name.string' => ' Nama tidak boleh mengandung simbol!',
+                'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
+                'selling_price.required' => 'Harga tidak boleh kosong!',
+                'category_id.required' => 'Kategori tidak boleh kosong!',
+                'product_color_id.required' => 'Warna tidak boleh kosong!',
+                'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
+                'product_unit_id.required' => 'Unit tidak boleh kosong!',
+            ];
 
-        $product->product_color()->sync($validatedData['product_color_id']);
-        $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
-        $product->image()->sync($validatedData['photo_id']);
+            $validatedData = $request->validate([
+                'product_name' => ['required', 'string', 'max:255'],
+                'selling_price' => ['required', 'numeric'],
+                'category_id' => ['required'],
+                'product_color_id' => ['required'],
+                'product_fragrance_id' => ['required'],
+                'product_unit_id' => ['required'],
+                'photo[]' => ['image','file', 'max:512'],
+                'stock' => ['required', 'numeric']
+            ], $messages);
+
+            if($photos = $request->file('photo')){
+                foreach ($photos as $photo) {
+                    $photoPath = $photo->store('product-photo');
+                    $photo = Image::create(['path' => $photoPath]);
+                    $validatedData['photo_id'][] = $photo->id;
+                }
+            }
+            $validatedData['size'] = $request->size;
+            $validatedData['description'] = $request->description;
+            $validatedData['code'] = $fullnumber;
+
+            $product = Product::create($validatedData);
+
+            $product->product_color()->sync($validatedData['product_color_id']);
+            $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
+            $product->image()->sync($validatedData['photo_id']);
 
 
-        return $product;
-    });
+            return $product;
+        });
 
     }
 
@@ -184,6 +185,10 @@ class ProductController extends Controller
         \DB::transaction(function () use ($product) {
             $product->product_color()->detach();
             $product->product_fragrance()->detach();
+
+            $image_id = $product->image()->pluck('image_id');
+            $product->image()->detach();
+            event(new ProductDeleted($image_id));
             return $product->delete();
         });
     }
@@ -196,18 +201,9 @@ class ProductController extends Controller
             ->addColumn('category', function ($data) {
                 return '<span class="badge badge-secondary">'.$data->category->name.'</span>';
             })
-            ->addColumn('action', function ($data) {
-                $buttons = '<div class="row"><div class="col">';
-                $buttons .= '<a href="/products/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->product_name.'">Detail</a>';
-                $buttons .= '</div><div class="col">';
-                $buttons .= '<a href="/products/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->product_name.'">Edit</a>';
-                if(!$data->sale()->exists()){
-                    $buttons .= '</div><div class="col">';
-                    $buttons .= '<a href="/products/'. $data->id .'" class="btn btn-sm btn-outline-danger btn-block btn-delete" title="Hapus '.$data->product_name.'">Hapus</a></div>';
-                }
-                $buttons .= '</div>';
-
-                return $buttons;
+            ->addColumn('action', function ($data) {  
+                $action = view('include.product.btn-action', compact('data'))->render();            
+                return $action;
             })
             ->addColumn('selling_price', function($data){
                 return rupiah($data->selling_price);
@@ -239,5 +235,10 @@ class ProductController extends Controller
     {
         $search = $request->search;
         return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name', 'selling_price')->get();
+    }
+
+    public function imageForm(Product $product)
+    {
+        return view('include.product.form-image', compact('product'));
     }
 }
