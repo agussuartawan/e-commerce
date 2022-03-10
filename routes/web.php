@@ -55,9 +55,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('unit-search', [ProductUnitController::class, 'searchUnit']);
 	Route::group(['middleware' => 'can:akses barang'], function () {
 		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
-		Route::resource('products', ProductController::class);
 		Route::get('product/manage-image/{product}', [ProductController::class, 'imageForm'])->name('product.image-form');
 		Route::post('product/manage-image/{product}', [ProductController::class, 'imageStore'])->name('product.image-store');
+		Route::resource('products', ProductController::class);
 		
 		#product color route
 		Route::get('color-create', [ProductColorController::class, 'create']);

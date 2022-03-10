@@ -239,6 +239,20 @@ class ProductController extends Controller
 
     public function imageForm(Product $product)
     {
-        return view('include.product.form-image', compact('product'));
+        return view('panel.product.form-image', compact('product'));
+    }
+
+    public function imageStore(Request $request, Product $product)
+    {
+        \DB::transaction(function () use ($request, $product){
+            if($images = $request->file('image')){
+                foreach($images as $image){
+                    $imagePath = $image->store('product-photo');
+                    $image = Image::create(['path' => $imagePath]);
+                    $image_id[] = $image->id;
+                }
+                $product->image()->attach($image_id);
+            }
+        });
     }
 }

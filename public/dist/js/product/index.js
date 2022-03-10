@@ -132,32 +132,6 @@ $(function () {
             },
         });
     });
-
-    $("body").on("click", ".btn-image", function (event) {
-        event.preventDefault();
-        $("#modal").modal("show");
-
-        var me = $(this),
-            url = me.attr("href"),
-            title = me.attr("title");
-
-        $(".modal-title").text(title);
-        $(".modal-save").remove();
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            dataType: "html",
-            success: function (response) {
-                $(".modal-body").html(response);
-                dropzone();
-            },
-            error: function (xhr, status) {
-                $("#modal").modal("hide");
-                alert("Terjadi kesalahan");
-            },
-        });
-    });
 });
 
 const Toast = Swal.mixin({
@@ -214,64 +188,4 @@ showDeleteAlert = function (me) {
             });
         }
     });
-};
-
-dropzone = () => {
-    // Dropzone.options.formImage = {
-    //     paramName: "images",
-    //     autoProcessQueue: false,
-    //     uploadMultiple: true,
-    //     parallelUploads: 100,
-    //     maxFiles: 20,
-    //     init: function () {
-    //         var myDropzone = this;
-
-    //         //Populate any existing thumbnails
-    //         if (thumbnailUrls) {
-    //             for (var i = 0; i < thumbnailUrls.length; i++) {
-    //                 var mockFile = {
-    //                     name: "myimage.jpg",
-    //                     size: 12345,
-    //                     type: "image/jpeg",
-    //                     status: Dropzone.ADDED,
-    //                     url: thumbnailUrls[i],
-    //                 };
-
-    //                 // Call the default addedfile event handler
-    //                 myDropzone.emit("addedfile", mockFile);
-
-    //                 // And optionally show the thumbnail of the file:
-    //                 myDropzone.emit("thumbnail", mockFile, thumbnailUrls[i]);
-
-    //                 myDropzone.files.push(mockFile);
-    //             }
-    //         }
-
-    //         this.on("removedfile", function (file) {
-    //             // Only files that have been programmatically added should
-    //             // have a url property.
-    //             if (file.url && file.url.trim().length > 0) {
-    //                 $("<input type='hidden'>")
-    //                     .attr({
-    //                         id: "DeletedImageUrls",
-    //                         name: "DeletedImageUrls",
-    //                     })
-    //                     .val(file.url)
-    //                     .appendTo("#image-form");
-    //             }
-    //         });
-    //     },
-    // };
-    Dropzone.options.formImage = {
-        // camelized version of the `id`
-        paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: 2, // MB
-        accept: function (file, done) {
-            if (file.name == "justinbieber.jpg") {
-                done("Naha, you don't.");
-            } else {
-                done();
-            }
-        },
-    };
 };
