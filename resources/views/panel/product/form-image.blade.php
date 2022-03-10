@@ -52,61 +52,92 @@
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-info">
-                        <div class="card-header">
-                            <h3 class="card-title">Gambar Produk</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <img src="{{ asset('img/no-image.jpg') }}" class="img-responsive rounded mr-3" alt="..."
-                                style="width: 175px">
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-            </div>
     </section>
 @endsection
 @push('js')
     <script src="{{ asset('') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
-    {{-- <script src="{{ asset('') }}/plugins/dropzone/min/dropzone.min.js"></script> --}}
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <script>
+        var image_id;
         Dropzone.options.image = {
             // camelized version of the `id`
             paramName: "image", // The name that will be used to transfer the file
             maxFilesize: 1, // MB
-            dictDefaultMessage: "Pilih gambar",
+            dictDefaultMessage: "Seret & Jatuhkan gambar di sini atau klik untuk menelusuri",
             addRemoveLinks: true,
-            uploadMultiple: true,
-            parallelUploads: 10,
+            // uploadMultiple: true,
+            // parallelUploads: 10,
             acceptedMimeTypes: ".jpeg,.jpg,.png,.gif",
+            init: function() {
+                var thisDropzone = this;
+                $.getJSON('{{ route("product.thumbnail", $product) }}', function(data) {
+                    $.each(data, function(key, value) {
+                        var mockFile = {
+                            name: `Gambar Produk ${key+1}`,
+                            size: value.size,
+                            dataURL: value.path,
+                            id: value.id
+                        };
+
+                        thisDropzone.files.push(mockFile);
+                        thisDropzone.emit('addedfile', mockFile);
+                        thisDropzone.createThumbnailFromUrl(mockFile,
+                            thisDropzone.options.thumbnailWidth,
+                            thisDropzone.options.thumbnailHeigth,
+                            thisDropzone.options.thumbnailMethod, true, function(thumbnail){
+                                thisDropzone.emit('thumbnail', mockFile, thumbnail)
+                            }
+                        );
+                        thisDropzone.emit("complete", mockFile);
+                    });
+                });
+
+                thisDropzone.on('success', function(file, serverFileName){
+                    showSuccessToast('Gambar produk berhasil diupload');
+                    image_id = serverFileName.id;
+                });
+
+                thisDropzone.on('removedfile', function(file){
+                    var data = 0;
+                    var token = $('meta[name="csrf-token"]').attr("content");
+
+                    if(image_id != undefined){
+                        data = image_id;
+                    } else if(file.id != undefined){
+                        data = file.id;
+                    }
+
+                    if(data == 0){
+                        return;
+                    }
+                    
+                    $.ajax({
+                        url: `/product/remove-image/${data}`,
+                        type: "POST",
+                        data: {
+                            _method: "DELETE",
+                            _token: token,
+                        },
+                        success: function (response) {
+                            showSuccessToast("Gambar produk berhasil dihapus");
+                        }
+                    });
+                });
+            },
         };
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+        });
+
+        showSuccessToast = (message) => {
+            Toast.fire({
+                icon: "success",
+                title: message,
+            });
+        }
     </script>
 @endpush
-
-{{-- // init: function() {
-// var thisDropzone = this;
-// var pageid = $("#pageid").val();
-// $.getJSON('{{ route('') }}', function(data) {
-
-// $.each(data, function(key, value) {
-
-// var mockFile = {
-// name: value.name,
-// size: value.size
-// };
-
-// thisDropzone.options.addedfile.call(thisDropzone, mockFile);
-// thisDropzone.options.thumbnail.call(thisDropzone, mockFile,
-// "/admin/uploads/" + value.name);
-// thisDropzone.emit("complete", mockFile);
-
-// });
-// });
-
-// }, --}}

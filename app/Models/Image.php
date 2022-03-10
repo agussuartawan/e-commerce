@@ -10,4 +10,9 @@ class Image extends Model
     use HasFactory;
 
     protected $fillable = ['path'];
+
+    public function product()
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }

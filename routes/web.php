@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\Panel\BankController;
 use App\Http\Controllers\Panel\SaleController;
 use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\Panel\ReportController;
 use App\Http\Controllers\Beranda\OrderController;
 use App\Http\Controllers\Panel\AccountController;
 use App\Http\Controllers\Panel\ProductController;
@@ -20,10 +25,6 @@ use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
-use App\Http\Controllers\CityController;
-use App\Http\Controllers\Panel\ReportController;
-use App\Http\Controllers\ProvinceController;
-use App\Http\Controllers\RegionController;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -57,6 +58,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('products/get-list', [ProductController::class, 'getProductLists']);
 		Route::get('product/manage-image/{product}', [ProductController::class, 'imageForm'])->name('product.image-form');
 		Route::post('product/manage-image/{product}', [ProductController::class, 'imageStore'])->name('product.image-store');
+		Route::get('product/thumbnail/{product}', [ProductController::class, 'thumbnail'])->name('product.thumbnail');
+		Route::delete('product/remove-image/{image}', [ProductController::class, 'removeImage']);
 		Route::resource('products', ProductController::class);
 		
 		#product color route

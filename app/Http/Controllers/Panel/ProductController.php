@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Events\ProductDeleted;
-use App\Http\Controllers\Controller;
-use App\Models\Category;
+use DataTables;
 use App\Models\Image;
 use App\Models\Product;
-use App\Models\ProductColor;
-use App\Models\ProductFragrance;
+use App\Models\Category;
 use App\Models\ProductUnit;
+use App\Models\ProductColor;
 use Illuminate\Http\Request;
-use DataTables;
+use App\Events\ProductDeleted;
+use App\Models\ProductFragrance;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -83,17 +84,9 @@ class ProductController extends Controller
                 'product_color_id' => ['required'],
                 'product_fragrance_id' => ['required'],
                 'product_unit_id' => ['required'],
-                'photo[]' => ['image','file', 'max:512'],
                 'stock' => ['required', 'numeric']
             ], $messages);
 
-            if($photos = $request->file('photo')){
-                foreach ($photos as $photo) {
-                    $photoPath = $photo->store('product-photo');
-                    $photo = Image::create(['path' => $photoPath]);
-                    $validatedData['photo_id'][] = $photo->id;
-                }
-            }
             $validatedData['size'] = $request->size;
             $validatedData['description'] = $request->description;
             $validatedData['code'] = $fullnumber;
@@ -102,8 +95,6 @@ class ProductController extends Controller
 
             $product->product_color()->sync($validatedData['product_color_id']);
             $product->product_fragrance()->sync($validatedData['product_fragrance_id']);
-            $product->image()->sync($validatedData['photo_id']);
-
 
             return $product;
         });
@@ -157,16 +148,9 @@ class ProductController extends Controller
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
             'product_unit_id' => ['required'],
-            'photo' => ['image','file', 'max:512'],
             'stock' => ['required', 'numeric']
         ], $messages);
 
-        if($request->file('photo')){
-            if($product->photo){
-                Storage::delete($product->photo);
-            }
-            $validatedData['photo'] = $request->file('photo')->store('product-photo');
-        }
 
         $validatedData['size'] = $request->size;
         $validatedData['description'] = $request->description;
@@ -244,15 +228,44 @@ class ProductController extends Controller
 
     public function imageStore(Request $request, Product $product)
     {
-        \DB::transaction(function () use ($request, $product){
-            if($images = $request->file('image')){
-                foreach($images as $image){
-                    $imagePath = $image->store('product-photo');
-                    $image = Image::create(['path' => $imagePath]);
-                    $image_id[] = $image->id;
-                }
-                $product->image()->attach($image_id);
+        $image = \DB::transaction(function () use ($request, $product){
+            if($image = $request->file('image')){
+                $imagePath = $image->store('product-photo');
+                $image = Image::create(['path' => $imagePath]);
+                
+                $product->image()->attach($image->id);
+                return $image;
             }
+        });
+
+        return $image;
+    }
+
+    public function thumbnail(Product $product)
+    {
+        $images = $product->image;
+        $image_list = [];
+        foreach($images as $image){
+            $path = storage_path("app/public/{$image->path}");
+            if(File::exists($path)) {
+                $size = File::size($path);
+                $image_list[] = [
+                    'size' => $size,
+                    'path' => asset("storage/{$image->path}"),
+                    'id' => $image->id
+                ];
+            }
+        }
+
+        return response()->json($image_list);
+    }
+
+    public function removeImage(Image $image)
+    {;
+        \DB::transaction(function () use ($image) {
+            $image->product()->detach();
+            Storage::delete($image->path);
+            $image->delete();
         });
     }
 }

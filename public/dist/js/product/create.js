@@ -6,11 +6,6 @@ $(function () {
         searchUnit();
     });
 
-    $(".input-images").imageUploader({
-        imagesInputName: "photo",
-        label: "Seret & Jatuhkan file di sini atau klik untuk menelusuri",
-    });
-
     //category
     $("body").on("click", "#add-category", function () {
         $("#modal").modal("show");
@@ -266,7 +261,6 @@ $(function () {
         const me = $(this),
             url = me.attr("action"),
             method = "POST",
-            formData = new FormData(this),
             message = "Data produk berhasil disimpan!";
 
         $(".form-control").removeClass("is-invalid");
@@ -276,9 +270,7 @@ $(function () {
         $.ajax({
             url: url,
             type: method,
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: me.serialize(),
             beforeSend: function () {
                 $(".btn").attr("disabled", true);
             },
