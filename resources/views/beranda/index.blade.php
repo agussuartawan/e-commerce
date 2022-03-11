@@ -1,5 +1,19 @@
 @extends('layouts.general')
 @section('title', 'Beranda')
+@push('css')
+    <style>
+        .module {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            /* number of lines to show */
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+    </style>
+@endpush
 @section('content')
     <div class="container mt-2">
         <div class="row">
@@ -22,9 +36,9 @@
         <div class="row">
             @forelse ($products as $product)
                 <div class="col d-flex justify-content-center py-2">
-                    <div class="card" style="width: 18rem;">
-                        @if ($product->photo)
-                            <img class="card-img-top" src="{{ asset('storage/' . $product->photo) }}"
+                    <div class="card" style="width: 21rem;">
+                        @if ($product->image()->exists())
+                            <img class="card-img-top" src="{{ asset('storage/' . $product->image()->first()->path) }}"
                                 alt="Card image cap">
                         @else
                             <img class="card-img-top" src="{{ asset('') }}/img/no-image.jpg" alt="Card image cap">
@@ -33,15 +47,17 @@
                             <h5 class="card-title">{{ $product->product_name }}</h5>
                             <h6>Rp. {{ rupiah($product->selling_price) }}</h6>
                             <hr>
-                            <p class="card-text">{{ $product->description }}</p>
+                            <div class="module">
+                                {{ $product->description }}
+                            </div>
                             <a href="{{ route('product.show', $product) }}" class="btn btn-primary">Detail</a>
                         </div>
                     </div>
                 </div>
             @empty
-            <div class="col py-2">
-                     <p class="text-center">Tidak ada data.</p>
-                   {{-- <div class="card p-2">
+                <div class="col py-2">
+                    <p class="text-center">Tidak ada data.</p>
+                    {{-- <div class="card p-2">
                         <h3 class="text-center">Hello Esty..</h3>
                         <p>&emsp;Selamat udah sampe tahap Skripsi, semangat ngerjainnya ya, do your best :)</p>
                         <p>&emsp;Emmm... ada yang mau aku sampein. Mungkin suatu saat kita bakalan lost contact, entah
