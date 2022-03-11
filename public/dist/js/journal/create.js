@@ -99,16 +99,14 @@ searchAccount = () => {
             },
         },
         placeholder: "Pilih akun",
-        cache: true,
-        templateResult: formatState,
-        templateSelection: formatState,
+        templateResult: function (state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                `<span>${state.account_number} | ${state.text}</span>`
+            );
+            return $state;
+        },
     });
-};
-
-formatState = (state) => {
-    if (!state.id) {
-        return state.text;
-    }
-    var $state = $(`<span>${state.account_number} | ${state.text}</span>`);
-    return $state;
 };

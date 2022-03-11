@@ -4,6 +4,13 @@
     <link rel="stylesheet" href="{{ asset('') }}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     {{-- <link rel="stylesheet" href="{{ asset('') }}/plugins/dropzone/min/dropzone.min.css"> --}}
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <style>
+        .dropzone {
+            border: dashed 2px rgb(134, 134, 134);
+            border-radius: 20px;
+        }
+
+    </style>
 @endpush
 @section('content')
 
@@ -70,7 +77,7 @@
             acceptedMimeTypes: ".jpeg,.jpg,.png,.gif",
             init: function() {
                 var thisDropzone = this;
-                $.getJSON('{{ route("product.thumbnail", $product) }}', function(data) {
+                $.getJSON('{{ route('product.thumbnail', $product) }}', function(data) {
                     $.each(data, function(key, value) {
                         var mockFile = {
                             name: `Gambar Produk ${key+1}`,
@@ -84,7 +91,8 @@
                         thisDropzone.createThumbnailFromUrl(mockFile,
                             thisDropzone.options.thumbnailWidth,
                             thisDropzone.options.thumbnailHeigth,
-                            thisDropzone.options.thumbnailMethod, true, function(thumbnail){
+                            thisDropzone.options.thumbnailMethod, true,
+                            function(thumbnail) {
                                 thisDropzone.emit('thumbnail', mockFile, thumbnail)
                             }
                         );
@@ -92,25 +100,24 @@
                     });
                 });
 
-                thisDropzone.on('success', function(file, serverFileName){
-                    showSuccessToast('Gambar produk berhasil diupload');
+                thisDropzone.on('success', function(file, serverFileName) {
                     image_id = serverFileName.id;
                 });
 
-                thisDropzone.on('removedfile', function(file){
+                thisDropzone.on('removedfile', function(file) {
                     var data = 0;
                     var token = $('meta[name="csrf-token"]').attr("content");
 
-                    if(image_id != undefined){
+                    if (image_id != undefined) {
                         data = image_id;
-                    } else if(file.id != undefined){
+                    } else if (file.id != undefined) {
                         data = file.id;
                     }
 
-                    if(data == 0){
+                    if (data == 0) {
                         return;
                     }
-                    
+
                     $.ajax({
                         url: `/product/remove-image/${data}`,
                         type: "POST",
@@ -118,7 +125,7 @@
                             _method: "DELETE",
                             _token: token,
                         },
-                        success: function (response) {
+                        success: function(response) {
                             showSuccessToast("Gambar produk berhasil dihapus");
                         }
                     });

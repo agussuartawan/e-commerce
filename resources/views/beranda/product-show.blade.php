@@ -17,14 +17,14 @@
         <div class="row">
             <div class="col d-flex justify-content-end">
                 <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <select name="" id="" class="form-control mr-sm-2 custom-select my-2">
+                    <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
+                    <select name="category_id" id="category_id" class="form-control mr-sm-2 custom-select my-2">
                         <option value="0">Semua</option>
                         @foreach ($categories as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
-                    <button class="btn btn-outline-success my-sm-0" type="submit">Cari</button>
+                    <button class="btn btn-outline-success my-sm-0" type="submit" id="btn-search">Cari</button>
                 </form>
             </div>
         </div>
@@ -34,24 +34,38 @@
                 <div class="row">
                     <div class="col-12 col-sm-6">
                         <h3 class="d-inline-block d-sm-none">{{ $product->product_name }}</h3>
-                        <div class="col-12">
-                            @if ($product->image()->count() > 0)
-                                <img src="{{ asset('storage/' . $product->image()->first()->path) }}"
-                                    class="product-image" alt="Product Image">
-                            @else
-                                <img src="{{ asset('') }}/img/no-image.jpg" alt="..." class="img-thumbnail">
-                            @endif
-                        </div>
-                        <div class="col-12 product-image-thumbs">
-                            @forelse ($product->image as $key => $image)
-                                <div class="product-image-thumb @if ($key == 0) active @endif">
-                                    <img src="{{ asset('storage/' . $image->path) }}" alt="Product Image">
-                                </div>
-                            @empty
-                                <div class="product-image-thumb active">
-                                    <img src="{{ asset('') }}/img/no-image.jpg" alt="..." class="img-thumbnail">
-                                </div>
-                            @endforelse
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                @foreach ($product->image as $key => $image)
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}"
+                                        class="@if ($key == 0) active @endif">
+                                    </li>
+                                @endforeach
+                            </ol>
+                            <div class="carousel-inner">
+                                @forelse ($product->image as $key => $image)
+                                    <div class="carousel-item @if ($key == 0) active @endif">
+                                        <img class="d-block w-100" src="{{ asset('storage/' . $image->path) }}"
+                                            alt="Gambar {{ $key + 1 }}">
+                                    </div>
+                                @empty
+                                    <div class="carousel-item active">
+                                        <img class="
+                                        d-block w-100"
+                                            src="{{ asset('') }}/img/no-image.jpg" alt="Tidak ada gambar">
+                                    </div>
+                                @endforelse
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                                data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                                data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
                         </div>
                     </div>
                     <div class="col-12 col-sm-6">
@@ -122,5 +136,23 @@
                 $(this).addClass("active");
             });
         })
+
+        $("#btn-search").click(function(event) {
+            event.preventDefault();
+            search();
+        });
+
+        $('input[type="search"').unbind();
+        $('input[type="search"').bind("keyup", function(e) {
+            if (e.keyCode == 13) {
+                search();
+            }
+        });
+
+        search = () => {
+            const search = $("#search").val();
+            const category_id = $("#category_id").val();
+            window.location.href = `/beranda?search=${search}&category_id=${category_id}`;
+        }
     </script>
 @endpush
