@@ -151,8 +151,11 @@ class OrderController extends Controller
 
     public function invoice(Sale $sale)
     {
-        $pdf = PDF::loadView('pdf.invoice', compact('sale'));
-        $pdf->setPaper('A4', 'potrait');
-        return $pdf->stream('invoice-penjualan.pdf');
+        if(auth()->user()->can('akses beranda') || auth()->user()->can('akses penjualan')){
+            $pdf = PDF::loadView('pdf.invoice', compact('sale'));
+            $pdf->setPaper('A4', 'potrait');
+            return $pdf->stream('invoice-penjualan.pdf');
+        }
+        return abort(403);
     }
 }
