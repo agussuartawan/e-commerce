@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
-class ProductController ext`ends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.

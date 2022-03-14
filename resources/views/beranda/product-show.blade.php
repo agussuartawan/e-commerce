@@ -95,7 +95,7 @@
                         @endforeach
                         <div class="bg-gray py-2 px-3 mt-4">
                             <h2 class="mb-0">
-                                Rp{{ rupiah($product->selling_price) }} / {{ $product->size }}
+                                Rp. {{ rupiah($product->selling_price) }} / {{ $product->size }}
                                 {{ $product->product_unit->name }}
                             </h2>
                         </div>
