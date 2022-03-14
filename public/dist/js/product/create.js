@@ -50,6 +50,9 @@ $(function () {
             success: function (response) {
                 showSuccessToast(message);
                 $("#modal").modal("hide");
+                $("#category_id").select2("trigger", "select", {
+                    data: { id: response.id, text: response.name },
+                });
             },
             error: function (xhr) {
                 showErrorToast();
@@ -112,6 +115,9 @@ $(function () {
             success: function (response) {
                 showSuccessToast(message);
                 $("#modal").modal("hide");
+                $("#product_color_id").select2("trigger", "select", {
+                    data: { id: response.id, text: response.name },
+                });
             },
             error: function (xhr) {
                 showErrorToast();
@@ -173,6 +179,9 @@ $(function () {
             success: function (response) {
                 showSuccessToast(message);
                 $("#modal").modal("hide");
+                $("#product_fragrance_id").select2("trigger", "select", {
+                    data: { id: response.id, text: response.name },
+                });
             },
             error: function (xhr) {
                 showErrorToast();
@@ -234,6 +243,9 @@ $(function () {
             success: function (response) {
                 showSuccessToast(message);
                 $("#modal").modal("hide");
+                $("#product_unit_id").select2("trigger", "select", {
+                    data: { id: response.id, text: response.name },
+                });
             },
             error: function (xhr) {
                 showErrorToast();

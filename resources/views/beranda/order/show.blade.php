@@ -13,7 +13,8 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <h6><strong>No. Pesanan : {{ $sale->sale_number }}</strong></h6>
-                                <h6><strong>Tanggal : {{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MM YYYY') }}</strong></h6>
+                                <h6><strong>Tanggal :
+                                        {{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</strong></h6>
                             </div>
                         </div>
 
@@ -33,7 +34,7 @@
                                 <h6>Tanggal Pembayaran</h6>
                                 <h6><strong>
                                         @if ($sale->payment)
-                                            {{ \Carbon\Carbon::parse($sale->payment->date)->isoFormat('DD MM YYYY') }}
+                                            {{ \Carbon\Carbon::parse($sale->payment->date)->isoFormat('DD MMMM Y') }}
                                         @else
                                             Belum melakukan pembayaran
                                         @endif

@@ -13,6 +13,7 @@
                 <span class="badge badge-danger">dibatalkan</span>
             @endif
         </h6>
+        <h6><strong>Tanggal : {{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</strong></h6>
     </div>
 </div>
 
@@ -36,7 +37,7 @@
     </div>
 
     <div class="col-md-4">
-        <h6>Waktu Pembayaran</h6>
+        <h6>Tanggal Pembayaran</h6>
         <h6><strong>
                 @if ($sale->payment)
                     {{ \Carbon\Carbon::parse($sale->payment->date)->isoFormat('DD MMMM Y') }}
