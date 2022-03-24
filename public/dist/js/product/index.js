@@ -162,7 +162,7 @@ showDeleteAlert = function (me) {
 
     Swal.fire({
         title: "Perhatian!",
-        text: "Hapus data " + title + "?",
+        text: title + "?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
