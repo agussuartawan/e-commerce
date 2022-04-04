@@ -163,7 +163,7 @@ $user = auth()->user();
                     </li>
                 @endcan
 
-                @can('akses laporan')
+                @if ($user->can('akses laporan jurnal umum') || $user->can('akses laporan penjualan') || $user->can('akses laporan neraca saldo') || $user->can('akses laporan buku besar'))
                     <li class="nav-item {{ request()->is('report*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
                             <i class="fas fa-book-open nav-icon"></i>
@@ -173,6 +173,7 @@ $user = auth()->user();
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            @can('akses laporan penjualan')
                             <li class="nav-item">
                                 <a href="{{ route('report.sales') }}"
                                     class="nav-link {{ request()->is('report/sales') ? 'active' : '' }}">
@@ -180,6 +181,8 @@ $user = auth()->user();
                                     <p>Penjualan</p>
                                 </a>
                             </li>
+                            @endcan
+                            @can('akses laporan jurnal umum')
                             <li class="nav-item">
                                 <a href="{{ route('report.journals') }}"
                                     class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
@@ -187,6 +190,8 @@ $user = auth()->user();
                                     <p>Jurnal Umum</p>
                                 </a>
                             </li>
+                            @endcan
+                            @can('akses laporan buku besar')
                             <li class="nav-item">
                                 <a href="{{ route('report.bigBooks') }}"
                                     class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
@@ -194,6 +199,8 @@ $user = auth()->user();
                                     <p>Buku Besar</p>
                                 </a>
                             </li>
+                            @endcan
+                            @can('akses laporan neraca saldo')
                             <li class="nav-item">
                                 <a href="{{ route('report.trialBalances') }}"
                                     class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
@@ -201,9 +208,10 @@ $user = auth()->user();
                                     <p>Neraca Saldo</p>
                                 </a>
                             </li>
+                            @endcan
                         </ul>
                     </li>
-                @endcan
+                @endif
 
                 <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();

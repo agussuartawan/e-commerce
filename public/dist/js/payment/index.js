@@ -30,6 +30,7 @@ $(function () {
                 url: "payment/get-list",
                 data: function (d) {
                     d.dateFilter = $("#daterange").val();
+                    d.payment_status = $("#payment-status").val();
                     d.search = $('input[type="search"]').val();
                 },
             },
@@ -57,10 +58,10 @@ $(function () {
         });
 
         $("#daterange").remove();
+        $("#payment-status").remove();
 
         const lunas = $("#lunas").val();
         const menunggu_konfirmasi = $("#menunggu-konfirmasi").val();
-        const menunggu_pembayaran = $("#menunggu-pembayaran").val();
 
         var filter = `
             <div class="row">
@@ -70,10 +71,9 @@ $(function () {
         `;
         filter += `
                 <div class="col">
-                    <div class="input-group"><select class="form-control custom-select">
+                    <div class="input-group"><select class="form-control custom-select" id="payment-status">
                         <option value="${lunas}">Lunas</option>
                         <option value="${menunggu_konfirmasi}" selected>Menunggu Konfirmasi</option>
-                        <option value="${menunggu_pembayaran}">Menunggu Pembayaran</option>
                     </select></div>
                 </div>
             </div>
@@ -88,6 +88,10 @@ $(function () {
         });
 
         $("#daterange").change(function () {
+            dTable.draw();
+        });
+
+        $("#payment-status").change(function () {
             dTable.draw();
         });
     });

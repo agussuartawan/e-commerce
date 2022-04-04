@@ -154,25 +154,31 @@ Route::group(['middleware' => 'auth'], function () {
 	});
 
 	// laporan route
-	Route::group(['middleware' => 'can:akses laporan'], function () {
+	Route::group(['middleware' => 'can:akses laporan penjualan'], function () {
 		// laporan penjualan
 		Route::get('report/sales', [ReportController::class, 'sales'])->name('report.sales');
 		Route::get('report/sales/get-lists', [ReportController::class, 'getSaleLists']);
 		Route::get('report/sales-download', [ReportController::class, 'salesReportDownload']);
 		Route::get('report/sales-print', [ReportController::class, 'salesReportPrint']);
+	});
 
+	Route::group(['middleware' => 'can:akses laporan jurnal umum'], function () {
 		// laporan jurnal umum
 		Route::get('report/journals', [ReportController::class, 'journals'])->name('report.journals');
 		Route::get('report/journals/get-lists', [ReportController::class, 'getJournalLists']);
 		Route::get('report/journals-download', [ReportController::class, 'journalsReportDownload']);
 		Route::get('report/journals-print', [ReportController::class, 'journalsReportPrint']);
+	});
 
+	Route::group(['middleware' => 'can:akses laporan buku besar'], function () {
 		// buku besar route
 		Route::get('report/big-books', [ReportController::class, 'bigBooks'])->name('report.bigBooks');
 		Route::get('report/big-books/get-lists', [ReportController::class, 'getBigBookLists']);
 		Route::get('report/ledger-download', [ReportController::class, 'ledgerReportDownload']);
 		Route::get('report/ledger-print', [ReportController::class, 'ledgerReportPrint']);
+	});
 
+	Route::group(['middleware' => 'can:akses laporan neraca saldo'], function () {
 		// neraca saldo route
 		Route::get('report/trial-balances', [ReportController::class, 'trialBalance'])->name('report.trialBalances');
 		Route::get('report/trial-balances/get-lists', [ReportController::class, 'getTrialBalanceLists']);

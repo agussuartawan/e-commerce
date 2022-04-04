@@ -54,6 +54,16 @@
 
 <div class="row">
     <div class="col-md-2">
+        <span class="col-form-label text-md-end">Harga Produksi</span>
+    </div>
+
+    <div class="col-md-6">
+        <p>{{ rupiah($product->production_price) }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
         <span class="col-form-label text-md-end">Sisa Stok</span>
     </div>
 

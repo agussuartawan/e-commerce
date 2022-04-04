@@ -28,7 +28,12 @@ class UserSeeder extends Seeder
 			$pembayaran = Permission::create(['name' => 'akses pembayaran']);
 			$penjualan = Permission::create(['name' => 'akses penjualan']);
 			$jurnal_umum = Permission::create(['name' => 'akses jurnal umum']);
-			$laporan = Permission::create(['name' => 'akses laporan']);
+
+			$laporan_penjualan = Permission::create(['name' => 'akses laporan penjualan']);
+			$laporan_jurnal_umum = Permission::create(['name' => 'akses laporan jurnal umum']);
+			$laporan_neraca_saldo = Permission::create(['name' => 'akses laporan neraca saldo']);
+			$laporan_buku_besar = Permission::create(['name' => 'akses laporan buku besar']);
+
 			$dashboard = Permission::create(['name' => 'akses dashboard']);
 			$user = Permission::create(['name' => 'akses user']);
 			$daerah = Permission::create(['name' => 'akses daerah']);
@@ -40,10 +45,14 @@ class UserSeeder extends Seeder
 			$owner_role = Role::create(['name' => 'Owner']);
 			$customer_role = Role::create(['name' => 'Pelanggan']);
 
-			$admin_role->syncPermissions([$bank, $pelanggan, $pembayaran, $penjualan, $dashboard, $daerah]);
-			$accounting_role->syncPermissions([$laporan, $jurnal_umum, $akun, $dashboard]);
+			$admin_role->syncPermissions([$bank, $pelanggan, $pembayaran, $penjualan, $dashboard, $daerah, $laporan_penjualan]);
+			$accounting_role->syncPermissions([
+				$laporan_penjualan, $laporan_buku_besar, $laporan_jurnal_umum, $laporan_neraca_saldo, $jurnal_umum, $akun, $dashboard
+			]);
 			$warehouse_role->syncPermissions([$kategori, $barang, $dashboard]);
-			$owner_role->syncPermissions([$laporan, $user, $dashboard]);
+			$owner_role->syncPermissions([
+				$laporan_penjualan, $laporan_buku_besar, $laporan_jurnal_umum, $laporan_neraca_saldo, $user, $dashboard
+			]);
 			$customer_role->syncPermissions([$beranda]);
 
 			$superadmin = User::create([

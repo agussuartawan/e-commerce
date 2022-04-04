@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('product_name');
             $table->string('stock');
             $table->decimal('selling_price', $precission = 18, $scale = 2);
+            $table->decimal('production_price', $precission = 18, $scale = 2);
             $table->integer('size')->default(0);
             $table->timestamps();
         });

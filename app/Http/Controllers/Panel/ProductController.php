@@ -71,6 +71,7 @@ class ProductController extends Controller
                 'product_name.string' => ' Nama tidak boleh mengandung simbol!',
                 'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
                 'selling_price.required' => 'Harga tidak boleh kosong!',
+                'production_price.required' => 'Harga produksi tidak boleh kosong!',
                 'category_id.required' => 'Kategori tidak boleh kosong!',
                 'product_color_id.required' => 'Warna tidak boleh kosong!',
                 'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
@@ -80,6 +81,7 @@ class ProductController extends Controller
             $validatedData = $request->validate([
                 'product_name' => ['required', 'string', 'max:255'],
                 'selling_price' => ['required', 'numeric'],
+                'production_price' => ['required', 'numeric'],
                 'category_id' => ['required'],
                 'product_color_id' => ['required'],
                 'product_fragrance_id' => ['required'],
@@ -135,6 +137,7 @@ class ProductController extends Controller
             'product_name.string' => ' Nama tidak boleh mengandung simbol!',
             'product_name.max' => ' Nama tidak boleh melebihi 255 huruf!',
             'selling_price.required' => 'Harga tidak boleh kosong!',
+            'production_price.required' => 'Harga produksi tidak boleh kosong!',
             'category_id.required' => 'Kategori tidak boleh kosong!',
             'product_color_id.required' => 'Warna tidak boleh kosong!',
             'product_fragrance_id.required' => 'Aroma tidak boleh kosong!',
@@ -144,6 +147,7 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'product_name' => ['required', 'string', 'max:255'],
             'selling_price' => ['required', 'numeric'],
+            'production_price' => ['required', 'numeric'],
             'category_id' => ['required'],
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
@@ -191,6 +195,9 @@ class ProductController extends Controller
             })
             ->addColumn('selling_price', function($data){
                 return rupiah($data->selling_price);
+            })
+            ->addColumn('production_price', function($data){
+                return rupiah($data->production_price);
             })
             ->addColumn('stock', function($data){
                 return $data->stock . ' ' . $data->product_unit->name;

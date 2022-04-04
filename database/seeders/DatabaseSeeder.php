@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             SaleStatusSeeder::class,
             AccountSeeder::class,
+            BankSeeder::class,
         ]);
     }
 }

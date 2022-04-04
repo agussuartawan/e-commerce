@@ -55,9 +55,20 @@
                                         {!! Form::text('product_name', null, ['class' => 'form-control', 'id' => 'product_name']) !!}
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="selling_price">Harga Jual</label>
-                                        {!! Form::text('selling_price', null, ['class' => 'form-control', 'id' => 'selling_price']) !!}
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="selling_price">Harga Jual</label>
+                                                {!! Form::text('selling_price', null, ['class' => 'form-control', 'id' => 'selling_price']) !!}
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="production_price">Harga Produksi</label>
+                                                {!! Form::text('production_price', null, ['class' => 'form-control', 'id' => 'production_price']) !!}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-group">

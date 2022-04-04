@@ -16,6 +16,7 @@ class Product extends Model
         'selling_price',
         'size',
         'description',
+        'production'
     ];
 
     public function category()

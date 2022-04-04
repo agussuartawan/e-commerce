@@ -36,6 +36,7 @@ $(function () {
                 { data: "code", name: "code" },
                 { data: "product_name", name: "product_name" },
                 { data: "selling_price", name: "selling_price" },
+                { data: "production_price", name: "production_price" },
                 { data: "stock", name: "stock" },
                 { data: "category", name: "product.category" },
                 { data: "action", name: "action", orderable: false },

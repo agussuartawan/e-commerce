@@ -98,8 +98,9 @@ class PaymentController extends Controller
             ->addColumn('date', function ($data) {
                 return Carbon::parse($data->date)->format('d/m/Y');
             })
-            ->addColumn('transfer_proof', function ($data) {           
-                return '<a href="/storage/'. $data->transfer_proof .'" class="btn btn-sm btn-outline-primary btn-block" target=”_blank”>Lihat</a>';
+            ->addColumn('transfer_proof', function ($data) {    
+                $action = view('include.payment.btn-transfer-proof', compact('data'))->render();            
+                return $action;
             })
             ->addColumn('payment_status', function ($data) {  
                 if($data->sale->payment_status_id == PaymentStatus::LUNAS){
@@ -131,6 +132,12 @@ class PaymentController extends Controller
                     $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
                     $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
                     $instance->whereBetween('payments.date', $date);
+                }
+                if ($request->payment_status) {
+                    $instance->join('sales', 'sales.id', '=', 'payments.sale_id')
+                                ->where(function ($w) use ($request) {
+                                    $w->where('payment_status_id', '=', $request->payment_status);
+                                });
                 }
                 if (!empty($request->search)) {
                     $instance->join('sales', 'sales.id', '=', 'payments.sale_id')
