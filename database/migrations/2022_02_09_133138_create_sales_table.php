@@ -30,6 +30,7 @@ class CreateSalesTable extends Migration
             $table->dateTime('date');
             $table->text('note')->nullable();
             $table->text('address');
+            $table->boolean('is_validated_warehouse')->default(0);
             $table->timestamps();
         });
     }

@@ -71,6 +71,9 @@
         </div>
         <!-- /.container-fluid -->
     </section>
+    <input type="hidden" value="{{ \App\Models\PaymentStatus::LUNAS }}" id="lunas">
+    <input type="hidden" value="{{ \App\Models\PaymentStatus::MENUNGGU_PEMBAYARAN }}" id="menunggu-pembayaran">
+    <input type="hidden" value="{{ \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI }}" id="menunggu-konfirmasi">
     <!-- /.content -->
 
     @include('include.modal')

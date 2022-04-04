@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
 
 			$superadmin_role = Role::create(['name' => 'Super Admin']);
 			$admin_role = Role::create(['name' => 'Admin']);
-			$accounting_role = Role::create(['name' => 'Akunting']);
+			$accounting_role = Role::create(['name' => 'Accounting']);
 			$warehouse_role = Role::create(['name' => 'Staff Gudang']);
 			$owner_role = Role::create(['name' => 'Owner']);
 			$customer_role = Role::create(['name' => 'Pelanggan']);

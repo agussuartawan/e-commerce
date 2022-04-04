@@ -92,8 +92,11 @@
 
                     <div class="card-footer d-flex justify-content-center">
                         <a href="{{ route('delivery.index') }}" class="btn btn-danger mr-2">Kembali</a>
-                        <a href="{{ route('order.invoice', $sale) }}" class="btn btn-primary" target="_blanc">Cetak Nota
-                            Pembelian</a>
+                        @if ($sale->is_validated_warehouse == 1 && $sale->delivery_status_id == \App\Models\DeliveryStatus::DIKIRIM)
+                            <a href="{{ route('order.invoice', $sale) }}" class="btn btn-primary" target="_blanc">Cetak
+                                Nota
+                                Pembelian</a>
+                        @endif
                     </div>
                 </div>
             </div>

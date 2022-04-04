@@ -49,7 +49,7 @@
                                         <tr>
                                             <th>Kode</th>
                                             <th>Nama Produk</th>
-                                            <th>Harga</th>
+                                            <th>Harga Jual</th>
                                             <th>Stock</th>
                                             <th>Kategori</th>
                                             <th width="10%">Aksi</th>

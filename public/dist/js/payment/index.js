@@ -45,7 +45,7 @@ $(function () {
                 { data: "payment_status", name: "payment_status" },
                 { data: "action", name: "action", orderable: false },
             ],
-            dom: "<'row'<'col-sm-3 mb-1 filter'><'col'f>>tipr",
+            dom: "<'row'<'col mb-1 filter'><'col'f>>tipr",
             initComplete: function (settings, json) {
                 $('input[type="search"').unbind();
                 $('input[type="search"').bind("keyup", function (e) {
@@ -58,9 +58,27 @@ $(function () {
 
         $("#daterange").remove();
 
-        $("div.filter").html(
-            '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="daterange"></div>'
-        );
+        const lunas = $("#lunas").val();
+        const menunggu_konfirmasi = $("#menunggu-konfirmasi").val();
+        const menunggu_pembayaran = $("#menunggu-pembayaran").val();
+
+        var filter = `
+            <div class="row">
+                <div class="col">
+                    <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="daterange"></div>
+                </div>
+        `;
+        filter += `
+                <div class="col">
+                    <div class="input-group"><select class="form-control custom-select">
+                        <option value="${lunas}">Lunas</option>
+                        <option value="${menunggu_konfirmasi}" selected>Menunggu Konfirmasi</option>
+                        <option value="${menunggu_pembayaran}">Menunggu Pembayaran</option>
+                    </select></div>
+                </div>
+            </div>
+        `;
+        $("div.filter").html(filter);
 
         $("#daterange").daterangepicker({
             locale: {
