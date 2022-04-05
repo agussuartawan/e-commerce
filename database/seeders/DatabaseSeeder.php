@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SaleStatusSeeder::class,
             AccountSeeder::class,
             BankSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

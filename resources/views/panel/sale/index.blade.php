@@ -56,7 +56,12 @@
                                             <th>Produk</th>
                                             <th>Tgl</th>
                                             <th>Total</th>
-                                            <th>Status</th>
+                                            <th>Status Gudang</th>
+                                            @if (auth()->user()->can('akses penjualan aksi'))
+                                                <th>Status Pembayaran</th>
+                                            @else
+                                                <th></th>
+                                            @endif
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>

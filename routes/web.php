@@ -25,6 +25,10 @@ use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
+use App\Mail\PaymentNotificationEmail;
+use App\Models\PaymentStatus;
+use App\Models\Sale;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
 	return redirect()->route('beranda');
@@ -88,7 +92,6 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('banks/get-list', [BankController::class, 'getBankLists']);
 		Route::resource('banks', BankController::class)->except('destroy', 'show');
 	});
-
 	
 	# route pemesanan
 	Route::get('order/{sale}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
@@ -114,6 +117,7 @@ Route::group(['middleware' => 'auth'], function () {
 	// route data penjualan admin
 	Route::group(['middleware' => 'can:akses penjualan'], function () {
 		Route::put('sale/{sale}/confirm', [SaleController::class, 'deliveryConfirm']);
+		Route::put('sale/{sale}/confirm-warehouse', [SaleController::class, 'warehouseConfirm']);
 		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
 		Route::get('sale/{product}/{sale}/get-variant-list', [SaleController::class, 'getVariantList']);
 		Route::get('sale/form-order/{sale}', [SaleController::class, 'formOrder']);

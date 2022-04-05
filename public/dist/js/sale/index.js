@@ -40,6 +40,11 @@ $(function () {
                 { data: "date", name: "date" },
                 { data: "grand_total", name: "grand_total" },
                 {
+                    data: "warehouse_status",
+                    name: "warehouse_status",
+                    orderable: false,
+                },
+                {
                     data: "delivery_status",
                     name: "delivery_status",
                     orderable: false,
@@ -138,12 +143,6 @@ $(function () {
             sale_id = me.attr("data-id");
 
         $(".modal-title").text(title);
-        $(".modal-footer").append(
-            `<a href="/order/${sale_id}/invoice" target="_blanc" class="btn btn-primary print-sale">Cetak Nota Penjualan</a>`
-        );
-        $(".modal-footer").append(
-            `<a href="/sale/form-order/${sale_id}" target="_blanc" class="btn btn-primary print-fo">Cetak Form Order</a>`
-        );
 
         $.ajax({
             url: url,
