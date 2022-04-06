@@ -25,6 +25,7 @@ use App\Http\Controllers\Panel\GeneralJournalController;
 use App\Http\Controllers\Panel\ProductFragranceController;
 use App\Http\Controllers\Panel\PaymentController as PanelPaymentController;
 use App\Http\Controllers\Beranda\PaymentController as BerandaPaymentController;
+use App\Http\Controllers\Panel\PurchaseController;
 use App\Mail\PaymentNotificationEmail;
 use App\Models\PaymentStatus;
 use App\Models\Sale;
@@ -122,6 +123,13 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('sale/{product}/{sale}/get-variant-list', [SaleController::class, 'getVariantList']);
 		Route::get('sale/form-order/{sale}', [SaleController::class, 'formOrder']);
 		Route::resource('sales', SaleController::class)->except('destroy', 'create', 'store');
+	});
+	
+	// route data barang masuk
+	Route::group(['middleware' => 'can:akses barang masuk'], function () {
+		Route::get('purchase/show-input-product', [PurchaseController::class, 'showInputProduct']);
+		Route::get('purchase/get-list', [PurchaseController::class, 'getPurchaseList']);
+		Route::resource('purchases', PurchaseController::class)->except('destroy');
 	});
 
 	// route data pembayaran admin

@@ -225,7 +225,7 @@ class ProductController extends Controller
     public function searchProduct(Request $request)
     {
         $search = $request->search;
-        return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name', 'selling_price')->get();
+        return Product::where('product_name', 'LIKE', "%$search%")->select('id', 'product_name', 'selling_price', 'production_price')->get();
     }
 
     public function imageForm(Product $product)

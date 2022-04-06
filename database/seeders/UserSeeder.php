@@ -27,6 +27,7 @@ class UserSeeder extends Seeder
 			$bank = Permission::create(['name' => 'akses bank']);
 			$pembayaran = Permission::create(['name' => 'akses pembayaran']);
 			$penjualan = Permission::create(['name' => 'akses penjualan']);
+			$barang_masuk = Permission::create(['name' => 'akses barang masuk']);
 			$penjualan_aksi = Permission::create(['name' => 'akses penjualan aksi']);
 			$jurnal_umum = Permission::create(['name' => 'akses jurnal umum']);
 
@@ -50,7 +51,7 @@ class UserSeeder extends Seeder
 			$accounting_role->syncPermissions([
 				$laporan_penjualan, $laporan_buku_besar, $laporan_jurnal_umum, $laporan_neraca_saldo, $jurnal_umum, $akun, $dashboard
 			]);
-			$warehouse_role->syncPermissions([$kategori, $barang, $dashboard, $penjualan]);
+			$warehouse_role->syncPermissions([$kategori, $barang, $dashboard, $penjualan, $barang_masuk]);
 			$owner_role->syncPermissions([
 				$laporan_penjualan, $laporan_buku_besar, $laporan_jurnal_umum, $laporan_neraca_saldo, $user, $dashboard
 			]);

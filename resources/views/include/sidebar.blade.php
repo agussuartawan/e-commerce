@@ -127,6 +127,18 @@ $user = auth()->user();
                     </li>
                 @endif
 
+                @can('akses barang masuk')
+                    <li class="nav-item">
+                        <a href="{{ route('purchases.index') }}"
+                            class="nav-link {{ request()->is('purchases*') ? 'active' : '' }}">
+                            <i class="fas fa-shopping-bag nav-icon"></i>
+                            <p>
+                                Barang Masuk
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('akses pembayaran')
                     <li class="nav-item">
                         <a href="{{ route('payments.index') }}"
@@ -174,40 +186,40 @@ $user = auth()->user();
                         </a>
                         <ul class="nav nav-treeview">
                             @can('akses laporan penjualan')
-                            <li class="nav-item">
-                                <a href="{{ route('report.sales') }}"
-                                    class="nav-link {{ request()->is('report/sales') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Penjualan</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('report.sales') }}"
+                                        class="nav-link {{ request()->is('report/sales') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Penjualan</p>
+                                    </a>
+                                </li>
                             @endcan
                             @can('akses laporan jurnal umum')
-                            <li class="nav-item">
-                                <a href="{{ route('report.journals') }}"
-                                    class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Jurnal Umum</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('report.journals') }}"
+                                        class="nav-link {{ request()->is('report/journals') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Jurnal Umum</p>
+                                    </a>
+                                </li>
                             @endcan
                             @can('akses laporan buku besar')
-                            <li class="nav-item">
-                                <a href="{{ route('report.bigBooks') }}"
-                                    class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Buku Besar</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('report.bigBooks') }}"
+                                        class="nav-link {{ request()->is('report/big-books') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Buku Besar</p>
+                                    </a>
+                                </li>
                             @endcan
                             @can('akses laporan neraca saldo')
-                            <li class="nav-item">
-                                <a href="{{ route('report.trialBalances') }}"
-                                    class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Neraca Saldo</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('report.trialBalances') }}"
+                                        class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Neraca Saldo</p>
+                                    </a>
+                                </li>
                             @endcan
                         </ul>
                     </li>
