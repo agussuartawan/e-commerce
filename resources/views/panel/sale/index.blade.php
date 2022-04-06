@@ -58,7 +58,7 @@
                                             <th>Total</th>
                                             <th>Status Gudang</th>
                                             @if (auth()->user()->can('akses penjualan aksi'))
-                                                <th>Status Pembayaran</th>
+                                                <th>Status Pengiriman</th>
                                             @else
                                                 <th></th>
                                             @endif

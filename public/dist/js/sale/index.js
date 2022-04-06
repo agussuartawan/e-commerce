@@ -133,6 +133,48 @@ $(function () {
         });
     });
 
+    $("body").on("click", ".btn-confirm-warehouse", function (event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "Yakin melanjutkan konfirmasi?",
+            text: "Konfirmasi tidak dapat dibatalkan!",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, konfirmasi",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var form_id = $(this).attr("data-id"),
+                    form = $(`.${form_id}`),
+                    url = form.attr("action"),
+                    method = "POST",
+                    message = "Konfirmasi gudang berhasil.";
+
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: form.serialize(),
+                    beforeSend: function () {
+                        $(".btn").attr("disabled", true);
+                    },
+                    complete: function () {
+                        $(".btn").removeAttr("disabled");
+                    },
+                    success: function (data) {
+                        showSuccessToast(message);
+                        $("#sale-table").DataTable().ajax.reload();
+                    },
+                    error: function (xhr) {
+                        showErrorToast();
+                    },
+                });
+            }
+        });
+    });
+
     $("body").on("click", ".btn-show", function (event) {
         event.preventDefault();
         $("#modal").modal("show");

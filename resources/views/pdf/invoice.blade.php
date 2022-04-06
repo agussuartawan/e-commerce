@@ -133,7 +133,8 @@
                 <td>Dipesan Oleh</td>
             </tr>
             <tr>
-                <td style="height: 40px" colspan="3"></td>
+                <td class="text-center"><img src="{{ asset('img/ttd-admin.png') }}" alt=""></td>
+                <td class="text-center"><img src="{{ asset('img/ttd-gudang.png') }}" alt=""></td>
             </tr>
             <tr class="text-center">
                 <td>(...................)</td>

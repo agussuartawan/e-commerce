@@ -8,26 +8,27 @@
                 font-size: 20pt;
                 text-align: center;
             }
-        
+
             .table {
                 border-collapse: collapse;
                 width: 100%;
             }
-        
+
             .table th {
                 padding: 8px 8px;
-                border:1px solid #000000;
+                border: 1px solid #000000;
                 text-align: center;
             }
-        
+
             .table td {
                 padding: 3px 3px;
-                border:1px solid #000000;
+                border: 1px solid #000000;
             }
-        
+
             .text-center {
                 text-align: center;
             }
+
         </style>
     @endpush
 
@@ -37,7 +38,7 @@
             <span>No : {{ $sale->sale_number }}</span>
             <span style="float: right">Tanggal : {{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</span>
         </div>
-  
+
         <table class="table">
             <thead>
                 <tr>
@@ -63,7 +64,10 @@
                 <td>Diperiksa Oleh</td>
                 <td>Dipesan Oleh</td>
             </tr>
-            <tr><td style="height: 40px" colspan="3"></td></tr>
+            <tr>
+                <td class="text-center"><img src="{{ asset('img/ttd-admin.png') }}" alt=""></td>
+                <td class="text-center"><img src="{{ asset('img/ttd-gudang.png') }}" alt=""></td>
+            </tr>
             <tr class="text-center">
                 <td>(...................)</td>
                 <td>(...................)</td>

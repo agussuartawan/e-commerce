@@ -175,6 +175,8 @@ class SaleController extends Controller
                         return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
                     } else if($data->is_cancel == 1 || $data->payment_status_id == PaymentStatus::DIBATALKAN || $data->delivery_status_id == DeliveryStatus::DIBATALKAN){
                         return '<span class="badge badge-danger">dibatalkan</span>';
+                    } else if($data->is_validated_warehouse == 0){
+                        return '<span class="badge badge-secondary">menunggu</span>';
                     }        
     
                     $confirm = '<form action="/sale/'.$data->id.'/confirm" method="POST" class="d-none form-send'.$data->id.'">';
@@ -198,7 +200,7 @@ class SaleController extends Controller
                     if($data->is_validated_warehouse == 1){
                         return '<span class="badge badge-success">Siap</span>';
                     } else {
-                        if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
+                        if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI || $data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
                             return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
                         }
                         $confirm = '<form action="/sale/'.$data->id.'/confirm-warehouse" method="POST" class="d-none form-send'.$data->id.'">';
@@ -284,7 +286,7 @@ class SaleController extends Controller
     public function warehouseConfirm(Sale $sale)
     {
         DB::transaction(function () use ($sale){
-            $sale->is_validate_warehouse_ = 1;
+            $sale->is_validated_warehouse = 1;
             $sale->save();
         });
 
