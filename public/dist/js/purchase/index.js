@@ -1,4 +1,4 @@
-var row = 1;
+var row;
 $(function () {
     "use strict";
     $(document).ready(function () {
@@ -37,7 +37,7 @@ $(function () {
             columns: [
                 { data: "purchase_number", name: "purchase_number" },
                 { data: "date", name: "date" },
-                { data: "qty", name: "qty" },
+                { data: "total_qty", name: "total_qty" },
                 { data: "action", name: "action", orderable: false },
             ],
             dom: "<'row'<'col'B><'col-sm-3 mb-1 filter'><'col'f>>tipr",
@@ -79,6 +79,15 @@ $(function () {
         });
 
         $(".modal-save").remove();
+    });
+
+    $('body').on('click', '.btn-removes', function(event){
+        event.preventDefault();
+        var first_td = $(this).closest('tr').children('td:first');
+        if(first_td.find('.product-select').attr('data-last-select') == 'true'){
+            $(this).closest('tr').prev('tr').children('td:first').find('.product-select').attr('data-last-select', 'true');
+        }
+        $(this).parents('tr').remove();
     });
 
     $("body").on("change", ".product-select", function () {
@@ -125,9 +134,6 @@ $(function () {
     $("body").on("click", ".modal-edit", function (event) {
         event.preventDefault();
         showModal();
-        $(".modal-footer").append(
-            '<button type="button" class="btn btn-primary modal-save">Simpan</button>'
-        );
 
         var me = $(this),
             url = me.attr("href"),
@@ -145,16 +151,7 @@ $(function () {
                 const sale_id = $("#sale_id").val();
                 const province_id = $("#province_id").val();
 
-                searchBank();
-                searchProvince();
-                searchCustomer();
-                searchCity(province_id);
                 searchProduct();
-                showVariant(product_id, sale_id);
-
-                const price = $("#price").val();
-                const qty = $(".input-number").val();
-                countGrandTotal(qty, price);
             },
             error: function (xhr, status) {
                 $("#modal").modal("hide");
@@ -166,10 +163,14 @@ $(function () {
     $("body").on("click", ".modal-save", function (event) {
         event.preventDefault();
 
-        var form = $("#form-order"),
+        var form = $("#form-purchase"),
             url = form.attr("action"),
-            method = "PUT",
-            message = "Data penjualan berhasil diubah";
+            method =
+                $("input[name=_method").val() == undefined ? "POST" : "PUT",
+            message =
+                $("input[name=_method").val() == undefined
+                    ? "Data barang masuk berhasil ditambahkan"
+                    : "Data barang masuk berhasil diubah";
 
         $(".form-control").removeClass("is-invalid");
         $(".invalid-feedback").remove();
@@ -187,36 +188,13 @@ $(function () {
             success: function (response) {
                 showSuccessToast(message);
                 $("#modal").modal("hide");
-                $("#sale-table").DataTable().ajax.reload();
+                $("#purchase-table").DataTable().ajax.reload();
             },
             error: function (xhr) {
                 showErrorToast();
                 var res = xhr.responseJSON;
                 if ($.isEmptyObject(res) == false) {
-                    $.each(res.errors, function (key, value) {
-                        if (key === "qty") {
-                            $("#qty").addClass("is-invalid");
-                            $("#input-qty").append(
-                                `<span class="invalid-feedback">${value}</span>`
-                            );
-                        } else {
-                            $("#" + key)
-                                .addClass("is-invalid")
-                                .after(
-                                    `<span class="invalid-feedback">${value}</span>`
-                                );
-                            if (key === "product_fragrance_id") {
-                                $(".fragrance-row").after(
-                                    `<small class="text-danger">${value}</small>`
-                                );
-                            }
-                            if (key === "product_color_id") {
-                                $(".color-row").after(
-                                    `<small class="text-danger">${value}</small>`
-                                );
-                            }
-                        }
-                    });
+                    showErrorToast();
                 }
             },
         });
@@ -224,8 +202,6 @@ $(function () {
 
     $("#modal").on("hidden.bs.modal", function () {
         $(".modal-save").remove();
-        $(".print-sale").remove();
-        $(".print-fo").remove();
     });
 });
 
@@ -341,6 +317,7 @@ searchProduct = () => {
             },
             placeholder: "Cari produk",
             cache: true,
+            allowClear: true
         })
         .on("select2:select", function (event) {
             var data = event.params.data;
@@ -350,6 +327,12 @@ searchProduct = () => {
             $(`#production_price_${id_number}`).val(
                 Math.round(data.production_price)
             );
+        })
+        .on('change', function(event){
+            var id = $(this).attr("id");
+            var id_number = id.slice(-1);
+            var this_value = $(this).val();
+            $(`#hidden_${id_number}`).val(this_value);
         });
 };
 
@@ -385,6 +368,9 @@ fillModal = (me) => {
     title === undefined ? (title = "Tambah Barang Masuk") : "";
 
     $(".modal-title").text(title);
+    $(".modal-footer").append(
+        '<button type="button" class="btn btn-primary modal-save">Simpan</button>'
+    );
 
     $.ajax({
         url: url,
@@ -392,7 +378,8 @@ fillModal = (me) => {
         dataType: "html",
         success: function (response) {
             $(".modal-body").html(response);
-            showCreateForm(row);
+            row = $('#row').val();
+            showCreateForm(row++);
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");

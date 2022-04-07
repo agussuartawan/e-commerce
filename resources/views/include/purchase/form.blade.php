@@ -22,5 +22,5 @@
         <tbody></tbody>
     </table>
 </div>
-
+<input type="hidden" id="row" value="{{ $row }}">
 {!! Form::close() !!}

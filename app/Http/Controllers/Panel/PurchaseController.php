@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Controllers\Controller;
-use App\Models\Purchase;
 use Carbon\Carbon;
+use App\Models\Product;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PurchaseRequest;
 
 class PurchaseController extends Controller
 {
@@ -28,7 +31,8 @@ class PurchaseController extends Controller
     public function create()
     {
         $purchase = new Purchase();
-        return view('include.purchase.form', compact('purchase'));
+        $row = 1;
+        return view('include.purchase.form', compact('purchase', 'row'));
     }
 
     public function showInputProduct(Request $request)
@@ -43,9 +47,50 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PurchaseRequest $request)
     {
-        //
+        DB::transaction(function () use ($request) {
+            // hapus nilai product_id yang kosong pada form
+            $product['product_id'] = $request->product_id;
+            $product['qty'] = $request->qty;
+            $product['production_price'] = $request->production_price;
+            foreach ($product['product_id'] as $key => $value) {
+                if ($value == null) {
+                    unset($product['product_id'][$key]);
+                    unset($product['qty'][$key]);
+                    unset($product['production_price'][$key]);
+                }
+            }
+
+            // insert ke table purchase
+            $purchase_count = Purchase::count();
+            if($purchase_count == 0){
+                $number = 10001;
+                $fullnumber = 'BM' . $number;
+            } else {
+                $number = Purchase::all()->last();
+                $number_plus = (int)substr($number->code, -5) + 1;
+                $fullnumber = 'BM' . $number_plus;
+            }
+
+            $purchase = Purchase::create([
+                'date' => $request->date,
+                'purchase_number' => $fullnumber,
+            ]);
+
+            foreach ($product['product_id'] as $key => $value) {
+                // insert to product_purchase
+                $purchase->product()->attach($product['product_id'][$key], [
+                    'qty' => $product['qty'][$key],
+                    'production_price' => str_replace(".", "", $product['production_price'][$key]),
+                ]);
+
+                // update in_stock di tabel product warehouse
+                Product::find($product['product_id'][$key])->increment('stock', $product['qty'][$key]);
+            }
+
+            return $purchase;
+        });
     }
 
     /**
@@ -90,6 +135,9 @@ class PurchaseController extends Controller
             ->addColumn('date', function ($data) {
                 return Carbon::parse($data->date)->format('d/m/Y');
             })
+            ->addColumn('total_qty', function ($data) {
+                return $data->product->sum('pivot.qty');
+            })
             ->addColumn('action', function ($data) {
                 $buttons = '<div class="row">';
 
@@ -125,7 +173,7 @@ class PurchaseController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action', 'date'])
+            ->rawColumns(['action', 'date', 'total_qty'])
             ->make(true);
     }
 }

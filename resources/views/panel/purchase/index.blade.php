@@ -57,7 +57,9 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody><input type="hidden" value="{{ date('Y-m-d') }}" id="daterange"></tbody>
+                                    <tbody>
+                                        <input type="hidden" value="{{ date('Y-m-d') }}" id="daterange">
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

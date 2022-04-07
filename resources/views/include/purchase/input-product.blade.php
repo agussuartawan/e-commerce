@@ -11,8 +11,7 @@
     </td>
     <td>
         @if ($row != 1)
-            <a href="" class="btn-removes" id="btn-remove-'.{{ $row }}.'"><i
-                    class="ik ik-trash-2 f-16 mr-15 text-danger"></i></a>
+            <a href="javascript:void(0)" class="badge badge-danger btn-removes" id="btn-remove-'.{{ $row }}.'">hapus</a>
         @endif
     </td>
 </tr>
