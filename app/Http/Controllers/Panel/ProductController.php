@@ -86,7 +86,6 @@ class ProductController extends Controller
                 'product_color_id' => ['required'],
                 'product_fragrance_id' => ['required'],
                 'product_unit_id' => ['required'],
-                'stock' => ['required', 'numeric']
             ], $messages);
 
             $validatedData['size'] = $request->size;
@@ -152,7 +151,6 @@ class ProductController extends Controller
             'product_color_id' => ['required'],
             'product_fragrance_id' => ['required'],
             'product_unit_id' => ['required'],
-            'stock' => ['required', 'numeric']
         ], $messages);
 
 

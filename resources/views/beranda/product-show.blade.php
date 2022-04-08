@@ -71,6 +71,7 @@
                     <div class="col-12 col-sm-6">
                         <h3 class="my-3">{{ $product->product_name }}</h3>
                         <hr>
+                        <h5>Sisa stok : {{ $product->stock }}</h5>
                         <h4>Warna Tersedia</h4>
                         @foreach ($product->product_color as $color)
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">

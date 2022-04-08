@@ -132,11 +132,13 @@ class PurchaseController extends Controller
     {
         DB::transaction(function () use ($request, $purchase) {
             foreach($purchase->product as $p){
-                $purchase->product()->detach([
-                    $p->id => ['qty' => $p->pivot->qty, 'production_price' => str_replace(".", "", $p->pivot->production_price)]
+                $purchase->product()->detach($p->id, [
+                    'qty' => $p->pivot->qty, 
+                    'production_price' => str_replace(".", "", $p->pivot->production_price)
                 ]);
                 $p->decrement('stock', $p->pivot->qty);
             }
+            
             // hapus nilai product_id yang kosong pada form
             $product['product_id'] = $request->product_id;
             $product['qty'] = $request->qty;
@@ -155,12 +157,17 @@ class PurchaseController extends Controller
             
             // insert to product_purchase
             foreach ($product['product_id'] as $key => $value) {
-                $purchase->product()->attach($product['product_id'][$key], [
-                    'qty' => $product['qty'][$key], 
-                    'production_price' => str_replace(".", "", $product['production_price'][$key])
+                $product_id = $product['product_id'][$key];
+                $qty = $product['qty'][$key];
+                $production_price = str_replace(".", "", $product['production_price'][$key]);
+
+                $purchase->product()->attach($product_id, [
+                    'qty' => $qty, 
+                    'production_price' => $production_price
                 ]);
+
                 // update in_stock di tabel product warehouse
-                Product::find($product['product_id'][$key])->increment('stock', $product['qty'][$key]);
+                Product::find($product_id)->increment('stock', $qty);
             }
 
             return $purchase;

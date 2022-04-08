@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\Account;
+use App\Models\Purchase;
 use App\Models\TrialBalance;
 use Illuminate\Http\Request;
 use App\Models\GeneralJournal;
@@ -291,5 +292,63 @@ class ReportController extends Controller
         $pdf->setPaper('A4', 'potrait');
 
         return $pdf->download('laporan-neraca-saldo.pdf');
+    }
+
+    public function productIncomes()
+    {
+        return view('panel.report.product-income.index');
+    }
+
+    public function getProductIncomeLists(Request $request)
+    {
+        $from = explode(" / ", $request->search)[0];
+        $to = explode(" / ", $request->search)[1];
+        $date['from'] = Carbon::parse($from)->format('Y-m-d');
+        $date['to'] = Carbon::parse($to)->format('Y-m-d');
+
+        $avenues = Sale::orderBy('date', 'ASC')->get();
+        $incomes = Purchase::orderBy('date', 'ASC')->get();
+
+        $sum_income = 0;
+        foreach($incomes as $a){
+            $sum_income = $sum_income + (int)$a->product->sum('pivot.qty');
+        }
+
+        return view('include.report.product-income.list', compact('avenues', 'incomes', 'sum_income', 'date'));
+    }
+    public function productIncomeReportPrint(Request $request)
+    {
+        $from = explode(" / ", $request->search)[0];
+        $to = explode(" / ", $request->search)[1];
+        $date['from'] = Carbon::parse($from)->format('Y-m-d');
+        $date['to'] = Carbon::parse($to)->format('Y-m-d');
+
+        $sales = Sale::orderBy('date', 'ASC')->get();
+        $incomes = Purchase::orderBy('date', 'ASC')->get();
+        $sum_income = 0;
+        foreach($incomes as $a){
+            $sum_income = $sum_income + (int)$a->product->sum('pivot.qty');
+        }
+
+        $pdf = PDF::loadView('pdf.product-income', compact('incomes', 'sum_income', 'sales', 'date'));
+        $pdf->setPaper('A4', 'potrait');
+
+        return $pdf->stream('laporan-barang-masuk.pdf');
+    }
+
+    public function productIncomeReportDownload(Request $request)
+    {
+        $from = explode(" / ", $request->search)[0];
+        $to = explode(" / ", $request->search)[1];
+        $date['from'] = Carbon::parse($from)->format('Y-m-d');
+        $date['to'] = Carbon::parse($to)->format('Y-m-d');
+
+        $incomes = Purchase::orderBy('date', 'ASC')->get();
+        $avenues = Sale::orderBy('date', 'ASC')->get();
+
+        $pdf = PDF::loadView('pdf.product-income', compact('incomes', 'avenues', 'date'));
+        $pdf->setPaper('A4', 'potrait');
+
+        return $pdf->download('laporan-barang-masuk.pdf');
     }
 }

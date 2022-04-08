@@ -175,7 +175,7 @@ $user = auth()->user();
                     </li>
                 @endcan
 
-                @if ($user->can('akses laporan jurnal umum') || $user->can('akses laporan penjualan') || $user->can('akses laporan neraca saldo') || $user->can('akses laporan buku besar'))
+                @if ($user->can('akses laporan jurnal umum') || $user->can('akses laporan penjualan') || $user->can('akses laporan neraca saldo') || $user->can('akses laporan buku besar') || $user->can('akses laporan barang masuk'))
                     <li class="nav-item {{ request()->is('report*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
                             <i class="fas fa-book-open nav-icon"></i>
@@ -218,6 +218,15 @@ $user = auth()->user();
                                         class="nav-link {{ request()->is('report/trial-balances') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Neraca Saldo</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('akses laporan barang masuk')
+                                <li class="nav-item">
+                                    <a href="{{ route('report.productIncomes') }}"
+                                        class="nav-link {{ request()->is('report/product-incomes') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Arus Barang</p>
                                     </a>
                                 </li>
                             @endcan

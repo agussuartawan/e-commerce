@@ -12,7 +12,6 @@ class Product extends Model
         'product_unit_id',
         'code',
         'product_name',
-        'stock',
         'selling_price',
         'size',
         'description',

@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
             'category_id' => $category->id,
             'product_unit_id' => $unit->id,
             'product_name' => 'Sabun Mandi',
-            'stock' => 100,
+            'stock' => 0,
             'selling_price' => 15000,
             'production_price' => 5000,
             'size' => 100,

@@ -71,11 +71,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="stock">Stok</label>
-                                        {!! Form::number('stock', null, ['class' => 'form-control', 'id' => 'stock']) !!}
-                                    </div>
-
-                                    <div class="form-group">
                                         <label for="size">Ukuran</label>
                                         {!! Form::number('size', null, ['class' => 'form-control', 'id' => 'size']) !!}
                                     </div>

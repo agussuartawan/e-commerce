@@ -198,6 +198,14 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('report/trial-balance-print', [ReportController::class, 'trialBalanceReportPrint']);
 	});
 
+	Route::group(['middleware' => 'can:akses laporan barang masuk'], function () {
+		// neraca saldo route
+		Route::get('report/product-incomes', [ReportController::class, 'productIncomes'])->name('report.productIncomes');
+		Route::get('report/product-incomes/get-lists', [ReportController::class, 'getProductIncomeLists']);
+		Route::get('report/product-income-download', [ReportController::class, 'productIncomeReportDownload']);
+		Route::get('report/product-incomes-print', [ReportController::class, 'productIncomeReportPrint']);
+	});
+
 	Route::group(['middleware' => 'can:akses wilayah'], function () {
 		Route::resource('region/provinces', ProvinceController::class)->except('show');
 		Route::resource('region/cities', CityController::class)->except('show');
