@@ -30,6 +30,12 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\ProductDeleted::class => [
             \App\Listeners\RemoveImageAfterProductDeleted::class,
         ],
+        \App\Events\PurchaseUpdating::class => [
+            \App\Listeners\DecrementProductStockBeforePurchaseUpdated::class,
+        ],
+        \App\Events\PurchaseUpdated::class => [
+            \App\Listeners\IncrementProductStockAfterPurchaseUpdated::class,
+        ],
     ];
 
     /**

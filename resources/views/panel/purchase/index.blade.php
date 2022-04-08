@@ -54,11 +54,11 @@
                                             <th>No</th>
                                             <th>Tgl</th>
                                             <th>Total Qty</th>
-                                            <th>Aksi</th>
+                                            <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <input type="hidden" value="{{ date('Y-m-d') }}" id="daterange">
+                                        <input type="hidden" value="{{ $now }}" id="daterange">
                                     </tbody>
                                 </table>
                             </div>

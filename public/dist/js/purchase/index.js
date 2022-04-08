@@ -81,19 +81,26 @@ $(function () {
         $(".modal-save").remove();
     });
 
-    $('body').on('click', '.btn-removes', function(event){
+    $("body").on("click", ".btn-removes", function (event) {
         event.preventDefault();
-        var first_td = $(this).closest('tr').children('td:first');
-        if(first_td.find('.product-select').attr('data-last-select') == 'true'){
-            $(this).closest('tr').prev('tr').children('td:first').find('.product-select').attr('data-last-select', 'true');
+        var first_td = $(this).closest("tr").children("td:first");
+        if (
+            first_td.find(".product-select").attr("data-last-select") == "true"
+        ) {
+            $(this)
+                .closest("tr")
+                .prev("tr")
+                .children("td:first")
+                .find(".product-select")
+                .attr("data-last-select", "true");
         }
-        $(this).parents('tr').remove();
+        $(this).parents("tr").remove();
     });
 
     $("body").on("change", ".product-select", function () {
         const me = $(this);
         if (me.attr("data-last-select") == "true") {
-            showCreateForm(row++);
+            showCreateForm(row++, 0, 0);
             me.removeAttr("data-last-select");
         }
     });
@@ -112,8 +119,7 @@ $(function () {
 
         var me = $(this),
             url = me.attr("href"),
-            title = me.attr("title"),
-            sale_id = me.attr("data-id");
+            title = me.attr("title");
 
         $(".modal-title").text(title);
 
@@ -137,9 +143,13 @@ $(function () {
 
         var me = $(this),
             url = me.attr("href"),
-            title = me.attr("title");
+            title = me.attr("title"),
+            id = me.attr("data-id");
 
         $(".modal-title").text(title);
+        $(".modal-footer").append(
+            '<button type="button" class="btn btn-primary modal-save">Simpan</button>'
+        );
 
         $.ajax({
             url: url,
@@ -147,10 +157,8 @@ $(function () {
             dataType: "html",
             success: function (response) {
                 $(".modal-body").html(response);
-                const product_id = $("#product_id").val();
-                const sale_id = $("#sale_id").val();
-                const province_id = $("#province_id").val();
-
+                row = $("#row").val();
+                showCreateForm(row++, 1, id);
                 searchProduct();
             },
             error: function (xhr, status) {
@@ -317,7 +325,7 @@ searchProduct = () => {
             },
             placeholder: "Cari produk",
             cache: true,
-            allowClear: true
+            allowClear: true,
         })
         .on("select2:select", function (event) {
             var data = event.params.data;
@@ -328,7 +336,7 @@ searchProduct = () => {
                 Math.round(data.production_price)
             );
         })
-        .on('change', function(event){
+        .on("change", function (event) {
             var id = $(this).attr("id");
             var id_number = id.slice(-1);
             var this_value = $(this).val();
@@ -378,7 +386,7 @@ fillModal = (me) => {
         dataType: "html",
         success: function (response) {
             $(".modal-body").html(response);
-            row = $('#row').val();
+            row = $("#row").val();
             showCreateForm(row++);
         },
         error: function (xhr, status) {
@@ -387,19 +395,19 @@ fillModal = (me) => {
     });
 };
 
-showCreateForm = (row) => {
+showCreateForm = (row, is_edit, id) => {
     $.ajax({
         url: "/purchase/show-input-product",
         type: "GET",
         data: {
             row: row,
+            is_edit: is_edit,
+            id: id,
         },
         dataType: "html",
         success: function (response) {
             $("#purchase-create-table tbody").append(response);
             searchProduct();
-            // maskMoney();
-            // countGrandTotal();
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");

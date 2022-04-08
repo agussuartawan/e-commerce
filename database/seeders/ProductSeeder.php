@@ -21,7 +21,7 @@ class ProductSeeder extends Seeder
         $category = Category::create(['name' => 'Body Wash']);
         $color = ProductColor::create(['name' => 'Putih', 'hex_color' => '#ffffff']);
         $fragrance = ProductFragrance::create(['name' => 'Melati']);
-        $unit = ProductUnit::create(['name' => 'Body Wash']);
+        $unit = ProductUnit::create(['name' => 'gram']);
 
         $product = Product::create([
             'category_id' => $category->id,

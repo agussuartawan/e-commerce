@@ -20,7 +20,10 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        return view('panel.purchase.index');
+        $from = Carbon::now()->startOfDay()->format('d-m-Y');
+        $to = Carbon::now()->endOfDay()->format('d-m-Y');
+        $now = $from . ' / ' . $to;
+        return view('panel.purchase.index', compact('now'));
     }
 
     /**
@@ -37,8 +40,10 @@ class PurchaseController extends Controller
 
     public function showInputProduct(Request $request)
     {
+        $purchase = Purchase::find($request->id);
+        $is_edit_form = $request->is_edit;
         $row = $request->row;
-        return view('include.purchase.input-product', compact('row'));
+        return view('include.purchase.input-product', compact('purchase', 'is_edit_form', 'row'));
     }
 
     /**
@@ -69,7 +74,7 @@ class PurchaseController extends Controller
                 $fullnumber = 'BM' . $number;
             } else {
                 $number = Purchase::all()->last();
-                $number_plus = (int)substr($number->code, -5) + 1;
+                $number_plus = (int)substr($number->purchase_number, -5) + 1;
                 $fullnumber = 'BM' . $number_plus;
             }
 
@@ -101,7 +106,7 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        //
+        return view('include.purchase.show', compact('purchase'));
     }
 
     /**
@@ -112,7 +117,8 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        //
+        $row = $purchase->product->count() + 1;
+        return view('include.purchase.form', compact('purchase', 'row'));
     }
 
     /**
@@ -122,9 +128,43 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Purchase $purchase)
+    public function update(PurchaseRequest $request, Purchase $purchase)
     {
-        //
+        DB::transaction(function () use ($request, $purchase) {
+            foreach($purchase->product as $p){
+                $purchase->product()->detach([
+                    $p->id => ['qty' => $p->pivot->qty, 'production_price' => str_replace(".", "", $p->pivot->production_price)]
+                ]);
+                $p->decrement('stock', $p->pivot->qty);
+            }
+            // hapus nilai product_id yang kosong pada form
+            $product['product_id'] = $request->product_id;
+            $product['qty'] = $request->qty;
+            $product['production_price'] = $request->production_price;
+            foreach ($product['product_id'] as $key => $value) {
+                if ($value == null) {
+                    unset($product['product_id'][$key]);
+                    unset($product['qty'][$key]);
+                    unset($product['production_price'][$key]);
+                }
+            }
+
+            $purchase->update([
+                'date' => $request->date,
+            ]);
+            
+            // insert to product_purchase
+            foreach ($product['product_id'] as $key => $value) {
+                $purchase->product()->attach($product['product_id'][$key], [
+                    'qty' => $product['qty'][$key], 
+                    'production_price' => str_replace(".", "", $product['production_price'][$key])
+                ]);
+                // update in_stock di tabel product warehouse
+                Product::find($product['product_id'][$key])->increment('stock', $product['qty'][$key]);
+            }
+
+            return $purchase;
+        });
     }
 
     public function getPurchaseList(Request $request)
@@ -139,21 +179,8 @@ class PurchaseController extends Controller
                 return $data->product->sum('pivot.qty');
             })
             ->addColumn('action', function ($data) {
-                $buttons = '<div class="row">';
-
-                $buttons .= '<div class="col">';
-                $buttons .= '<a href="/purchases/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->purchase_number.'" data-id="'.$data->id.'">Detail</a>';
-                $buttons .= '</div>';
-                
-                if($data->is_cancel != 1){
-                    $buttons .= '<div class="col">';
-                    $buttons .= '<a href="/purchases/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->purchase_number.'">Edit</a>';
-                    $buttons .= '</div>';
-                }
-
-                $buttons .= '</div>';       
-
-                return $buttons;
+                $action = view('include.purchase.btn-action', compact('data'))->render();           
+                return $action;
             })
             ->filter(function ($instance) use ($request) {
                 if ($request->dateFilter) {
