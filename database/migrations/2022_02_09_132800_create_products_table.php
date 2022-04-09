@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('product_unit_id')->constrained()->onUpdate('cascade');
             
             $table->string('product_name');
-            $table->string('stock');
+            $table->integer('stock')->default(0);
             $table->decimal('selling_price', $precission = 18, $scale = 2);
             $table->decimal('production_price', $precission = 18, $scale = 2);
             $table->integer('size')->default(0);
