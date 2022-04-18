@@ -22,7 +22,7 @@ class PurchaseController extends Controller
     {
         $from = Carbon::now()->startOfDay()->format('d-m-Y');
         $to = Carbon::now()->endOfDay()->format('d-m-Y');
-        $now = $from . ' / ' . $to;
+        $now = $from . ' s/d ' . $to;
         return view('panel.purchase.index', compact('now'));
     }
 
@@ -191,8 +191,8 @@ class PurchaseController extends Controller
             })
             ->filter(function ($instance) use ($request) {
                 if ($request->dateFilter) {
-                    $from = explode(" / ", $request->dateFilter)[0];
-                    $to = explode(" / ", $request->dateFilter)[1];
+                    $from = explode(" s/d ", $request->dateFilter)[0];
+                    $to = explode(" s/d ", $request->dateFilter)[1];
 
                     $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
                     $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');

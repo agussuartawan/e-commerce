@@ -15,7 +15,7 @@ class GeneralJournalController extends Controller
     {
         $start = Carbon::now()->startOfMonth()->format('d-m-Y');
         $end = Carbon::now()->format('d-m-Y');
-        $dateFilter = $start . ' / ' . $end;
+        $dateFilter = $start . ' s/d ' . $end;
         return view('panel.journal.index', compact('dateFilter', 'start', 'end'));
     }
 
@@ -96,8 +96,8 @@ class GeneralJournalController extends Controller
             })
             ->filter(function ($instance) use ($request) {
                 if ($request->dateFilter) {
-                    $from = explode(" / ", $request->dateFilter)[0];
-                    $to = explode(" / ", $request->dateFilter)[1];
+                    $from = explode(" s/d ", $request->dateFilter)[0];
+                    $to = explode(" s/d ", $request->dateFilter)[1];
 
                     $date['from'] = Carbon::parse($from)->format('Y-m-d');
                     $date['to'] = Carbon::parse($to)->format('Y-m-d');

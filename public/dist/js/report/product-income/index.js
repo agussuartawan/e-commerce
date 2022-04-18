@@ -4,42 +4,42 @@ $(function () {
         $("#dateFilter").daterangepicker({
             locale: {
                 format: "DD-MM-YYYY",
-                separator: " / ",
+                separator: " s/d ",
             },
         });
     });
 
-    $('#btn-search').click(function(){
-        const search = $('#dateFilter').val();
+    $("#btn-search").click(function () {
+        const search = $("#dateFilter").val();
         loadData(search);
     });
 
-    $('body').on('click', '#btn-download', function(event){
+    $("body").on("click", "#btn-download", function (event) {
         event.preventDefault();
-        const url = $(this).attr('href');
-        const search = $('#dateFilter').val();
-        window.open(url + '?search=' + search, '_blanc');
+        const url = $(this).attr("href");
+        const search = $("#dateFilter").val();
+        window.open(url + "?search=" + search, "_blanc");
     });
 
-    $('body').on('click', '#btn-print', function(event){
+    $("body").on("click", "#btn-print", function (event) {
         event.preventDefault();
-        const url = $(this).attr('href');
-        const search = $('#dateFilter').val();
-        window.open(url + '?search=' + search, '_blanc');
+        const url = $(this).attr("href");
+        const search = $("#dateFilter").val();
+        window.open(url + "?search=" + search, "_blanc");
     });
 });
 
 loadData = (search) => {
-    $('#appended').remove();
+    $("#appended").remove();
     $.ajax({
-        url: '/report/product-incomes/get-lists?search=' + search,
+        url: "/report/product-incomes/get-lists?search=" + search,
         type: "GET",
         dataType: "html",
-        beforeSend: function(){
-            $('#preloader').fadeIn();
+        beforeSend: function () {
+            $("#preloader").fadeIn();
         },
-        complete: function(){
-            $('#preloader').fadeOut();
+        complete: function () {
+            $("#preloader").fadeOut();
         },
         success: function (response) {
             const btnAction = `<a href="/report/product-incomes-download" target="_blanc" class="btn btn-danger mr-2" id="btn-download">
@@ -51,11 +51,11 @@ loadData = (search) => {
                                     Cetak
                                 </a>`;
 
-            $('#btn-action').html(btnAction);
+            $("#btn-action").html(btnAction);
             $(".append-here").append(response);
         },
         error: function (xhr, status) {
             alert("Terjadi kesalahan");
         },
     });
-}
+};

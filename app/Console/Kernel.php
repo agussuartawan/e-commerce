@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Events\SaleUpdating;
+use App\Mail\CancelPurchaseNotification;
 use App\Mail\PaymentNotificationEmail;
 use App\Models\DeliveryStatus;
 use App\Models\PaymentStatus;
@@ -32,7 +33,7 @@ class Kernel extends ConsoleKernel
                 }
             }
     
-            //batalkan pesanan jika tidak jatuh tempo
+            //batalkan pesanan jika jatuh tempo
             $sales = Sale::where('due_date', '<' , Carbon::now())
                     ->where('payment_status_id', PaymentStatus::MENUNGGU_PEMBAYARAN)
                     ->where('is_cancel', 0)->get();
@@ -44,6 +45,7 @@ class Kernel extends ConsoleKernel
                     'delivery_status_id' => DeliveryStatus::DIBATALKAN,
                     'payment_status_id' => PaymentStatus::DIBATALKAN,
                 ]);
+                Mail::to($sale->customer->user->email)->send(new CancelPurchaseNotification($sale));
             }
         })->everyMinute();
 

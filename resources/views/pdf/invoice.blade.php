@@ -137,8 +137,8 @@
                 <td class="text-center"><img src="{{ asset('img/ttd-gudang.png') }}" alt=""></td>
             </tr>
             <tr class="text-center">
-                <td>(...................)</td>
-                <td>(...................)</td>
+                <td>(Dewi Komala Sari)</td>
+                <td>(Adelia)</td>
                 <td>(...................)</td>
             </tr>
         </table>

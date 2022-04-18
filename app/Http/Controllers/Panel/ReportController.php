@@ -21,8 +21,8 @@ class ReportController extends Controller
 
     public function getSaleLists(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
@@ -34,8 +34,8 @@ class ReportController extends Controller
 
     public function salesReportPrint(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
@@ -49,8 +49,8 @@ class ReportController extends Controller
 
     public function salesReportDownload(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
@@ -70,8 +70,8 @@ class ReportController extends Controller
 
     public function getJournalLists(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
@@ -85,8 +85,8 @@ class ReportController extends Controller
 
     public function journalsReportPrint(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d');
@@ -100,8 +100,8 @@ class ReportController extends Controller
 
     public function journalsReportDownload(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
 
         $date['from'] = Carbon::parse($from)->startOfDay()->format('Y-m-d H:i:s');
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
@@ -121,8 +121,8 @@ class ReportController extends Controller
 
     public function getBigBookLists(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 
@@ -133,8 +133,8 @@ class ReportController extends Controller
 
     public function ledgerReportPrint(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 
@@ -148,8 +148,8 @@ class ReportController extends Controller
 
     public function ledgerReportDownload(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 
@@ -301,8 +301,8 @@ class ReportController extends Controller
 
     public function getProductIncomeLists(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 
@@ -318,8 +318,8 @@ class ReportController extends Controller
     }
     public function productIncomeReportPrint(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 
@@ -338,8 +338,8 @@ class ReportController extends Controller
 
     public function productIncomeReportDownload(Request $request)
     {
-        $from = explode(" / ", $request->search)[0];
-        $to = explode(" / ", $request->search)[1];
+        $from = explode(" s/d ", $request->search)[0];
+        $to = explode(" s/d ", $request->search)[1];
         $date['from'] = Carbon::parse($from)->format('Y-m-d');
         $date['to'] = Carbon::parse($to)->format('Y-m-d');
 

@@ -30,7 +30,7 @@ class IncrementProductStockBeforeSaleUpdated
         $sale = $event->sale;
         $product = $event->product;
         // $product->increment('stock', (int)$sale->qty);
-        $product->stock = $product->stock - (int)$sale->qty;
+        $product->stock = $product->stock + (int)$sale->qty;
         $product->save();
     }
 }

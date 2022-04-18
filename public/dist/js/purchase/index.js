@@ -70,7 +70,7 @@ $(function () {
         $("#daterange").daterangepicker({
             locale: {
                 format: "DD-MM-YYYY",
-                separator: " / ",
+                separator: " s/d ",
             },
         });
 

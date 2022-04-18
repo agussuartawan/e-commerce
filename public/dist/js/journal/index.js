@@ -74,7 +74,7 @@ $(function () {
             endDate: end,
             locale: {
                 format: "DD-MM-YYYY",
-                separator: " / ",
+                separator: " s/d ",
             },
         });
         $("#end").remove();
