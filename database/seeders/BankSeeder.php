@@ -15,9 +15,7 @@ class BankSeeder extends Seeder
     {
         \App\Models\Bank::insert([
             ['name' => 'BCA', 'account_name' => 'CV. Murni Sejati', 'account_number' => '00001'],
-            ['name' => 'Mandiri', 'account_name' => 'CV. Murni Sejati', 'account_number' => '00002'],
-            ['name' => 'BNI', 'account_name' => 'CV. Murni Sejati', 'account_number' => '00003'],
-            ['name' => 'BRI', 'account_name' => 'CV. Murni Sejati', 'account_number' => '00004'],
+            ['name' => 'BNI', 'account_name' => 'CV. Murni Sejati', 'account_number' => '00002'],
         ]);
     }
 }

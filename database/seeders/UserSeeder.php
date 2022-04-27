@@ -81,7 +81,7 @@ class UserSeeder extends Seeder
 			]);
 
 			$accounting = User::create([
-				'name' => 'Akunting',
+				'name' => 'Accounting',
 				'email' => 'accounting@gmail.com',
 				'password' => Hash::make('password')
 			]);
