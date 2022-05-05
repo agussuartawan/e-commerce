@@ -60,7 +60,6 @@
 
                 </ul>
                 @auth
-                    {{-- @can('akses beranda') --}}
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -68,11 +67,13 @@
                                 {{ Auth::user()->name }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                    {{ __('Dashboard') }}
-                                </a>
+                                @can('akses dashboard')
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                        {{ __('Dashboard') }}
+                                    </a>
+                                @endcan
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                            document.getElementById('logout-form').submit();">
+                                                    document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
@@ -83,7 +84,6 @@
                             </div>
                         </li>
                     </ul>
-                    {{-- @endcan --}}
                 @endauth
             </div>
         </div>
