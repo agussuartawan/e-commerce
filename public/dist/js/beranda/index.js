@@ -1,6 +1,6 @@
 $(function () {
     "use strict";
-    $("#btn-search").click(function (event) {
+    $("body").on("click", "#btn-search", function (event) {
         event.preventDefault();
         search();
     });
