@@ -65,4 +65,12 @@
 @endsection
 @push('js')
     <script src="{{ asset('') }}/dist/js/beranda/index.js"></script>
+    <script>
+        $("body").on("click", "#btn-search", function(event) {
+            event.preventDefault();
+            const search = $("#search").val();
+            const category_id = $("#category_id").val();
+            window.location.href = `/beranda?search=${search}&category_id=${category_id}`;
+        });
+    </script>
 @endpush
