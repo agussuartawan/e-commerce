@@ -96,7 +96,8 @@ class PaymentController extends Controller
                 return $data->sale->sale_number;
             })
             ->addColumn('date', function ($data) {
-                return Carbon::parse($data->date)->format('d/m/Y');
+                // return Carbon::parse($data->date)->format('d/m/Y');
+                return Carbon::parse($payment->date)->isoFormat('DD MMMM Y');
             })
             ->addColumn('transfer_proof', function ($data) {    
                 $action = view('include.payment.btn-transfer-proof', compact('data'))->render();            
