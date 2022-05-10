@@ -88,17 +88,16 @@ class PaymentController extends Controller
 
     public function getPaymentList(Request $request)
     {
-
         $data  = Payment::query();
 
         return DataTables::of($data)
             ->addColumn('sale_number', function ($data) {
                 return $data->sale->sale_number;
             })
-            ->addColumn('date', function ($data) {
-                // return Carbon::parse($data->date)->format('d/m/Y');
-                return Carbon::parse($payment->date)->isoFormat('DD MMMM Y');
-            })
+            // ->addColumn('payment_date', function ($data) {
+            //     // return Carbon::parse($data->date)->isoFormat('DD MMMM Y');
+            //     return $data->date;
+            // })
             ->addColumn('transfer_proof', function ($data) {    
                 $action = view('include.payment.btn-transfer-proof', compact('data'))->render();            
                 return $action;
@@ -151,7 +150,7 @@ class PaymentController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action',' customer', 'date', 'sale_number', 'transfer_proof', 'payment_status'])
+            ->rawColumns(['action',' customer', 'sale_number', 'transfer_proof', 'payment_status'])
             ->make(true);
     }
 }
