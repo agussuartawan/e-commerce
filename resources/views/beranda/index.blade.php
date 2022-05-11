@@ -47,7 +47,7 @@
                             <h5 class="card-title">{{ $product->product_name }}</h5>
                             <h6>Sisa stok : {{ $product->stock }}</h6>
                             <h6>Rp. {{ rupiah($product->selling_price) }}</h6>
-                            <h6>Terjual : {{ $product->sale()->count() }}</h6>
+                            <h6>Terjual : {{ $product->sale()->sum('qty') }}</h6>
                             <hr>
                             <div class="module">
                                 {{ $product->description }}
