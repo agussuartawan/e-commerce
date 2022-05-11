@@ -58,6 +58,46 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info" style="position: relative;">
+                        <div class="card-header">
+                            <h5 class="text-center">Produk Terlaris</ class="text-center">
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-bordered" style="min-width: 50rem" id="sale-report">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Kode</th>
+                                        <th>Nama Produk</th>
+                                        <th>Harga Jual</th>
+                                        <th>Harga Produksi</th>
+                                        <th>Qty Terjual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($best_seller_product as $key => $p)
+                                        <tr>
+                                            <td>{{ $key+1 }}</td>
+                                            <td>{{ $p->code }}</td>
+                                            <td>{{ $p->product_name }}</td>
+                                            <td>{{ rupiah($p->selling_price) }}</td>
+                                            <td>{{ rupiah($p->production_price) }}</td>
+                                            <td>{{ rupiah($p->sale->sum('qty')) }}</td>
+                                        </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">Tidak ada data.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-info" style="position: relative;">
                         <div class="card-body table-responsive p-0">
                             <table class="table table-bordered" style="min-width: 50rem" id="sale-report">
                                 <thead class="text-center">

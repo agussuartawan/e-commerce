@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Events\PaymentConfirmed;
 use Carbon\Carbon;
 use App\Models\Bank;
 use App\Models\City;
@@ -15,10 +14,13 @@ use App\Events\SaleUpdating;
 use Illuminate\Http\Request;
 use App\Models\PaymentStatus;
 use App\Models\DeliveryStatus;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Events\PaymentConfirmed;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DeliveryEmailNotification;
 
 class SaleController extends Controller
 {
@@ -266,6 +268,10 @@ class SaleController extends Controller
             $sale->delivery_status_id = DeliveryStatus::DALAM_PENGIRIMAN;
             $sale->save();
             event(new PaymentConfirmed($sale));
+
+            $now = Carbon::now();
+            $delivery_estimation = $now->isoFormat('DD MMMM Y') . ' - ' . $now->addDays(2)->isoFormat('DD MMMM Y');
+            Mail::to($sale->customer->user->email)->send(new DeliveryEmailNotification($sale, $delivery_estimation));
         });
 
         return $sale;

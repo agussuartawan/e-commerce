@@ -38,60 +38,90 @@
     @endpush
 
     <div class="container">
-        <h3 class="text-center" style="margin-bottom: 5px">Laporan Penjualan</h3>
-        <span class="text-center text">Periode : {{ \Carbon\Carbon::parse($date['from'])->isoFormat('DD MMMM Y') }} -
-            {{ \Carbon\Carbon::parse($date['to'])->isoFormat('DD MMMM Y') }}</span>
-
-        <table class="table" style="margin-top: 5px">
+        <h3 class="text-center" style="margin-bottom: 5px">Produk Terlaris</h3>
+        <table class="table" style="margin-top: 5px; margin-bottom: 15px">
             <thead>
                 <tr>
                     <th>NO.</th>
-                    <th>TANGGAL</th>
-                    <th>NO INVOICE</th>
-                    <th>NAMA PELANGGAN</th>
-                    <th>ITEM BARANG</th>
-                    <th>JUMLAH</th>
-                    <th>TOTAL</th>
+                    <th>KODE</th>
+                    <th>NAMA PRODUK</th>
+                    <th>HARGA JUAL</th>
+                    <th>HARGA PRODUKSI</th>
+                    <th>QTY TERJUAL</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($sales as $key => $sale)
+                @forelse($best_seller_product as $key => $p)
                     <tr>
-                        <td class="text-center">{{ $key + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</td>
-                        <td>{{ $sale->sale_number }}</td>
-                        <td>{{ $sale->customer->fullname }}</td>
-                        <td>{{ $sale->product->product_name }}</td>
-                        <td style="text-align: left">{{ $sale->qty }} {{ $sale->product->product_unit->name }}</td>
-                        <td style="text-align: left">Rp. {{ rupiah($sale->grand_total) }}</td>
+                        <td class="text-center">{{ $key+1 }}</td>
+                        <td>{{ $p->code }}</td>
+                        <td>{{ $p->product_name }}</td>
+                        <td>{{ rupiah($p->selling_price) }}</td>
+                        <td>{{ rupiah($p->production_price) }}</td>
+                        <td>{{ rupiah($p->sale->sum('qty')) }}</td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="7" class="text-center">Tidak ada data.</td>
-                    </tr>
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada data.</td>
+                </tr>
                 @endforelse
             </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="5">JUMLAH</th>
-                    <th style="text-align: left">{{ $sales->sum('qty') }}</th>
-                    <th style="text-align: left">Rp. {{ rupiah($sales->sum('grand_total')) }}</th>
-                </tr>
-            </tfoot>
         </table>
 
-        <table style="width: 100%; margin-top: 20px">
-            <tr>
-                <td class="text" style="text-align: right">Badung,
-                    {{ \Carbon\Carbon::now()->isoFormat('DD MMMM Y') }}</td>
-            </tr>
-            <tr>
-                <td style="height: 40px"></td>
-            </tr>
-            <tr>
-                <td class="text" style="text-align: right">(...................)</td>
-            </tr>
-        </table>
+            <h3 class="text-center" style="margin-bottom: 5px; margin-top: 5px">Laporan Penjualan</h3>
+            <span class="text-center text">Periode : {{ \Carbon\Carbon::parse($date['from'])->isoFormat('DD MMMM Y') }} -
+                {{ \Carbon\Carbon::parse($date['to'])->isoFormat('DD MMMM Y') }}</span>
+
+            <table class="table" style="margin-top: 5px">
+                <thead>
+                    <tr>
+                        <th>NO.</th>
+                        <th>TANGGAL</th>
+                        <th>NO INVOICE</th>
+                        <th>NAMA PELANGGAN</th>
+                        <th>ITEM BARANG</th>
+                        <th>JUMLAH</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($sales as $key => $sale)
+                        <tr>
+                            <td class="text-center">{{ $key + 1 }}</td>
+                            <td>{{ \Carbon\Carbon::parse($sale->date)->isoFormat('DD MMMM Y') }}</td>
+                            <td>{{ $sale->sale_number }}</td>
+                            <td>{{ $sale->customer->fullname }}</td>
+                            <td>{{ $sale->product->product_name }}</td>
+                            <td style="text-align: left">{{ $sale->qty }} {{ $sale->product->product_unit->name }}</td>
+                            <td style="text-align: left">Rp. {{ rupiah($sale->grand_total) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada data.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5">JUMLAH</th>
+                        <th style="text-align: left">{{ $sales->sum('qty') }}</th>
+                        <th style="text-align: left">Rp. {{ rupiah($sales->sum('grand_total')) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <table style="width: 100%; margin-top: 20px">
+                <tr>
+                    <td class="text" style="text-align: right">Badung,
+                        {{ \Carbon\Carbon::now()->isoFormat('DD MMMM Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="height: 40px"></td>
+                </tr>
+                <tr>
+                    <td class="text" style="text-align: right">(...................)</td>
+                </tr>
+            </table>
     </div>
 
 @endsection

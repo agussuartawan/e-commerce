@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\Account;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\TrialBalance;
 use Illuminate\Http\Request;
@@ -14,9 +15,29 @@ use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
+    public function getBestProduct()
+    {
+        $products = Product::get();
+        $product_selling_count = [];
+        foreach ($products as $product) {
+            $product_selling_count[] = [
+                'qty' => $product->sale()->where('is_cancel', '=', 0)->sum('qty'),
+                'id' => $product->id
+            ];
+        }
+        rsort($product_selling_count);
+        $bestselling = array_slice($product_selling_count, 0, 5);
+        foreach ($bestselling as $key => $value) {
+            $best_seller_product_id[] = $value['id'];
+        }
+        
+        return Product::whereIn('id', $best_seller_product_id)->get();
+    }
+
     public function sales()
     {
-        return view('panel.report.sale.index');
+        $best_seller_product = $this->getBestProduct();
+        return view('panel.report.sale.index', compact('best_seller_product'));
     }
 
     public function getSaleLists(Request $request)
@@ -41,8 +62,9 @@ class ReportController extends Controller
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
 
         $sales = Sale::with('customer', 'product')->whereBetween('date', $date)->where('is_cancel', 0)->get();
+        $best_seller_product = $this->getBestProduct();
 
-        $pdf = PDF::loadView('pdf.sales', compact('sales', 'date'));
+        $pdf = PDF::loadView('pdf.sales', compact('sales', 'date', 'best_seller_product'));
         $pdf->setPaper('A4', 'potrait');
         return $pdf->stream('laporan-penjualan.pdf');
     }
@@ -56,8 +78,9 @@ class ReportController extends Controller
         $date['to'] = Carbon::parse($to)->endOfDay()->format('Y-m-d H:i:s');
 
         $sales = Sale::with('customer', 'product')->whereBetween('date', $date)->where('is_cancel', 0)->get();
+        $best_seller_product = $this->getBestProduct();
 
-        $pdf = PDF::loadView('pdf.sales', compact('sales', 'date'));
+        $pdf = PDF::loadView('pdf.sales', compact('sales', 'date', 'best_seller_product'));
         $pdf->setPaper('A4', 'potrait');
 
         return $pdf->download('laporan-penjualan.pdf');
