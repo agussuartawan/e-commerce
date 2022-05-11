@@ -104,7 +104,6 @@ class GeneralJournalController extends Controller
                     $instance->whereBetween('date', $date);
                 }
                 if (!empty($request->search)) {
-
                     $instance->whereHas('account', function($query) use ($request){
                         $search = $request->search;
                         $query->where('name', 'like', "%$search%")

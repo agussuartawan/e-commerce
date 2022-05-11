@@ -24,4 +24,9 @@ class Payment extends Model
     {
         return $this->belongsTo(Sale::class);
     }
+
+    public function getSaleNumber()
+    {
+        return $this->sale->sale_number;
+    }
 }

@@ -92,7 +92,7 @@ class PaymentController extends Controller
 
         return DataTables::of($data)
             ->addColumn('sale_number', function ($data) {
-                return $data->sale->sale_number;
+                return $data->getSaleNumber();
             })
             ->addColumn('date', function ($data) {
                 $date = Carbon::parse($data->date)->isoFormat('DD MMMM Y');
@@ -116,13 +116,8 @@ class PaymentController extends Controller
                 return $confirm;
             })
             ->addColumn('action', function ($data) {
-                $buttons = '<div class="row"><div class="col">';
-                $buttons .= '<a href="/payments/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail Pembayaran">Detail</a>';
-                $buttons .= '</div><div class="col">';
-                $buttons .= '<a href="/payments/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit Pembayaran">Edit</a>';
-                $buttons .= '</div></div>';                
-
-                return $buttons;
+                $action = view('include.payment.btn-action', compact('data'))->render();            
+                return $action;
             })
             ->filter(function ($instance) use ($request) {
                 if ($request->dateFilter) {
@@ -134,10 +129,14 @@ class PaymentController extends Controller
                     $instance->whereBetween('payments.date', $date);
                 }
                 if ($request->payment_status) {
-                    $instance->join('sales', 'sales.id', '=', 'payments.sale_id')
-                                ->where(function ($w) use ($request) {
-                                    $w->where('payment_status_id', '=', $request->payment_status);
-                                });
+                    $instance->whereHas('sale', function($query) use ($request){
+                        $payment_status = $request->payment_status;
+                        $query->where('payment_status_id', '=', $payment_status);
+                    })
+                    ->with(['sale' => function($query) use ($request){
+                        $payment_status = $request->payment_status;
+                        $query->where('payment_status_id', '=', $payment_status);
+                    }]);
                 }
                 if (!empty($request->search)) {
                     $instance->join('sales', 'sales.id', '=', 'payments.sale_id')
@@ -150,7 +149,7 @@ class PaymentController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action',' customer', 'sale_number', 'date', 'transfer_proof', 'payment_status'])
+            ->rawColumns(['sale_number', 'action',' customer', 'date', 'transfer_proof', 'payment_status'])
             ->make(true);
     }
 }

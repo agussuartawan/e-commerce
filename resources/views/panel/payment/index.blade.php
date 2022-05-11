@@ -59,7 +59,8 @@
                                     </thead>
                                     <tbody>
                                         <input type="hidden" value="{{ $now }}" id="daterange">
-                                        <input type="hidden" value="{{ \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI }}" id="payment-status">
+                                        <input type="hidden" value="{{ \App\Models\PaymentStatus::MENUNGGU_KONFIRMASI }}"
+                                            id="payment-status">
                                     </tbody>
                                 </table>
                             </div>
