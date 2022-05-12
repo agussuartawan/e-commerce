@@ -28,12 +28,15 @@
                         <div class="card card-outline card-info" style="position: relative;">
                             @include('include.preloader')
                             <div class="card-header">
-                                <h3 class="card-title">Cari Laporan Neraca Saldo</h3>
+                                <h3 class="card-title">Laporan Neraca Saldo</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="d-flex d-flex justify-content-center">
                                     <div class="input-group mb-3 col-md-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Cari</span>
+                                        </div>
                                         {!! Form::select('month', $months, date('m'), ['class' => 'form-control custom-select', 'id' => 'month']) !!}
                                         {!! Form::select('year', $years, date('Y'), ['class' => 'form-control custom-select', 'id' => 'year']) !!}
                                         <div class="input-group-append">

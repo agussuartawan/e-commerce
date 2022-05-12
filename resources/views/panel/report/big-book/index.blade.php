@@ -32,12 +32,15 @@
                     <div class="card card-outline card-info" style="position: relative;">
                         @include('include.preloader')
                         <div class="card-header">
-                            <h3 class="card-title">Cari Laporan Buku Besar</h3>
+                            <h3 class="card-title">Laporan Buku Besar</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="d-flex d-flex justify-content-center">
                                 <div class="input-group mb-3 col-md-6">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Cari</span>
+                                    </div>
                                     <input type="text" name="dateFilter" class="form-control" id="dateFilter">
 
                                     <div class="input-group-append">

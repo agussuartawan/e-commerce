@@ -34,10 +34,23 @@ class ReportController extends Controller
         return Product::whereIn('id', $best_seller_product_id)->get();
     }
 
+    public function bestSellerChart()
+    {
+        $best_seller_product = $this->getBestProduct();
+
+        foreach($best_seller_product as $key => $item){
+            $chartData['labels'][] = $item->product_name;
+            $chartData['data'][] = $item->sale->sum('qty');
+        }
+
+        return json_encode($chartData);
+    }
+
     public function sales()
     {
         $best_seller_product = $this->getBestProduct();
-        return view('panel.report.sale.index', compact('best_seller_product'));
+        $best_seller_chart = $this->bestSellerChart();
+        return view('panel.report.sale.index', compact('best_seller_product', 'best_seller_chart'));
     }
 
     public function getSaleLists(Request $request)
