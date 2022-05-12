@@ -62,7 +62,7 @@
                             <h5 class="text-center">Produk Terlaris</ class="text-center">
                         </div>
                         <div class="card-body table-responsive p-0">
-                            <table class="table table-bordered" style="min-width: 50rem" id="sale-report">
+                            <table class="table table-bordered" style="min-width: 50rem">
                                 <thead class="text-center">
                                     <tr>
                                         <th>#</th>
