@@ -251,7 +251,12 @@ class ReportController extends Controller
     {
         $date['previousMonthStartDate'] = new Carbon('first day of last month');
         $date['previousMonthEndDate'] = new Carbon('last day of last month');
-        
+
+        $date = [
+            $date['previousMonthStartDate']->format('Y-m-d'),
+            $date['previousMonthEndDate']->format('Y-m-d')
+        ];
+
         $trialBalanceLastMonth = TrialBalance::whereBetween('date', $date)->first();
 
         if($trialBalanceLastMonth){
@@ -297,7 +302,7 @@ class ReportController extends Controller
             });
         }
 
-        return;
+        // return;
     }
 
     public function trialBalanceReportPrint(Request $request)
