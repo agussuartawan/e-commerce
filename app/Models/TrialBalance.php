@@ -21,8 +21,13 @@ class TrialBalance extends Model
         $date['previousMonthStartDate'] = new \Carbon\Carbon('first day of last month');
         $date['previousMonthEndDate'] = new \Carbon\Carbon('last day of last month');
 
-        $previousTrialBalance = $this->whereBetween('date', $date)->first();              
+        $date = [
+            $date['previousMonthStartDate']->format('Y-m-d'),
+            $date['previousMonthEndDate']->format('Y-m-d')
+        ];
 
+        $previousTrialBalance = $this->whereBetween('date', $date)->first();    
+        
         if($previousTrialBalance){
             $accounts = Account::with('general_journal')->get();
             foreach($accounts as $account){
