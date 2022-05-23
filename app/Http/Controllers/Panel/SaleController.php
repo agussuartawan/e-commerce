@@ -195,13 +195,20 @@ class SaleController extends Controller
                 if(auth()->user()->can('akses penjualan aksi')){
                     if($data->is_validated_warehouse == 1){
                         return '<span class="badge badge-success">Siap</span>';
+                    }
+                    if($data->is_cancel == 1) {
+                        return '<span class="badge badge-danger">dibatalkan</span>';
                     } else {
                         return '<span class="badge badge-secondary">Belum Siap</span>';
                     }       
                 } else {
                     if($data->is_validated_warehouse == 1){
                         return '<span class="badge badge-success">Siap</span>';
-                    } else {
+                    }
+                    if($data->is_cancel == 1){
+                        return '<span class="badge badge-danger">dibatalkan</span>';
+                    } 
+                    if($data->is_validated_warehouse == 0) {
                         if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI || $data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
                             return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
                         }
@@ -230,7 +237,11 @@ class SaleController extends Controller
 
                     $buttons .= '</div>'; 
                 } else {
-                    $buttons = '<a href="/sale/form-order/'.$data->id.'" target="_blanc" class="btn btn-outline-primary btn-block btn-sm print-fo">Cetak Form Order</a>';
+                    if($data->is_cancel == 1){
+                        return '<span class="badge badge-danger">dibatalkan</span>';
+                    } else {
+                        $buttons = '<a href="/sale/form-order/'.$data->id.'" target="_blanc" class="btn btn-outline-primary btn-block btn-sm print-fo">Cetak Form Order</a>';
+                    }
                 }          
 
                 return $buttons;
