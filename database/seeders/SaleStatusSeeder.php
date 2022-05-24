@@ -15,7 +15,7 @@ class SaleStatusSeeder extends Seeder
     public function run()
     {
         DB::table('delivery_statuses')->insert([
-            ['name' => 'dikirim'],
+            ['name' => 'telah terkirim'],
             ['name' => 'menunggu'],
             ['name' => 'dalam pengiriman'],
             ['name' => 'dibatalkan'],

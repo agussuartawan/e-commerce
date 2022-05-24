@@ -8,7 +8,7 @@ $(function () {
             processing: true,
             responsive: true,
             autoWidth: false,
-            order: [[0, "desc"]],
+            order: [[1, "desc"]],
             language: {
                 lengthMenu: "Tampilkan _MENU_ data",
                 zeroRecords: "Data tidak ditemukan",
