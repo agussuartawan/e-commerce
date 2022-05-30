@@ -11,7 +11,7 @@ class Sale extends Model
 
     protected $fillable = [
         'customer_id',
-        'product_id', 
+        'product_id',
         'user_id',
         'province_id',
         'city_id',
@@ -80,4 +80,6 @@ class Sale extends Model
     {
         return $this->belongsTo(PaymentStatus::class);
     }
+
+    public const ONGKIR = 17000;
 }

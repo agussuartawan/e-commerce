@@ -133,6 +133,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="address">Tujuan Pengiriman</label>
+                            <br>
+                            <small>Mohon cek kembali apakah alamat pengiriman anda sudah benar!</small>
                             {!! Form::textarea('address', auth()->user()->customer->address, ['class' => 'form-control', 'rows' => 2, 'id' => 'address']) !!}
                         </div>
                     </div>
@@ -141,10 +143,15 @@
 
             <div class="row">
                 <div class="col text-right">
+                    <h5>Subtotal (Rp)</h5>
+                    <h5>Ongkir (Rp)</h5>
                     <h4>Total (Rp)</h4>
                 </div>
                 <div class="d-flex flex-column text-right pr-5">
+                    <h5 id="sub_total">0</h5>
+                    <h5 id="ongkir">0</h5>
                     <h4 id="grand_total">0</h4>
+                    <input type="hidden" id="shipping" value="{{ \App\Models\Sale::ONGKIR }}">
                 </div>
             </div>
 

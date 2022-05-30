@@ -6,7 +6,11 @@ $(function () {
 
         const price = $("#price").val();
         const qty = $(".input-number").val();
-        countGrandTotal(qty, price);
+
+        const province_id = $('#province_id').val();
+        const ongkir = countOngkir(province_id);
+
+        countGrandTotal(qty, price, ongkir);
     });
 
     $("#form-order").on("submit", function (event) {
@@ -85,7 +89,10 @@ $(function () {
     $(".input-number").change(function () {
         var price = $("#price").val();
         var qty = $(this).val();
-        countGrandTotal(qty, price);
+        const province_id = $('#province_id').val();
+        const ongkir = countOngkir(province_id);
+
+        countGrandTotal(qty, price, ongkir);
     });
 });
 
@@ -195,7 +202,12 @@ searchProvince = () => {
         })
         .on("change", function () {
             const province_id = $(this).val();
+            const ongkir =  countOngkir(province_id);
+            const price = $("#price").val();
+            const qty = $(".input-number").val();
+            
             searchCity(province_id);
+            countGrandTotal(qty, price, ongkir);
         });
 };
 
@@ -280,7 +292,18 @@ rupiah = (bilangan) => {
     return rupiah;
 };
 
-countGrandTotal = (qty, price) => {
-    var grand_total = parseInt(price) * parseInt(qty);
+countGrandTotal = (qty, price, ongkir) => {
+    const subtotal = parseInt(price) * parseInt(qty);
+    var grand_total = subtotal + parseInt(ongkir);
+
     $("#grand_total").text(rupiah(grand_total));
+    $("#ongkir").text(rupiah(ongkir));
+    $("#sub_total").text(rupiah(subtotal));
 };
+
+countOngkir = (province_id) => {
+    if(province_id != 1 && province_id != null){
+        return ongkir = $('#shipping').val();
+    }
+    return 0;
+}

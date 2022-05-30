@@ -16,6 +16,7 @@ class CitySeeder extends Seeder
     public function run()
     {
         $province = Province::create(['name' => 'Bali']);
+        $jawa = Province::create(['name' => 'Jawa']);
         City::insert([
             ['province_id' => $province->id, 'name' => 'Denpasar'],
             ['province_id' => $province->id, 'name' => 'Badung'],
@@ -29,7 +30,10 @@ class CitySeeder extends Seeder
             ['province_id' => $province->id, 'name' => 'Canggu'],
             ['province_id' => $province->id, 'name' => 'Seminyak'],
             ['province_id' => $province->id, 'name' => 'Tabanan'],
-            ['province_id' => $province->id, 'name' => 'Nusa DUa'],
+            ['province_id' => $province->id, 'name' => 'Nusa Dua'],
+            ['province_id' => $jawa->id, 'name' => 'Bandung'],
+            ['province_id' => $jawa->id, 'name' => 'Jakarta'],
+            ['province_id' => $jawa->id, 'name' => 'Malang'],
         ]);
     }
 }
