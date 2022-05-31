@@ -21,23 +21,23 @@ class OrderController extends Controller
 {
     public function create(Product $product)
     {
-        $banks = Bank::pluck('name', 'id'); 
-        $provinces = Province::pluck('name', 'id'); 
-        $cities = City::pluck('name', 'id'); 
+        $banks = Bank::pluck('name', 'id');
+        $provinces = Province::pluck('name', 'id');
+        $cities = City::pluck('name', 'id');
 
         return view('beranda.create', compact('product', 'banks', 'provinces', 'cities'));
     }
 
     public function store(Request $request, Product $product)
     {
-        if($product->stock >= $request->qty){
+        if ($product->stock >= $request->qty) {
             $result = '';
-            DB::transaction(function () use ($request, $product, &$result){
+            DB::transaction(function () use ($request, $product, &$result) {
                 // membuat nomor penjualan otomatis
                 $now = Carbon::now();
                 $year_month = $now->year . $now->month;
                 $sale_count = Sale::count();
-                if($sale_count == 0){
+                if ($sale_count == 0) {
                     $number = 10001;
                     $fullnumber = 'CVMS' . $year_month . $number;
                 } else {
@@ -70,7 +70,14 @@ class OrderController extends Controller
 
                 //hitung grand total
                 $price = $product->selling_price;
-                $grand_total = (int)$price * (int)$validated['qty'];
+                $sub_total = (int)$price * (int)$validated['qty'];
+                if ($validated['province_id'] != 1) {
+                    $ongkir = Sale::ONGKIR;
+                }
+                if ($validated['province_id'] == 1) {
+                    $ongkir = 0;
+                }
+                $grand_total = $sub_total + $ongkir;
 
                 // hitung tanggal jatuh tempo
                 $due_date = $now->addDay();
@@ -96,10 +103,6 @@ class OrderController extends Controller
                     'due_date' => $due_date
                 ]);
 
-                
-                //potong stok di table products
-                event(new SaleCreated($sale, $validated));
-
                 $result = '/order/' . $sale->id . '/result';
                 return $result;
             });
@@ -114,16 +117,16 @@ class OrderController extends Controller
 
     public function result(Sale $sale)
     {
-        if($sale->user_id != Auth::user()->id){
+        if ($sale->user_id != Auth::user()->id) {
             abort(404);
-        } else if($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
+        } else if ($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI) {
             return redirect()->route('order.show', $sale);
-        } else if($sale->payment_status_id == PaymentStatus::DIBATALKAN){
+        } else if ($sale->payment_status_id == PaymentStatus::DIBATALKAN) {
             return redirect()->route('beranda');
         }
-        
+
         $due = Carbon::parse($sale->due_date);
-        
+
         return view('beranda.result', compact('sale', 'due'));
     }
 
@@ -141,9 +144,9 @@ class OrderController extends Controller
 
     public function show(Sale $sale)
     {
-        if($sale->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
+        if ($sale->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN) {
             return redirect()->route('order.result', $sale);
-        } elseif($sale->is_cancel == 1){
+        } elseif ($sale->is_cancel == 1) {
             return redirect()->route('delivery.index');
         }
         return view('beranda.order.show', compact('sale'));
@@ -151,7 +154,7 @@ class OrderController extends Controller
 
     public function invoice(Sale $sale)
     {
-        if(auth()->user()->can('akses beranda') || auth()->user()->can('akses penjualan')){
+        if (auth()->user()->can('akses beranda') || auth()->user()->can('akses penjualan')) {
             $pdf = PDF::loadView('pdf.invoice', compact('sale'));
             $pdf->setPaper('A4', 'potrait');
             return $pdf->stream('invoice-penjualan.pdf');

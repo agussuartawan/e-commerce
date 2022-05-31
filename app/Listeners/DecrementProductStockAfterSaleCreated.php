@@ -27,8 +27,7 @@ class DecrementProductStockAfterSaleCreated
     public function handle(SaleCreated $event)
     {
         $sale = $event->sale;
-        $request = $event->request;
-        $sale->product->stock = $sale->product->stock - (int)$request['qty'];
+        $sale->product->stock = $sale->product->stock - (int)$sale->qty;
         $sale->product->save();
     }
 }

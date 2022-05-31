@@ -66,16 +66,16 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('product/thumbnail/{product}', [ProductController::class, 'thumbnail'])->name('product.thumbnail');
 		Route::delete('product/remove-image/{image}', [ProductController::class, 'removeImage']);
 		Route::resource('products', ProductController::class);
-		
+
 		#product color route
 		Route::get('color-create', [ProductColorController::class, 'create']);
 		Route::post('color-create', [ProductColorController::class, 'store'])->name('color.store');
-		
+
 		#product fragrance route
 		Route::get('fragrance-create', [ProductFragranceController::class, 'create'])->name('fragrance.create');
 		Route::post('fragrance-create', [ProductFragranceController::class, 'store'])->name('fragrance.store');
-		
-		
+
+
 		#product unit route
 		Route::get('unit-create', [ProductUnitController::class, 'create'])->name('unit.create');
 		Route::post('unit-create', [ProductUnitController::class, 'store'])->name('unit.store');
@@ -93,7 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('banks/get-list', [BankController::class, 'getBankLists']);
 		Route::resource('banks', BankController::class)->except('destroy', 'show');
 	});
-	
+
 	# route pemesanan
 	Route::get('order/{sale}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
 	Route::group(['middleware' => 'can:akses beranda'], function () {
@@ -109,7 +109,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 		Route::get('delivery', [DeliveryController::class, 'index'])->name('delivery.index');
 		Route::put('delivery/{sale}/received', [DeliveryController::class, 'deliveryReceived'])->name('delivery.received');
-
 	});
 	Route::get('province-search', [OrderController::class, 'searchProvince']);
 	Route::get('city-search/{province_id}', [OrderController::class, 'searchCity']);
@@ -122,9 +121,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('sale/get-list', [SaleController::class, 'getSaleList']);
 		Route::get('sale/{product}/{sale}/get-variant-list', [SaleController::class, 'getVariantList']);
 		Route::get('sale/form-order/{sale}', [SaleController::class, 'formOrder']);
+		Route::put('sale/notification-close', [SaleController::class, 'notificationClose']);
 		Route::resource('sales', SaleController::class)->except('destroy', 'create', 'store');
 	});
-	
+
 	// route data barang masuk
 	Route::group(['middleware' => 'can:akses barang masuk'], function () {
 		Route::get('purchase/show-input-product', [PurchaseController::class, 'showInputProduct']);
@@ -152,7 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('accounts', AccountController::class)->except('show');
 		Route::get('account/get-list', [AccountController::class, 'getAccountList']);
 		Route::get('account-search', [AccountController::class, 'searchAccount']);
-		
+
 		//neraca saldo route
 		Route::get('trial-balance/get-form', [TrialBalanceController::class, 'getForm']);
 		Route::get('trial-balance/first-create', [TrialBalanceController::class, 'firstCreate'])->name('trial-balance.first-create');

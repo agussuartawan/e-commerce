@@ -34,7 +34,8 @@ class SaleController extends Controller
         $from = Carbon::now()->startOfDay()->format('d-m-Y');
         $to = Carbon::now()->endOfDay()->format('d-m-Y');
         $now = $from . ' s/d ' . $to;
-        return view('panel.sale.index', compact('now'));
+        $newSale = Sale::where('is_new', 1)->count();
+        return view('panel.sale.index', compact('now', 'newSale'));
     }
 
     /**
@@ -45,7 +46,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        if(auth()->user()->can('akses penjualan aksi')){
+        if (auth()->user()->can('akses penjualan aksi')) {
             return view('include.sale.show', compact('sale'));
         }
         abort(403);
@@ -59,7 +60,7 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-        if($sale->is_cancel == 1 && !auth()->user()->can('akses penjualan aksi')){
+        if ($sale->is_cancel == 1 && !auth()->user()->can('akses penjualan aksi')) {
             abort(403);
         }
         $provinces = Province::pluck('name', 'id');
@@ -78,8 +79,8 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Sale $sale)
-    {        
-        if($sale->is_cancel == 1 && !auth()->user()->can('akses penjualan aksi')){
+    {
+        if ($sale->is_cancel == 1 && !auth()->user()->can('akses penjualan aksi')) {
             abort(403);
         }
         // validasi input
@@ -111,7 +112,7 @@ class SaleController extends Controller
         $product = Product::findOrFail($request->product_id);
         event(new SaleUpdating($sale, $product));
 
-        if($product->stock < $validated['qty']){// cek apakah stok mencukupi
+        if ($product->stock < $validated['qty']) { // cek apakah stok mencukupi
             $product->decrement('stock', $sale->qty);
 
             // return error jika stok tidak mencukupi
@@ -120,7 +121,7 @@ class SaleController extends Controller
             ], 422);
         }
 
-        DB::transaction(function () use ($sale, $product, $validated){
+        DB::transaction(function () use ($sale, $product, $validated) {
             //hitung grand total
             $price = $product->selling_price;
             $grand_total = $price * $validated['qty'];
@@ -128,11 +129,11 @@ class SaleController extends Controller
             // hitung tanggal jatuh tempo
             $date = Carbon::parse($validated['date']);
             $due_date = $date->addDay();
-            
+
             // cari user id berdasarkan data customer
             $customer = Customer::findOrFail($validated['customer_id']);
             $user_id = $customer->user->id;
-            
+
             // update variable validated
             $validated['user_id'] = $user_id;
             $validated['grand_total'] = $grand_total;
@@ -140,7 +141,7 @@ class SaleController extends Controller
 
             // update tabel penjualan
             $sale->update($validated);
-            
+
             //potong stok di table products
             event(new SaleUpdated($sale, $validated));
 
@@ -166,83 +167,83 @@ class SaleController extends Controller
                 return Carbon::parse($data->date)->format('d/m/Y');
             })
             ->addColumn('delivery_status', function ($data) {
-                if(auth()->user()->can('akses penjualan aksi')){
-                    if($data->delivery_status_id == DeliveryStatus::DIKIRIM){
-                        return '<span class="badge badge-success">'.$data->delivery_status->name.'</span>';
-                    } else if($data->delivery_status_id == DeliveryStatus::DALAM_PENGIRIMAN){
-                        return '<span class="badge badge-warning">'.$data->delivery_status->name.'</span>';
-                    } else if($data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
-                        return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
-                    } else if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
-                        return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
-                    } else if($data->is_cancel == 1 || $data->payment_status_id == PaymentStatus::DIBATALKAN || $data->delivery_status_id == DeliveryStatus::DIBATALKAN){
+                if (auth()->user()->can('akses penjualan aksi')) {
+                    if ($data->delivery_status_id == DeliveryStatus::DIKIRIM) {
+                        return '<span class="badge badge-success">' . $data->delivery_status->name . '</span>';
+                    } else if ($data->delivery_status_id == DeliveryStatus::DALAM_PENGIRIMAN) {
+                        return '<span class="badge badge-warning">' . $data->delivery_status->name . '</span>';
+                    } else if ($data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN) {
+                        return '<span class="badge badge-secondary">' . $data->payment_status->name . '</span>';
+                    } else if ($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI) {
+                        return '<span class="badge badge-secondary">' . $data->payment_status->name . '</span>';
+                    } else if ($data->is_cancel == 1 || $data->payment_status_id == PaymentStatus::DIBATALKAN || $data->delivery_status_id == DeliveryStatus::DIBATALKAN) {
                         return '<span class="badge badge-danger">dibatalkan</span>';
-                    } else if($data->is_validated_warehouse == 0){
+                    } else if ($data->is_validated_warehouse == 0) {
                         return '<span class="badge badge-secondary">menunggu</span>';
-                    }        
-    
-                    $confirm = '<form action="/sale/'.$data->id.'/confirm" method="POST" class="d-none form-send'.$data->id.'">';
-                    $confirm .= '<input type="hidden" value="'.csrf_token().'" name="_token">';
+                    }
+
+                    $confirm = '<form action="/sale/' . $data->id . '/confirm" method="POST" class="d-none form-send' . $data->id . '">';
+                    $confirm .= '<input type="hidden" value="' . csrf_token() . '" name="_token">';
                     $confirm .= '<input type="hidden" value="PUT" name="_method">';
-                    $confirm .= '</form>';                
-                    $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm" data-id="form-send'.$data->id.'">Kirim</a>';
-    
+                    $confirm .= '</form>';
+                    $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm" data-id="form-send' . $data->id . '">Kirim</a>';
+
                     return $confirm;
                 }
                 return '';
             })
             ->addColumn('warehouse_status', function ($data) {
-                if(auth()->user()->can('akses penjualan aksi')){
-                    if($data->is_validated_warehouse == 1){
+                if (auth()->user()->can('akses penjualan aksi')) {
+                    if ($data->is_validated_warehouse == 1) {
                         return '<span class="badge badge-success">Siap</span>';
                     }
-                    if($data->is_cancel == 1) {
+                    if ($data->is_cancel == 1) {
                         return '<span class="badge badge-danger">dibatalkan</span>';
                     } else {
                         return '<span class="badge badge-secondary">Belum Siap</span>';
-                    }       
+                    }
                 } else {
-                    if($data->is_validated_warehouse == 1){
+                    if ($data->is_validated_warehouse == 1) {
                         return '<span class="badge badge-success">Siap</span>';
                     }
-                    if($data->is_cancel == 1){
+                    if ($data->is_cancel == 1) {
                         return '<span class="badge badge-danger">dibatalkan</span>';
-                    } 
-                    if($data->is_validated_warehouse == 0) {
-                        if($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI || $data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN){
-                            return '<span class="badge badge-secondary">'.$data->payment_status->name.'</span>';
+                    }
+                    if ($data->is_validated_warehouse == 0) {
+                        if ($data->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI || $data->payment_status_id == PaymentStatus::MENUNGGU_PEMBAYARAN) {
+                            return '<span class="badge badge-secondary">' . $data->payment_status->name . '</span>';
                         }
-                        $confirm = '<form action="/sale/'.$data->id.'/confirm-warehouse" method="POST" class="d-none form-send'.$data->id.'">';
-                        $confirm .= '<input type="hidden" value="'.csrf_token().'" name="_token">';
+                        $confirm = '<form action="/sale/' . $data->id . '/confirm-warehouse" method="POST" class="d-none form-send' . $data->id . '">';
+                        $confirm .= '<input type="hidden" value="' . csrf_token() . '" name="_token">';
                         $confirm .= '<input type="hidden" value="PUT" name="_method">';
-                        $confirm .= '</form>';                
-                        $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm-warehouse" data-id="form-send'.$data->id.'">Konfirm</a>';
+                        $confirm .= '</form>';
+                        $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm-warehouse" data-id="form-send' . $data->id . '">Konfirm</a>';
                         return $confirm;
-                    } 
-                }                           
+                    }
+                }
             })
             ->addColumn('action', function ($data) {
                 if (auth()->user()->can('akses penjualan aksi')) {
                     $buttons = '<div class="row">';
 
                     $buttons .= '<div class="col">';
-                    $buttons .= '<a href="/sales/'. $data->id .'" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail '.$data->sale_number.'" data-id="'.$data->id.'">Detail</a>';
+                    $buttons .= '<a href="/sales/' . $data->id . '" class="btn btn-sm btn-outline-success btn-block btn-show" title="Detail ' . $data->sale_number . '" data-id="' . $data->id . '">Detail</a>';
                     $buttons .= '</div>';
-                    
-                    if($data->is_cancel != 1){
+
+                    if ($data->is_cancel != 1) {
                         $buttons .= '<div class="col">';
-                        $buttons .= '<a href="/sales/'. $data->id .'/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit '.$data->sale_number.'">Edit</a>';
+                        $buttons .= '<a href="/sales/' . $data->id . '/edit" class="btn btn-sm btn-outline-info btn-block modal-edit" title="Edit ' . $data->sale_number . '">Edit</a>';
                         $buttons .= '</div>';
                     }
 
-                    $buttons .= '</div>'; 
+                    $buttons .= '</div>';
                 } else {
-                    if($data->is_cancel == 1){
+                    if ($data->is_cancel == 1) {
                         return '<span class="badge badge-danger">dibatalkan</span>';
                     } else {
-                        $buttons = '<a href="/sale/form-order/'.$data->id.'" target="_blanc" class="btn btn-outline-primary btn-block btn-sm print-fo">Cetak Form Order</a>';
+                        $buttons = '<a href="/sale/form-order/' . $data->id . '" target="_blanc" class="btn btn-outline-primary btn-block btn-sm print-fo">Cetak Form Order</a>';
                     }
-                }          
+                }
 
                 return $buttons;
             })
@@ -257,25 +258,25 @@ class SaleController extends Controller
                 }
                 if (!empty($request->search)) {
                     $instance->join('customers', 'customers.id', '=', 'sales.customer_id')
-                                ->join('products', 'products.id', '=', 'sales.product_id')
-                                ->where(function ($w) use ($request) {
-                                    $search = $request->search;
-                                    $w->orWhere('sale_number', 'LIKE', "%$search%")
-                                        ->orWhere('customers.fullname', 'LIKE', "%$search%")
-                                        ->orWhere('grand_total', 'LIKE', "%$search%")
-                                        ->orWhere('products.product_name', 'LIKE', "%$search%");
-                                });
+                        ->join('products', 'products.id', '=', 'sales.product_id')
+                        ->where(function ($w) use ($request) {
+                            $search = $request->search;
+                            $w->orWhere('sale_number', 'LIKE', "%$search%")
+                                ->orWhere('customers.fullname', 'LIKE', "%$search%")
+                                ->orWhere('grand_total', 'LIKE', "%$search%")
+                                ->orWhere('products.product_name', 'LIKE', "%$search%");
+                        });
                 }
 
                 return $instance;
             })
-            ->rawColumns(['action',' customer', 'product', 'date', 'grand_total', 'delivery_status', 'warehouse_status'])
+            ->rawColumns(['action', ' customer', 'product', 'date', 'grand_total', 'delivery_status', 'warehouse_status'])
             ->make(true);
     }
 
     public function deliveryConfirm(Sale $sale)
     {
-        DB::transaction(function () use ($sale){
+        DB::transaction(function () use ($sale) {
             $sale->delivery_status_id = DeliveryStatus::DALAM_PENGIRIMAN;
             $sale->save();
             event(new PaymentConfirmed($sale));
@@ -302,11 +303,17 @@ class SaleController extends Controller
 
     public function warehouseConfirm(Sale $sale)
     {
-        DB::transaction(function () use ($sale){
+        DB::transaction(function () use ($sale) {
             $sale->is_validated_warehouse = 1;
             $sale->save();
         });
 
         return $sale;
+    }
+
+    public function notificationClose()
+    {
+        Sale::where('is_new', '1')->update(['is_new' => 0]);
+        return redirect()->route('sales.index');
     }
 }

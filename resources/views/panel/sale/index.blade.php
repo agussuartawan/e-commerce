@@ -33,9 +33,27 @@
                     </ol>
                 </div>
             </div>
+            @if ($newSale != 0)
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <h6>Ada <b>{{ $newSale }}</b> pesanan baru, mohon periksa segera!</h6>
+                            <button type="button" class="close"
+                                onclick="document.getElementById('form-close').submit()" data-dismiss="alert"
+                                aria-label="Close">
+                                <h6 aria-hidden="true">&times;</h6>
+                            </button>
+                            <form action="{{ url('sale/notification-close') }}" class="d-none" id="form-close"
+                                method="POST">
+                                @csrf
+                                @method('PUT')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div><!-- /.container-fluid -->
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">

@@ -48,7 +48,7 @@
                         <div class="row mb-3">
                             <label for="sender_bank" class="col-md-4 col-form-label text-md-end">Bank Pengirim</label>
                             <div class="col">
-                                {!! Form::text('sender_bank', null, ['class' => 'form-control', 'id' => 'sender_bank']) !!}
+                                {!! Form::select('sender_bank', \App\Models\Bank::BANK, null, ['class' => 'form-control custom-select', 'id' => 'sender_bank']) !!}
                             </div>
                         </div>
 

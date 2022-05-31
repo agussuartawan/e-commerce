@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Beranda;
 
+use App\Events\SaleCreated;
 use App\Models\Sale;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -14,11 +15,11 @@ class PaymentController extends Controller
 {
     public function create(Sale $sale)
     {
-        if($sale->user_id != Auth::user()->id){
+        if ($sale->user_id != Auth::user()->id) {
             abort(404);
-        } else if($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI){
+        } else if ($sale->payment_status_id == PaymentStatus::LUNAS || $sale->payment_status_id == PaymentStatus::MENUNGGU_KONFIRMASI) {
             return redirect()->route('order.show', $sale);
-        } else if($sale->payment_status_id == PaymentStatus::DIBATALKAN){
+        } else if ($sale->payment_status_id == PaymentStatus::DIBATALKAN) {
             return redirect()->route('beranda');
         }
 
@@ -60,7 +61,7 @@ class PaymentController extends Controller
             $sale->save();
 
             // upload foto bukti transfer
-            if($request->file('transfer_proof')){
+            if ($request->file('transfer_proof')) {
                 $validated['transfer_proof'] = $request->file('transfer_proof')->store('transfer-proof');
             }
 
@@ -68,13 +69,18 @@ class PaymentController extends Controller
             $payment = Payment::create([
                 'sale_id' => $sale->id,
                 'user_id' => Auth::user()->id,
-                'destination_bank' => $validated['destination_bank'], 
-                'sender_bank' => $validated['sender_bank'], 
-                'sender_account_name' => $validated['sender_account_name'], 
-                'sender_account_number' => $validated['sender_account_number'], 
-                'date' => $validated['date'], 
+                'destination_bank' => $validated['destination_bank'],
+                'sender_bank' => $validated['sender_bank'],
+                'sender_account_name' => $validated['sender_account_name'],
+                'sender_account_number' => $validated['sender_account_number'],
+                'date' => $validated['date'],
                 'transfer_proof' => $validated['transfer_proof']
             ]);
+
+            //potong stok di table products
+            event(new SaleCreated(
+                $sale
+            ));
 
             return $result = $payment;
         });

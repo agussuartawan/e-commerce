@@ -27,7 +27,7 @@ class PaymentController extends Controller
 
     public function paymentConfirm(Sale $sale)
     {
-        $sale = \DB::transaction(function() use($sale) {
+        $sale = \DB::transaction(function () use ($sale) {
             $sale->payment_status_id = PaymentStatus::LUNAS;
             $sale->save();
 
@@ -88,7 +88,7 @@ class PaymentController extends Controller
 
     public function getPaymentList(Request $request)
     {
-        $data  = Payment::query();
+        $data  = Payment::query()->orderBy('created_at', 'desc');
 
         return DataTables::of($data)
             ->addColumn('sale_number', function ($data) {
@@ -98,25 +98,25 @@ class PaymentController extends Controller
                 $date = Carbon::parse($data->date)->isoFormat('DD MMMM Y');
                 return $date;
             })
-            ->addColumn('transfer_proof', function ($data) {    
-                $action = view('include.payment.btn-transfer-proof', compact('data'))->render();            
+            ->addColumn('transfer_proof', function ($data) {
+                $action = view('include.payment.btn-transfer-proof', compact('data'))->render();
                 return $action;
             })
-            ->addColumn('payment_status', function ($data) {  
-                if($data->sale->payment_status_id == PaymentStatus::LUNAS){
+            ->addColumn('payment_status', function ($data) {
+                if ($data->sale->payment_status_id == PaymentStatus::LUNAS) {
                     return '<span class="badge badge-success">selesai</span>';
-                }         
+                }
 
-                $confirm = '<form action="/payment/'.$data->sale->id.'/confirm" method="POST" class="d-none form-confirm'.$data->sale->id.'">';
-                $confirm .= '<input type="hidden" value="'.csrf_token().'" name="_token">';
+                $confirm = '<form action="/payment/' . $data->sale->id . '/confirm" method="POST" class="d-none form-confirm' . $data->sale->id . '">';
+                $confirm .= '<input type="hidden" value="' . csrf_token() . '" name="_token">';
                 $confirm .= '<input type="hidden" value="PUT" name="_method">';
-                $confirm .= '</form>';                
-                $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm" data-id="form-confirm'.$data->sale->id.'">Konfirmasi</a>';
+                $confirm .= '</form>';
+                $confirm .= '<a href="#" class="btn btn-sm btn-outline-info btn-block btn-confirm" data-id="form-confirm' . $data->sale->id . '">Konfirmasi</a>';
 
                 return $confirm;
             })
             ->addColumn('action', function ($data) {
-                $action = view('include.payment.btn-action', compact('data'))->render();            
+                $action = view('include.payment.btn-action', compact('data'))->render();
                 return $action;
             })
             ->filter(function ($instance) use ($request) {
@@ -129,27 +129,27 @@ class PaymentController extends Controller
                     $instance->whereBetween('payments.date', $date);
                 }
                 if ($request->payment_status) {
-                    $instance->whereHas('sale', function($query) use ($request){
+                    $instance->whereHas('sale', function ($query) use ($request) {
                         $payment_status = $request->payment_status;
                         $query->where('payment_status_id', '=', $payment_status);
                     })
-                    ->with(['sale' => function($query) use ($request){
-                        $payment_status = $request->payment_status;
-                        $query->where('payment_status_id', '=', $payment_status);
-                    }]);
+                        ->with(['sale' => function ($query) use ($request) {
+                            $payment_status = $request->payment_status;
+                            $query->where('payment_status_id', '=', $payment_status);
+                        }]);
                 }
                 if (!empty($request->search)) {
                     $instance->join('sales', 'sales.id', '=', 'payments.sale_id')
-                                ->where(function ($w) use ($request) {
-                                    $search = $request->search;
-                                    $w->orWhere('sales.sale_number', 'LIKE', "%$search%")
-                                        ->orWhere('sender_account_name', 'LIKE', "%$search%");
-                                });
+                        ->where(function ($w) use ($request) {
+                            $search = $request->search;
+                            $w->orWhere('sales.sale_number', 'LIKE', "%$search%")
+                                ->orWhere('sender_account_name', 'LIKE', "%$search%");
+                        });
                 }
 
                 return $instance;
             })
-            ->rawColumns(['sale_number', 'action',' customer', 'date', 'transfer_proof', 'payment_status'])
+            ->rawColumns(['sale_number', 'action', ' customer', 'date', 'transfer_proof', 'payment_status'])
             ->make(true);
     }
 }

@@ -53,7 +53,7 @@ $user = auth()->user();
 
                 @if ($user->can('akses barang') || $user->can('akses kategori') || $user->can('akses pelanggan') || $user->can('akses bank') || $user->can('akses akun') || $user->can('akses akun') || $user->can('akses wilayah'))
                     <li
-                        class="nav-item {{ request()->is('categories*') ||request()->is('products*') ||request()->is('product*') ||request()->is('banks*') ||request()->is('accounts') ||request()->is('customers*') ||request()->is('trial-balance/first-create') ||request()->is('region')? 'menu-open': '' }}">
+                        class="nav-item {{ request()->is('categories*') || request()->is('products*') || request()->is('product*') || request()->is('banks*') || request()->is('accounts') || request()->is('customers*') || request()->is('trial-balance/first-create') || request()->is('region') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
                             <i class="fas fa-file-archive nav-icon"></i>
                             <p>
@@ -158,6 +158,13 @@ $user = auth()->user();
                             <i class="fas fa-shopping-cart nav-icon"></i>
                             <p>
                                 Penjualan
+                                @php
+                                    $newSale = \App\Models\Sale::where('is_new', 1)->count();
+                                @endphp
+                                @if ($newSale != 0)
+                                    <span
+                                        class="badge badge-rounded badge-danger badge-notification">{{ $newSale }}</span>
+                                @endif
                             </p>
                         </a>
                     </li>

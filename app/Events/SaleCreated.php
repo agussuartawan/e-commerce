@@ -23,10 +23,9 @@ class SaleCreated
      *
      * @return void
      */
-    public function __construct(Sale $sale, $request)
+    public function __construct(Sale $sale)
     {
         $this->sale = $sale;
-        $this->request = $request;
     }
 
     /**
