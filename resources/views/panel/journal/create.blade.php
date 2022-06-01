@@ -65,13 +65,32 @@
                                                         class="form-control custom-select"></select></td>
 
                                                 <td>
-                                                    <input type="text" name="debit[]" id="debit-1" class="form-control"
-                                                        value="0">
+                                                    <input type="text" name="debit[]" id="debit-1"
+                                                        class="form-control debit" value="0">
                                                 </td>
 
                                                 <td>
-                                                    <input type="text" name="credit[]" id="credit-1" class="form-control"
-                                                        value="0">
+                                                    <input type="text" name="credit[]" id="credit-1"
+                                                        class="form-control credit" value="0">
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <input type="date" name="date[]" id="date-2" class="form-control"
+                                                        value="{{ date('Y-m-d') }}" required>
+                                                </td>
+                                                <td><select name="account_id[]" id="account_id-2"
+                                                        class="form-control custom-select"></select></td>
+
+                                                <td>
+                                                    <input type="text" name="debit[]" id="debit-2"
+                                                        class="form-control debit" value="0">
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" name="credit[]" id="credit-2"
+                                                        class="form-control credit" value="0">
                                                 </td>
                                             </tr>
                                         </tbody>

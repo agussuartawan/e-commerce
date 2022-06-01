@@ -1,8 +1,27 @@
-var row = 1;
+var row = 2;
 $(function () {
     $(document).ready(function () {
         searchAccount();
     });
+
+    $('body').on('keyup', '.credit', function(){
+        const id = $(this).attr('id');
+        const value = $(this).val();
+        const row = parseInt(id.split("-").pop()) + 1;
+        const next_debit_id = `debit-${row}`;
+
+        $(`#${next_debit_id}`).val(value);
+    })
+
+    $('body').on('keyup', '.debit', function(){
+        const id = $(this).attr('id');
+        const value = $(this).val();
+        const row = parseInt(id.split("-").pop()) + 1;
+        const next_credit_id = `credit-${row}`;
+
+        $(`#${next_credit_id}`).val(value);
+    })
+
     $("body").on("click", "#btn-add", function (event) {
         event.preventDefault();
         row++;
@@ -12,8 +31,8 @@ $(function () {
         html += `<td><input type="date" name="date[]" id="date-${row}" class="form-control" value="${now}" required></td>`;
         html += `<td><select name="account_id[]" id="account_id-${row}" class="form-control custom-select"></select>`;
         html += '<div class="input-group-append"></td>';
-        html += `<td><input type="text" name="debit[]" id="debit-${row}" class="form-control" value="0"></td>`;
-        html += `<td><input type="text" name="credit[]" id="credit-${row}" class="form-control" value="0"></td>`;
+        html += `<td><input type="text" name="debit[]" id="debit-${row}" class="form-control debit" value="0"></td>`;
+        html += `<td><input type="text" name="credit[]" id="credit-${row}" class="form-control credit" value="0"></td>`;
         html +=
             '<td><button class="btn btn-sm btn-outline-danger btn-remove">Hapus</button></td>';
         html += "</td>";
