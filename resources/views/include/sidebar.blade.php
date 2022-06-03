@@ -146,6 +146,13 @@ $user = auth()->user();
                             <i class="far fa-solid fa-credit-card nav-icon"></i>
                             <p>
                                 Pembayaran
+                                @php
+                                    $newPayment = \App\Models\Payment::where('is_new', 1)->count();
+                                @endphp
+                                @if ($newPayment != 0)
+                                    <span
+                                        class="badge badge-rounded badge-danger badge-notification">{{ $newPayment }}</span>
+                                @endif
                             </p>
                         </a>
                     </li>

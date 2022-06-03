@@ -31,6 +31,25 @@
                     </ol>
                 </div>
             </div>
+            @if ($newPayment != 0)
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <h6>Ada <b>{{ $newPayment }}</b> pembayaran baru, mohon periksa segera!</h6>
+                            <button type="button" class="close"
+                                onclick="document.getElementById('form-close').submit()" data-dismiss="alert"
+                                aria-label="Close">
+                                <h6 aria-hidden="true">&times;</h6>
+                            </button>
+                            <form action="{{ url('payment/notification-close') }}" class="d-none" id="form-close"
+                                method="POST">
+                                @csrf
+                                @method('PUT')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div><!-- /.container-fluid -->
     </section>
 

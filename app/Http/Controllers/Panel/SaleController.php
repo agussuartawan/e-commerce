@@ -154,6 +154,15 @@ class SaleController extends Controller
         $data  = Sale::query();
 
         return DataTables::of($data)
+            ->addColumn('sale_number', function ($data) {
+                $newSale = Sale::where('is_new', 1)->count();
+                if($newSale > 0){
+                    $badge = '<span class="badge badge-rounded badge-danger">Baru</span>';
+                }else{
+                    $badge = '';
+                }
+                return $data->sale_number . '&nbsp;' . $badge;
+            })
             ->addColumn('grand_total', function ($data) {
                 return 'Rp. ' . rupiah($data->grand_total);
             })
@@ -270,7 +279,7 @@ class SaleController extends Controller
 
                 return $instance;
             })
-            ->rawColumns(['action', ' customer', 'product', 'date', 'grand_total', 'delivery_status', 'warehouse_status'])
+            ->rawColumns(['sale_number', 'action', ' customer', 'product', 'date', 'grand_total', 'delivery_status', 'warehouse_status'])
             ->make(true);
     }
 

@@ -136,6 +136,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::group(['middleware' => 'can:akses pembayaran'], function () {
 		Route::get('payment/get-list', [PanelPaymentController::class, 'getPaymentList']);
 		Route::put('payment/{sale}/confirm', [PanelPaymentController::class, 'paymentConfirm']);
+		Route::put('payment/notification-close', [PanelPaymentController::class, 'notificationClose']);
 		Route::resource('payments', PanelPaymentController::class)->except('destroy', 'create', 'store');
 	});
 

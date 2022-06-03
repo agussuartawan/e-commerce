@@ -22,7 +22,8 @@ class PaymentController extends Controller
         $from = Carbon::now()->startOfDay()->format('d-m-Y');
         $to = Carbon::now()->endOfDay()->format('d-m-Y');
         $now = $from . ' s/d ' . $to;
-        return view('panel.payment.index', compact('now'));
+        $newPayment = Payment::where('is_new', 1)->count();
+        return view('panel.payment.index', compact('now', 'newPayment'));
     }
 
     public function paymentConfirm(Sale $sale)
@@ -92,7 +93,13 @@ class PaymentController extends Controller
 
         return DataTables::of($data)
             ->addColumn('sale_number', function ($data) {
-                return $data->getSaleNumber();
+                $newPayment = Payment::where('is_new', 1)->count();
+                if($newPayment > 0){
+                    $badge = '<span class="badge badge-rounded badge-danger">Baru</span>';
+                }else{
+                    $badge = '';
+                }
+                return $data->getSaleNumber() . '&nbsp;' . $badge;
             })
             ->addColumn('date', function ($data) {
                 $date = Carbon::parse($data->date)->isoFormat('DD MMMM Y');
@@ -151,5 +158,11 @@ class PaymentController extends Controller
             })
             ->rawColumns(['sale_number', 'action', ' customer', 'date', 'transfer_proof', 'payment_status'])
             ->make(true);
+    }
+
+    public function notificationClose()
+    {
+        Payment::where('is_new', '1')->update(['is_new' => 0]);
+        return redirect()->route('payments.index');
     }
 }

@@ -23,6 +23,7 @@ class CreatePaymentsTable extends Migration
             $table->string('sender_account_name');
             $table->dateTime('date')->useCurent();
             $table->string('transfer_proof');
+            $table->boolean('is_new')->default(1);
             $table->timestamps();
         });
     }
